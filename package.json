@@ -4,11 +4,13 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "commit": "./node_modules/.bin/git-cz",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cross-env NODE_ENV=homolog ./node_modules/.bin/webpack-dev-server --port 3000",
     "start:local": "cross-env NODE_ENV=local ./node_modules/.bin/webpack-dev-server --port 3000",
     "build": "cross-env NODE_ENV=production webpack",
-    "build:hmg": "cross-env NODE_ENV=homolog webpack"
+    "build:hmg": "cross-env NODE_ENV=homolog webpack",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "author": "Samuel Martins",
   "license": "ISC",
@@ -22,8 +24,10 @@
     "babel-plugin-transform-regenerator": "^6.16.1",
     "babel-preset-env": "^1.1.8",
     "babel-preset-es2015": "^6.18.0",
+    "commitizen": "^2.9.6",
     "cross-env": "^5.1.3",
     "css-loader": "^0.26.1",
+    "cz-conventional-changelog": "^2.1.0",
     "eslint": "^4.16.0",
     "eslint-config-standard": "^11.0.0-beta.0",
     "eslint-loader": "^1.9.0",
@@ -37,10 +41,16 @@
     "node-sass": "^4.7.2",
     "resolve-url-loader": "^1.6.1",
     "sass-loader": "^6.0.6",
+    "semantic-release": "^12.4.1",
     "style-loader": "^0.13.1",
     "url-loader": "^0.6.2",
     "webpack": "^3.10.0",
     "webpack-dev-server": "^1.16.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0"
