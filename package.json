@@ -1,6 +1,6 @@
 {
   "name": "blip-chat-widget",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "",
   "main": "dist/blip-chat.js",
   "files": [
@@ -9,7 +9,7 @@
   "private": false,
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/takenet/blip-chat-widget.git"
+    "url": "https://github.com/takenet/blip-chat-widget.git"
   },
   "bugs": {
     "url": "https://github.com/takenet/blip-chat-widget/issues"
@@ -28,7 +28,8 @@
     "start:local": "cross-env NODE_ENV=local ./node_modules/.bin/webpack-dev-server --port 3000",
     "build": "cross-env NODE_ENV=production webpack",
     "build:hmg": "cross-env NODE_ENV=homolog webpack",
-    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
+    "semantic-release": "semantic-release",
+    "travis-deploy-once": "travis-deploy-once"
   },
   "author": "Samuel Martins",
   "license": "MIT",
@@ -63,7 +64,8 @@
     "style-loader": "^0.13.1",
     "url-loader": "^0.6.2",
     "webpack": "^3.10.0",
-    "webpack-dev-server": "^1.16.2"
+    "webpack-dev-server": "^1.16.2",
+    "travis-deploy-once": "^4.3.4"
   },
   "config": {
     "commitizen": {
