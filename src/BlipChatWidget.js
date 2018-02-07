@@ -52,7 +52,7 @@ export class BlipChatWidget {
     else if (process.env.NODE_ENV === 'production') {
       this.CHAT_URL = Constants.CHAT_URL_PROD
     }
-    this.CHAT_URL += `?appKey=${appKey}`
+    this.CHAT_URL += `?appKey=${encodeURIComponent(appKey)}`
     if (authConfig) this.CHAT_URL += `&authType=${authConfig.authType}`
 
     // Check if local storage values expired
