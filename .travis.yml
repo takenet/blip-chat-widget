@@ -2,14 +2,15 @@ sudo: required
 language: node_js
 cache:
   directories:
+    - ~/.npm
     - node_modules
 notifications:
   email: false
 node_js:
+  - '9'
   - '8'
-before_install:
-  - npm i -g npm@^5.0.0
-
+  - '6'
+  - '4'
 before_script:
   - npm prune
 script:
@@ -18,4 +19,4 @@ after_success:
   - npm run semantic-release
 branches:
   except:
-    - "/^v\\d+\\.\\d+\\.\\d+$/"
+    - /^v\d+\.\d+\.\d+$/
