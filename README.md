@@ -40,7 +40,7 @@ OnLoad  - Set the event to run on closing the chat
 ## Example
 
 ```js
-var builder = new ChatBuilder()
+var builder = new BlipChat()
   .withAppKey('YmxpcHRlc3RjYXJkczoxOGE5NzUwYS1kZjAxLTRhNTgtODA1ZC1kY2ExYmI2NTBmZjk=')
   .withButton({
     color: '#F00',
@@ -56,8 +56,9 @@ var builder = new ChatBuilder()
       email: 'user@blip.ai',
     },
   })
-  .withEventHandler('OnEnter', () => console.log('enter'))
-  .withEventHandler('OnLeave', () => console.log('leave'))
-  .withEventHandler('OnLoad', () => builder.sendMessage('chatloaded'))
+  .withEventHandler(BlipChat.ENTER_EVENT, () => console.log('enter'))
+  .withEventHandler(BlipChat.LEAVE_EVENT, () => console.log('leave'))
+  .withEventHandler(BlipChat.LOAD_EVENT, () => builder.sendMessage('chatloaded'))
   .withTarget('mydiv')
+builder.build()
 ```

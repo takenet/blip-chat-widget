@@ -67,6 +67,7 @@ export class BlipChat {
   }
 
   destroy () {
+    this.widget._destroy()
     if (this.widget && this.target) {
       // Chat exists on specified element
       while (this.target.firstChild) {
