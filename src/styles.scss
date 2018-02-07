@@ -1,0 +1,64 @@
+#blip-chat-container {
+    position: fixed;
+    bottom: 40px;
+    right: 80px;
+
+    #blip-chat-iframe {
+        position: absolute;
+        bottom: 90px;
+        right: 0;
+        opacity: 0;
+        visibility: hidden;
+        transition: 500ms;
+        transform: translateY(10%);
+        z-index: 1;
+        height: 610px;
+        width: 420px;
+
+        &.blip-chat-iframe-opened {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+    }
+
+    #blip-chat-open-iframe {
+        padding: 15px;
+        border-radius: 50%;
+        display: inline-block;
+        cursor: pointer;
+        z-index: 2;
+        position: relative;
+        visibility: hidden;
+        opacity: 0;
+        transition: transform 200ms, opacity 500ms;
+        box-shadow: 2px 2px 7px 0 #555;
+
+        &:active {
+            transform: scale(0.9);
+        }
+
+        .blip-chat-image {
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        img {
+            max-width: 100%;
+            max-height: 100%;
+            height: auto;
+        }
+    }
+}
+
+#blip-chat-open-iframe {
+    display: none;
+}
+
+#blip-chat-iframe {
+    width: 100%;
+    height: 100%;
+}

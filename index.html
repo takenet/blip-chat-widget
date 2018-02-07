@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>BlipChat widget</title>
+</head>
+
+<body>
+  <div class="container">
+    <div class="column">
+
+      <div class="row">
+        <h1>BlipChat Sandbox</h1>
+        <p>Use buttons bellow to see different behaviours of BLiP Chat</p>
+
+        <button onclick="buildChat()">Build SDK as GUEST (Default)</button>
+        <button onclick="buildChat({authType:BlipChat.DEV_AUTH})">Build SDK as DEV</button>
+        <button onclick="changeSDK()">Change SDK Template</button>
+        <button onclick="sendMessage()">Send test message</button>
+        <button onclick="destroyChat()">Destroy SDK</button>
+      </div>
+
+      <div class="row">
+        <h1>For authentication type DEV</h1>
+        <p>Enter the name and email of the client (We will create a random identifier and password for them)</p>
+
+        <form>
+          Full Name:
+          <input type="text" id="fullName">
+          <br> Email:
+          <input type="text" id="email">
+          <br> Id:
+          <input type="text" id="userId" value="">
+          <br> Password:
+          <input type="text" id="userPass" value="">
+          <br>
+        </form>
+      </div>
+
+    </div>
+  </div>
+  <div id="sdk-target" style="height:550px; width: 50%"> </div>
+
+  <script>
+    var sendMessage;
+    var destroyChat;
+    var buildChat;
+
+    var target;
+    var builder;
+    (function () {
+      window.onload = function () {
+        sendMessage = function () {
+          builder.sendMessage('teste');
+        }
+
+        destroyChat = function () {
+          builder.destroy();
+          builder = null;
+        }
+
+        buildChat = function (authConfig) {
+          if (builder) {
+            destroyChat();
+          }
+
+          if (authConfig && authConfig.authType == BlipChat.DEV_AUTH) {
+            authConfig.userAccount = {
+              identity: document.getElementById('userId').value ? document.getElementById('userId').value : '01684334-71c7-40e0-ad1a-5ce372de1a08', // Required
+              password: document.getElementById('userPass').value ? document.getElementById('userPass').value : 'MjU2OWNmOTItYmRjZi00Njg0LTljZDktMWQxNjQxYmYxMGU1', // Required
+              name: document.getElementById('fullName').value ? document.getElementById('fullName').value : '', // Optional
+              email: document.getElementById('email').value ? document.getElementById('email').value : ''// Optional
+            }
+          }
+
+          builder = new BlipChat()
+            .withAppKey('YmxpcHRlc3RjYXJkczoxOGE5NzUwYS1kZjAxLTRhNTgtODA1ZC1kY2ExYmI2NTBmZjk=')
+            .withButton({
+              color: '#0CC8CC'
+            })
+            .withTarget(target)
+            .withAuth(authConfig)
+            .withEventHandler(BlipChat.ENTER_EVENT, () => console.log('enter'))
+            .withEventHandler(BlipChat.LEAVE_EVENT, () => console.log('leave'))
+            .withEventHandler(BlipChat.LOAD_EVENT, () => console.log('chatloaded'))
+          // .withTarget('sdk-target')
+          builder.build()
+        }
+
+        changeSDK = function () {
+          if (target) {
+            target = null;
+          } else {
+            target = 'sdk-target';
+          }
+
+          buildChat();
+        }
+
+        applyValues = function () {
+          options.window.title = document.getElementById('title').value;
+          options.window.iconPath = document.getElementById('iconPath').value;
+          options.window.widgetColor = document.getElementById('widgetColor').value;
+          options.window.hideMenu = !document.getElementsByName('hideMenu')[1].checked;
+
+          buildChat(options.config.authType);
+
+        }
+
+        buildChat();
+      }
+    })();
+  </script>
+</body>
+
+</html>
