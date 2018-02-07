@@ -2,7 +2,25 @@
   "name": "blip-chat-widget",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "dist/blip-chat.js",
+  "files": [
+    "dist/blip-chat.js"
+  ],
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/takenet/blip-chat-widget.git"
+  },
+  "bugs": {
+    "url": "https://github.com/takenet/blip-chat-widget/issues"
+  },
+  "homepage": "https://github.com/takenet/blip-chat-widget#readme",
+  "keywords": [
+    "blip",
+    "chatbot",
+    "widget",
+    "web"
+  ],
   "scripts": {
     "commit": "./node_modules/.bin/git-cz",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -13,7 +31,7 @@
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "author": "Samuel Martins",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-core": "^6.21.0",
