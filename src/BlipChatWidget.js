@@ -69,19 +69,22 @@ export class BlipChatWidget {
     self.blipChatContainer.innerHTML = rendered
 
     window.addEventListener('message', self._onReceivePostMessage)
+
     if (!self.target) {
       // Chat presented on widget
       document.body.appendChild(self.blipChatContainer)
       document
         .getElementById('blip-chat-open-iframe')
         .addEventListener('click', self.openChat)
+
+      const blipChatIcon = document.getElementById('blip-chat-open-iframe')
+      blipChatIcon.style.backgroundImage = `url('${self.buttonIcon}')`
     }
   }
 
   openChat(event) {
     const blipChatIframe = document.getElementById('blip-chat-iframe')
-    const blipChatIcon = document.getElementById('blip-chat-icon')
-
+    const blipChatIcon = document.getElementById('blip-chat-open-iframe')
     if (!blipChatIframe.classList.contains('blip-chat-iframe-opened')) {
       if (!self.isOpen) {
         // Is opening for the first time
@@ -91,14 +94,13 @@ export class BlipChatWidget {
       }
       blipChatIframe.classList.add('blip-chat-iframe-opened')
 
-      blipChatIcon.src = closeIcon
+      blipChatIcon.style.backgroundImage = `url('${closeIcon}')`
 
       if (self.events.OnEnter) self.events.OnEnter()
     }
     else {
       blipChatIframe.classList.remove('blip-chat-iframe-opened')
-
-      blipChatIcon.src = self.buttonIcon
+      blipChatIcon.style.backgroundImage = `url('${self.buttonIcon}')`
 
       blipChatIframe.contentWindow.postMessage({
         code: Constants.SEND_MESSAGE_CODE,

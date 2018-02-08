@@ -23,6 +23,8 @@
     }
 
     #blip-chat-open-iframe {
+        width: 35px;
+        height: 35px;
         padding: 15px;
         border-radius: 50%;
         display: inline-block;
@@ -33,6 +35,9 @@
         opacity: 0;
         transition: transform 200ms, opacity 500ms;
         box-shadow: 2px 2px 7px 0 #555;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center;
 
         &:active {
             transform: scale(0.9);
