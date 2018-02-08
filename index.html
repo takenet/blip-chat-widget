@@ -68,25 +68,26 @@
           }
 
           if (authConfig && authConfig.authType == BlipChat.DEV_AUTH) {
-            authConfig.userAccount = {
-              identity: document.getElementById('userId').value ? document.getElementById('userId').value : '01684334-71c7-40e0-ad1a-5ce372de1a08', // Required
-              password: document.getElementById('userPass').value ? document.getElementById('userPass').value : 'MjU2OWNmOTItYmRjZi00Njg0LTljZDktMWQxNjQxYmYxMGU1', // Required
-              name: document.getElementById('fullName').value ? document.getElementById('fullName').value : '', // Optional
-              email: document.getElementById('email').value ? document.getElementById('email').value : ''// Optional
-            }
+            authConfig.userIdentity = document.getElementById('userId').value ? document.getElementById('userId').value : '01684334-71c7-40e0-ad1a-5ce372de1a08', // Required
+            authConfig.userPassword = document.getElementById('userPass').value ? document.getElementById('userPass').value : 'MjU2OWNmOTItYmRjZi00Njg0LTljZDktMWQxNjQxYmYxMGU1', // Required
+            authConfig.userName = document.getElementById('fullName').value ? document.getElementById('fullName').value : '', // Optional
+            authConfig.userEmail = document.getElementById('email').value ? document.getElementById('email').value : ''// Optional
           }
 
           builder = new BlipChat()
-            .withAppKey('YmxpcHRlc3RjYXJkczoxOGE5NzUwYS1kZjAxLTRhNTgtODA1ZC1kY2ExYmI2NTBmZjk=')
-            .withButton({
-              color: '#0CC8CC'
-            })
+          .withAppKey('dGFrZXJvbGU6MzE1N0ZFMjktNTIzMi00NTk1LTk3NzAtOTQyMjk4QjFGRTQ0')
+          .withButton({"color":"#2f8413"})
             .withTarget(target)
             .withAuth(authConfig)
-            .withEventHandler(BlipChat.ENTER_EVENT, () => console.log('enter'))
-            .withEventHandler(BlipChat.LEAVE_EVENT, () => console.log('leave'))
-            .withEventHandler(BlipChat.LOAD_EVENT, () => console.log('chatloaded'))
-          // .withTarget('sdk-target')
+            .withEventHandler(BlipChat.ENTER_EVENT, function () {
+              console.log('enter')
+            })
+            .withEventHandler(BlipChat.LEAVE_EVENT, function () {
+              console.log('leave')
+            })
+            .withEventHandler(BlipChat.LOAD_EVENT, function () {
+              console.log('chatloaded')
+            })
           builder.build()
         }
 
@@ -113,6 +114,7 @@
         buildChat();
       }
     })();
+
   </script>
 </body>
 

@@ -96,7 +96,6 @@ export class BlipChatWidget {
       blipChatIframe.classList.add('blip-chat-iframe-opened')
 
       blipChatIcon.src = closeIcon
-      blipChatIcon.style.padding = '15px'
 
       if (self.events.OnEnter) self.events.OnEnter()
     }
