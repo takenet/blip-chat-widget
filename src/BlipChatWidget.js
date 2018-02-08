@@ -36,7 +36,7 @@ const render = (template, context = this) =>
 // Use self as context to be able to remove event listeners on widget destroy
 let self = null
 export class BlipChatWidget {
-  constructor (appKey, buttonConfig, authConfig, target, events) {
+  constructor(appKey, buttonConfig, authConfig, target, events) {
     self = this
     self.appKey = appKey
     self.buttonColor = buttonConfig.color
@@ -49,7 +49,6 @@ export class BlipChatWidget {
 
     self.CHAT_URL = Constants.CHAT_URL_LOCAL
     if (process.env.NODE_ENV === 'homolog') {
-      console.log('Env', process.env)
       self.CHAT_URL = Constants.CHAT_URL_HMG
     }
     else if (process.env.NODE_ENV === 'production') {
@@ -65,21 +64,21 @@ export class BlipChatWidget {
     self.onInit()
   }
 
-  onInit () {
+  onInit() {
     const rendered = render(chatView, this)
     self.blipChatContainer.innerHTML = rendered
 
     window.addEventListener('message', self._onReceivePostMessage)
-    document.body.appendChild(self.blipChatContainer)
     if (!self.target) {
       // Chat presented on widget
+      document.body.appendChild(self.blipChatContainer)
       document
         .getElementById('blip-chat-open-iframe')
         .addEventListener('click', self.openChat)
     }
   }
 
-  openChat (event) {
+  openChat(event) {
     const blipChatIframe = document.getElementById('blip-chat-iframe')
     const blipChatIcon = document.getElementById('blip-chat-icon')
 
@@ -101,7 +100,8 @@ export class BlipChatWidget {
 
       blipChatIcon.src = self.buttonIcon
 
-      blipChatIframe.contentWindow.postMessage({ code: Constants.SEND_MESSAGE_CODE,
+      blipChatIframe.contentWindow.postMessage({
+        code: Constants.SEND_MESSAGE_CODE,
         content: {
           type: 'application/vnd.lime.chatstate+json',
           content: { 'state': 'gone' },
@@ -112,7 +112,7 @@ export class BlipChatWidget {
     }
   }
 
-  _onReceivePostMessage (message) {
+  _onReceivePostMessage(message) {
     switch (message.data.code) {
       case Constants.CHAT_READY_CODE:
         if (!self.target) {
@@ -138,7 +138,7 @@ export class BlipChatWidget {
     }
   }
 
-  _getObfuscatedUserAccount () {
+  _getObfuscatedUserAccount() {
     if (!self.authConfig || self.authConfig.authType === Constants.GUEST_AUTH) {
       return StorageService._getFromLocalStorage(Constants.USER_ACCOUNT_KEY)
     }
@@ -147,12 +147,12 @@ export class BlipChatWidget {
     }
   }
 
-  _sendMessage (content) {
+  _sendMessage(content) {
     const blipChatIframe = document.getElementById('blip-chat-iframe')
     blipChatIframe.contentWindow.postMessage({ code: Constants.SEND_MESSAGE_CODE, content }, self.CHAT_URL)
   }
 
-  _destroy () {
+  _destroy() {
     window.removeEventListener('message', self._onReceivePostMessage)
   }
 }
