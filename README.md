@@ -35,12 +35,10 @@ var builder = new BlipChat()
   })
   .withAuth({
     authType: 'Dev',
-    userAccount: {
-      identity: '1234567',
-      password: 'MTIzNDU2',
-      name: 'User test',
-      email: 'user@blip.ai',
-    },
+    userIdentity: '1234567',
+    userPassword: 'MTIzNDU2',
+    userName: 'User test',
+    userEmail: 'user@blip.ai',
   })
   .withEventHandler(BlipChat.ENTER_EVENT, function () {
     console.log('enter')
