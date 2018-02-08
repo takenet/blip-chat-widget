@@ -86,8 +86,8 @@ export class BlipChatWidget {
     if (!blipChatIframe.classList.contains('blip-chat-iframe-opened')) {
       if (!self.isOpen) {
         // Is opening for the first time
-        const userData = self._getObfuscatedUserAccount()
-        blipChatIframe.contentWindow.postMessage({ code: Constants.START_CONNECTION_CODE, userData }, self.CHAT_URL)
+        const userAccount = self._getObfuscatedUserAccount()
+        blipChatIframe.contentWindow.postMessage({ code: Constants.START_CONNECTION_CODE, userAccount }, self.CHAT_URL)
         self.isOpen = true
       }
       blipChatIframe.classList.add('blip-chat-iframe-opened')
@@ -128,7 +128,7 @@ export class BlipChatWidget {
         break
 
       case Constants.CREATE_ACCOUNT_CODE:
-        let data = window.atob(message.data.userData)
+        let data = window.atob(message.data.userAccount)
         StorageService._setToLocalStorage(Constants.USER_ACCOUNT_KEY, JSON.parse(data), Constants.COOKIES_EXPIRATION)
         break
 
