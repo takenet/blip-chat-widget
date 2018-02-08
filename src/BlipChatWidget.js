@@ -83,6 +83,9 @@ export class BlipChatWidget {
     const blipChatIframe = document.getElementById('blip-chat-iframe')
     const blipChatIcon = document.getElementById('blip-chat-icon')
 
+    blipChatIframe.style.boxShadow = '0 -1px 12px 0 #c5c5c5'
+    blipChatIframe.style.borderRadius = '5px'
+
     if (!blipChatIframe.classList.contains('blip-chat-iframe-opened')) {
       if (!self.isOpen) {
         // Is opening for the first time
@@ -93,6 +96,7 @@ export class BlipChatWidget {
       blipChatIframe.classList.add('blip-chat-iframe-opened')
 
       blipChatIcon.src = closeIcon
+      blipChatIcon.style.padding = '15px'
 
       if (self.events.OnEnter) self.events.OnEnter()
     }
