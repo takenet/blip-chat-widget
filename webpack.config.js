@@ -103,7 +103,7 @@ const config = {
     watchContentBase: true
   },
   node: {
-    hot: true,
+    hot: process.env.NODE_ENV === 'production',
     inline: true,
     progress: true,
     colors: true

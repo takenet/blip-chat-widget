@@ -104,13 +104,6 @@ export class BlipChatWidget {
 
       blipChatIcon.src = self.buttonIcon
 
-      blipChatIframe.contentWindow.postMessage({ code: Constants.SEND_MESSAGE_CODE,
-        content: {
-          type: 'application/vnd.lime.chatstate+json',
-          content: { 'state': 'gone' },
-          metadata: undefined
-        }
-      }, self.CHAT_URL)
       if (self.events.OnLeave) self.events.OnLeave()
     }
   }
