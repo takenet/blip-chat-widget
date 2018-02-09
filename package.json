@@ -24,6 +24,7 @@
   "scripts": {
     "commit": "./node_modules/.bin/git-cz",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "start:prod": "cross-env NODE_ENV=production ./node_modules/.bin/webpack-dev-server --port 3000",
     "start": "cross-env NODE_ENV=homolog ./node_modules/.bin/webpack-dev-server --port 3000",
     "start:local": "cross-env NODE_ENV=local ./node_modules/.bin/webpack-dev-server --port 3000",
     "build": "cross-env NODE_ENV=production webpack",
