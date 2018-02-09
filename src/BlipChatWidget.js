@@ -49,7 +49,6 @@ export class BlipChatWidget {
 
     self.CHAT_URL = Constants.CHAT_URL_LOCAL
     if (process.env.NODE_ENV === 'homolog') {
-      console.log('Env', process.env)
       self.CHAT_URL = Constants.CHAT_URL_HMG
     }
     else if (process.env.NODE_ENV === 'production') {
@@ -70,9 +69,10 @@ export class BlipChatWidget {
     self.blipChatContainer.innerHTML = rendered
 
     window.addEventListener('message', self._onReceivePostMessage)
-    document.body.appendChild(self.blipChatContainer)
+
     if (!self.target) {
       // Chat presented on widget
+      document.body.appendChild(self.blipChatContainer)
       document
         .getElementById('blip-chat-open-iframe')
         .addEventListener('click', self.openChat)
@@ -131,7 +131,7 @@ export class BlipChatWidget {
         break
 
       case Constants.CREATE_ACCOUNT_CODE:
-        let data = window.atob(message.data.userData)
+        let data = window.atob(message.data.userAccount)
         StorageService._setToLocalStorage(Constants.USER_ACCOUNT_KEY, JSON.parse(data), Constants.COOKIES_EXPIRATION)
         break
 

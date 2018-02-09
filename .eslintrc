@@ -2,6 +2,7 @@
   "extends": "standard",
   "rules": {
     "no-new": 0,
+    "space-before-function-paren": 0,
     "brace-style": ["error", "stroustrup"]
   }
 }

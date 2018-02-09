@@ -8,20 +8,6 @@
 * `npm start`
 * Project will be running on `http://localhost:3000`
 
-# Deploy
-
-## Homologation
-
-url: [https://hmg-blip-chat.herokuapp.com/](https://hmg-blip-chat.herokuapp.com/)
-
-`git push staging master`
-
-## Production
-
-url: [https://blip-chat.herokuapp.com/](https://blip-chat.herokuapp.com/)
-
-`git push production master`
-
 # Optional parameters
 
 | Property          | Description                                         |
@@ -49,16 +35,20 @@ var builder = new BlipChat()
   })
   .withAuth({
     authType: 'Dev',
-    userAccount: {
-      identity: '1234567',
-      password: 'MTIzNDU2',
-      name: 'User test',
-      email: 'user@blip.ai',
-    },
+    userIdentity: '1234567',
+    userPassword: 'MTIzNDU2',
+    userName: 'User test',
+    userEmail: 'user@blip.ai',
   })
-  .withEventHandler(BlipChat.ENTER_EVENT, () => console.log('enter'))
-  .withEventHandler(BlipChat.LEAVE_EVENT, () => console.log('leave'))
-  .withEventHandler(BlipChat.LOAD_EVENT, () => builder.sendMessage('chatloaded'))
+  .withEventHandler(BlipChat.ENTER_EVENT, function () {
+    console.log('enter')
+  })
+  .withEventHandler(BlipChat.LEAVE_EVENT, function () {
+    console.log('leave')
+  })
+  .withEventHandler(BlipChat.LOAD_EVENT, function () {
+    console.log('chatloaded')
+  })
   .withTarget('mydiv')
 builder.build()
 ```
