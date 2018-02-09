@@ -114,7 +114,6 @@ const config = {
         'NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
       }
     }),
-    new webpack.HotModuleReplacementPlugin(),
     cssPlugin
   ]
 }
@@ -126,6 +125,7 @@ if (process.env.NODE_ENV === 'production') {
     }),
   )
 } else {
+  config.plugins.push(new webpack.HotModuleReplacementPlugin())
   config.plugins.push(
     new webpack.LoaderOptionsPlugin({
       debug: true
