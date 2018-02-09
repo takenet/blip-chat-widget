@@ -41,7 +41,7 @@ export class BlipChatWidget {
     self.appKey = appKey
     self.buttonColor = buttonConfig.color
     self.buttonIcon = buttonConfig.icon || blipIcon
-    self.authConfig = authConfig
+    self.authConfig = authConfig || Constants.GUEST_AUTH
     self.target = target
     self.events = events
     self.blipChatContainer = target || createDiv('#blip-chat-container')
