@@ -38,7 +38,6 @@ const render = (template, context = this) =>
 
 // Use self as context to be able to remove event listeners on widget destroy
 let self = null
-
 export class BlipChatWidget {
   constructor(appKey, buttonConfig, authConfig, target, events) {
     self = this
