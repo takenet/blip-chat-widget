@@ -30,8 +30,9 @@
         cursor: pointer;
         z-index: 2;
         position: fixed;
-        height: 64px;
-        width: 64px;
+        width: 4%;
+        max-width:76px;
+        min-width: 48px;
         right: 35px;
         bottom: 35px;
         visibility: hidden;

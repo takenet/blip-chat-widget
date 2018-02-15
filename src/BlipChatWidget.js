@@ -77,6 +77,18 @@ export class BlipChatWidget {
         .getElementById('blip-chat-open-iframe')
         .addEventListener('click', self.openChat)
     }
+    this.resizeElements()
+    window.addEventListener('resize', this.resizeElements)
+  }
+
+  resizeElements() {
+    const blipFAB = document.getElementById('blip-chat-open-iframe')
+    const blipChatIframe = document.getElementById('blip-chat-iframe')
+    const screenHeight = window.outerHeight - 250
+
+    blipFAB.style.height = window.getComputedStyle(blipFAB).width
+    blipChatIframe.style.bottom = `calc(15px + ${blipFAB.style.height} )`
+    blipChatIframe.style.maxHeight = `${screenHeight}px`
   }
 
   openChat (event) {
