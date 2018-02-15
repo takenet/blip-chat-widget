@@ -5,5 +5,5 @@
   "bracketSpacing": true,
   "arrowParens": "always",
   "spaceBeforeFunctionParent": true,
-  "trailingComma": "es5"
+  "trailingComma": "none"
 }

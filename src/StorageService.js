@@ -2,8 +2,7 @@ class StorageService {
   static _getFromLocalStorage(name) {
     if (this._supportsLocalStorage()) {
       return window.localStorage.getItem(name)
-    }
-    else {
+    } else {
       return null
     }
   }
@@ -18,8 +17,7 @@ class StorageService {
   static _supportsLocalStorage() {
     try {
       return 'localStorage' in window && window['localStorage'] !== null
-    }
-    catch (e) {
+    } catch (e) {
       return false
     }
   }
@@ -42,16 +40,14 @@ class StorageService {
           if (currentValue.expires && currentValue.expires <= currentDate) {
             toRemove.push(window.localStorage.key(i))
           }
-        }
-        catch (e) {}
+        } catch (e) {}
       }
 
       // Remove outdated items
       for (let i = toRemove.length - 1; i >= 0; i--) {
         window.localStorage.removeItem(toRemove[i])
       }
-    }
-    catch (e) {}
+    } catch (e) {}
   }
 }
 

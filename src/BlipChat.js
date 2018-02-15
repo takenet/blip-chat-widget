@@ -74,8 +74,7 @@ export class BlipChat {
       while (this.target.firstChild) {
         this.target.removeChild(this.target.firstChild)
       }
-    }
-    else if (this.widget) {
+    } else if (this.widget) {
       // Chat exists as widget
       this.widget.blipChatContainer.parentElement.removeChild(
         this.widget.blipChatContainer
