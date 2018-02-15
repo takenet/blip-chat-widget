@@ -1,64 +1,64 @@
 #blip-chat-container {
+  position: fixed;
+  bottom: 40px;
+  right: 80px;
+
+  #blip-chat-iframe {
+    position: absolute;
+    bottom: 90px;
+    right: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: 500ms;
+    transform: translateY(10%);
+    z-index: 1;
+    height: 610px;
+    width: 420px;
+
+    &.blip-chat-iframe-opened {
+      opacity: 1;
+      transform: translateY(0);
+      visibility: visible;
+    }
+  }
+
+  #blip-chat-open-iframe {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 2;
     position: fixed;
-    bottom: 40px;
-    right: 80px;
+    height: 64px;
+    width: 64px;
+    right: 35px;
+    bottom: 35px;
+    visibility: hidden;
+    opacity: 0;
+    transition: transform 200ms, opacity 500ms;
+    box-shadow: 2px 2px 7px 0 #555;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
 
-    #blip-chat-iframe {
-        position: absolute;
-        bottom: 90px;
-        right: 0;
-        opacity: 0;
-        visibility: hidden;
-        transition: 500ms;
-        transform: translateY(10%);
-        z-index: 1;
-        height: 610px;
-        width: 420px;
-
-        &.blip-chat-iframe-opened {
-            opacity: 1;
-            transform: translateY(0);
-            visibility: visible;
-        }
+    &:active {
+      transform: scale(0.9);
     }
 
-    #blip-chat-open-iframe {
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        z-index: 2;
-        position: fixed;
-        height: 64px;
-        width: 64px;
-        right: 35px;
-        bottom: 35px;
-        visibility: hidden;
-        opacity: 0;
-        transition: transform 200ms, opacity 500ms;
-        box-shadow: 2px 2px 7px 0 #555;
-        background-size: 100%;
-        background-repeat: no-repeat;
-        background-position: center;
-
-        &:active {
-            transform: scale(0.9);
-        }
-
-        img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-        }
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
     }
+  }
 }
 
 #blip-chat-open-iframe {
-    display: none;
+  display: none;
 }
 
 #blip-chat-iframe {
-    width: 100%;
-    height: 100%;
+  width: 100%;
+  height: 100%;
 }
