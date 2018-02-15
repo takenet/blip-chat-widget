@@ -22,25 +22,26 @@
     }
   }
 
-  #blip-chat-open-iframe {
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 2;
-    position: fixed;
-    height: 64px;
-    width: 64px;
-    right: 35px;
-    bottom: 35px;
-    visibility: hidden;
-    opacity: 0;
-    transition: transform 200ms, opacity 500ms;
-    box-shadow: 2px 2px 7px 0 #555;
-    background-size: 100%;
-    background-repeat: no-repeat;
-    background-position: center;
+    #blip-chat-open-iframe {
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        z-index: 2;
+        position: fixed;
+        width: 4%;
+        max-width:76px;
+        min-width: 48px;
+        right: 35px;
+        bottom: 35px;
+        visibility: hidden;
+        opacity: 0;
+        transition: transform 200ms, opacity 500ms;
+        box-shadow: 2px 2px 7px 0 #555;
+        background-size: 100%;
+        background-repeat: no-repeat;
+        background-position: center;
 
     &:active {
       transform: scale(0.9);
