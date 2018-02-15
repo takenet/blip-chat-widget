@@ -4,11 +4,7 @@ import closeIcon from './images/close.svg'
 import Constants from './Constants.js'
 import StorageService from './StorageService.js'
 import './styles.scss'
-
-if ((typeof window !== 'undefined' && !window._babelPolyfill) ||
-  (typeof global !== 'undefined' && !global._babelPolyfill)) {
-  require('babel-polyfill')
-}
+import 'babel-polyfill'
 
 const createDiv = (selector) => {
   const div = document.createElement('div')
