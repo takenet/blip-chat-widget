@@ -68,7 +68,7 @@ export class BlipChat {
   }
 
   destroy() {
-    this.widget._destroy()
+    this.widget.destroy()
     if (this.widget && this.target) {
       // Chat exists on specified element
       while (this.target.firstChild) {
@@ -84,6 +84,6 @@ export class BlipChat {
   }
 
   sendMessage(content) {
-    this.widget._sendMessage(content)
+    this.widget.sendMessage(content)
   }
 }

@@ -1,5 +1,5 @@
 class StorageService {
-  static _getFromLocalStorage(name) {
+  static getFromLocalStorage(name) {
     if (this._supportsLocalStorage()) {
       return window.localStorage.getItem(name)
     } else {
@@ -7,7 +7,7 @@ class StorageService {
     }
   }
 
-  static _setToLocalStorage(name, value, expires) {
+  static setToLocalStorage(name, value, expires) {
     if (this._supportsLocalStorage()) {
       value.expires = new Date().getTime() + expires
       window.localStorage.setItem(name, window.btoa(JSON.stringify(value)))
@@ -22,7 +22,7 @@ class StorageService {
     }
   }
 
-  static _processLocalStorageExpires() {
+  static processLocalStorageExpires() {
     try {
       let toRemove = [] // Items to be removed
       const currentDate = new Date().getTime()

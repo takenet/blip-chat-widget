@@ -4,37 +4,13 @@ import closeIcon from './images/close.svg'
 import Constants from './Constants.js'
 import StorageService from './StorageService.js'
 import './styles.scss'
+import { isBase64 } from './Validators'
+import { BlipChat } from './BlipChat'
 
 if ((typeof window !== 'undefined' && !window._babelPolyfill) ||
   (typeof global !== 'undefined' && !global._babelPolyfill)) {
   require('babel-polyfill')
 }
-
-const createDiv = (selector) => {
-  const div = document.createElement('div')
-
-  if (selector) {
-    if (selector.startsWith('.')) {
-      // is selector a Class
-      div.className = selector.substr(1)
-    } else if (selector.startsWith('#')) {
-      // is selector an ID
-      div.id = selector.substr(1)
-    }
-  }
-
-  return div
-}
-
-const render = (template, context = this) =>
-  template.replace(/{{([^{}]*)}}/g, (replaced, bind) => {
-    let key = bind
-    if (typeof key === 'string') {
-      key = key.trim()
-    }
-
-    return context[key]
-  })
 
 // Use self as context to be able to remove event listeners on widget destroy
 let self = null
@@ -44,10 +20,10 @@ export class BlipChatWidget {
     self.appKey = appKey
     self.buttonColor = buttonConfig.color
     self.buttonIcon = buttonConfig.icon || blipIcon
-    self.authConfig = authConfig || Constants.GUEST_AUTH
+    self.authConfig = self._parseAuthConfig(authConfig)
     self.target = target
     self.events = events
-    self.blipChatContainer = target || createDiv('#blip-chat-container')
+    self.blipChatContainer = target || self._createDiv('#blip-chat-container')
     self.isOpen = false
 
     self.CHAT_URL = Constants.CHAT_URL_LOCAL
@@ -61,13 +37,13 @@ export class BlipChatWidget {
     if (authConfig) self.CHAT_URL += `&authType=${authConfig.authType}`
 
     // Check if local storage values expired
-    StorageService._processLocalStorageExpires()
+    StorageService.processLocalStorageExpires()
 
-    self.onInit()
+    self._onInit()
   }
 
-  onInit() {
-    const rendered = render(chatView, this)
+  _onInit() {
+    const rendered = self._render(chatView, this)
     self.blipChatContainer.innerHTML = rendered
 
     window.addEventListener('message', self._onReceivePostMessage)
@@ -77,13 +53,40 @@ export class BlipChatWidget {
       document.body.appendChild(self.blipChatContainer)
       document
         .getElementById('blip-chat-open-iframe')
-        .addEventListener('click', self.openChat)
+        .addEventListener('click', self._openChat)
     }
-    this.resizeElements()
-    window.addEventListener('resize', this.resizeElements)
+    self._resizeElements()
+    window.addEventListener('resize', self._resizeElements)
   }
 
-  resizeElements() {
+  _createDiv(selector) {
+    const div = document.createElement('div')
+
+    if (selector) {
+      if (selector.startsWith('.')) {
+        // is selector a Class
+        div.className = selector.substr(1)
+      } else if (selector.startsWith('#')) {
+        // is selector an ID
+        div.id = selector.substr(1)
+      }
+    }
+
+    return div
+  }
+
+  _render(template, context = this) {
+    return template.replace(/{{([^{}]*)}}/g, (replaced, bind) => {
+      let key = bind
+      if (typeof key === 'string') {
+        key = key.trim()
+      }
+
+      return context[key]
+    })
+  }
+
+  _resizeElements() {
     const blipFAB = document.getElementById('blip-chat-open-iframe')
     const blipChatIframe = document.getElementById('blip-chat-iframe')
     const screenHeight = window.outerHeight - 250
@@ -93,7 +96,21 @@ export class BlipChatWidget {
     blipChatIframe.style.maxHeight = `${screenHeight}px`
   }
 
-  openChat(event) {
+  _parseAuthConfig(authConfig) {
+    if (!authConfig) {
+      return { authType: BlipChat.GUEST_AUTH }
+    }
+
+    authConfig.userPassword =
+      authConfig.userPassword !== undefined && !isBase64(authConfig.userPassword)
+        ? window.btoa(authConfig.userPassword)
+        : authConfig.userPassword
+    authConfig.userName = authConfig.userName ? encodeURIComponent(authConfig.userName) : authConfig.userName
+
+    return authConfig
+  }
+
+  _openChat(event) {
     const blipChatIframe = document.getElementById('blip-chat-iframe')
     const blipChatIcon = document.getElementById('blip-chat-icon')
 
@@ -103,9 +120,9 @@ export class BlipChatWidget {
     if (!blipChatIframe.classList.contains('blip-chat-iframe-opened')) {
       if (!self.isOpen) {
         // Is opening for the first time
-        const userData = self._getObfuscatedUserAccount()
+        const userAccount = self._getObfuscatedUserAccount()
         blipChatIframe.contentWindow.postMessage(
-          { code: Constants.START_CONNECTION_CODE, userData },
+          { code: Constants.START_CONNECTION_CODE, userAccount },
           self.CHAT_URL
         )
         self.isOpen = true
@@ -134,13 +151,13 @@ export class BlipChatWidget {
           button.style.opacity = 1
         } else {
           // Chat presented on fixed element
-          self.openChat()
+          self._openChat()
         }
         break
 
       case Constants.CREATE_ACCOUNT_CODE:
         let data = window.atob(message.data.userAccount)
-        StorageService._setToLocalStorage(
+        StorageService.setToLocalStorage(
           Constants.USER_ACCOUNT_KEY,
           JSON.parse(data),
           Constants.COOKIES_EXPIRATION
@@ -155,13 +172,13 @@ export class BlipChatWidget {
 
   _getObfuscatedUserAccount() {
     if (!self.authConfig || self.authConfig.authType === Constants.GUEST_AUTH) {
-      return StorageService._getFromLocalStorage(Constants.USER_ACCOUNT_KEY)
+      return StorageService.getFromLocalStorage(Constants.USER_ACCOUNT_KEY)
     } else if (self.authConfig.authType === Constants.DEV_AUTH) {
       return window.btoa(JSON.stringify(self.authConfig))
     }
   }
 
-  _sendMessage(content) {
+  sendMessage(content) {
     const blipChatIframe = document.getElementById('blip-chat-iframe')
     blipChatIframe.contentWindow.postMessage(
       { code: Constants.SEND_MESSAGE_CODE, content },
@@ -169,7 +186,7 @@ export class BlipChatWidget {
     )
   }
 
-  _destroy() {
+  destroy() {
     window.removeEventListener('message', self._onReceivePostMessage)
   }
 }
