@@ -1,7 +1,3 @@
-# Repository
-
-`git clone https://gitlab.com/samuelstake/blip-chat-widget.git`
-
 # Running
 
 * `npm install`
@@ -10,13 +6,13 @@
 
 # Optional parameters
 
-| Property          | Description                                         |
-| ----------------- | --------------------------------------------------- |
-| withAppKey        | Set the bot's idenfigier                            |
-| withButton        | Set the button color and icon                       |
-| withAuth          | Set the auth type and user account                  |
+| Property          | Description                                            |
+| ----------------- | ------------------------------------------------------ |
+| withAppKey        | Set the bot's app key                                  |
+| withButton        | Set the button color and icon                          |
+| withAuth          | Set the auth type and user account                     |
 | withEventHandler  | Set the events to be called. Params: name and function |
-| withTarget        | Set the element that will present the chat          |
+| withTarget        | Set the element that will present the chat             |
 
 *Supported events:
 OnEnter - Set the event to run on first time opening the chat
@@ -34,7 +30,7 @@ var builder = new BlipChat()
       'https://www.google.com.br/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png',
   })
   .withAuth({
-    authType: 'Dev',
+    authType: BlipChat.DEV_AUTH,
     userIdentity: '1234567',
     userPassword: 'MTIzNDU2',
     userName: 'User test',
