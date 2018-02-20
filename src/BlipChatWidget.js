@@ -105,6 +105,7 @@ export class BlipChatWidget {
       authConfig.userPassword !== undefined && !isBase64(authConfig.userPassword)
         ? window.btoa(authConfig.userPassword)
         : authConfig.userPassword
+
     authConfig.userIdentifier = encodeURIComponent(authConfig.userIdentifier)
 
     return authConfig
