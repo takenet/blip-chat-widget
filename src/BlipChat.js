@@ -57,13 +57,19 @@ export class BlipChat {
     return this
   }
 
+  withEnvironment(environment) {
+    this.environment = environment
+    return this
+  }
+
   build() {
     this.widget = new BlipChatWidget(
       this.appKey,
       this.buttonConfig,
       this.authConfig,
       this.target,
-      this.events
+      this.events,
+      this.environment || process.env.NODE_ENV
     )
   }
 

@@ -15,7 +15,7 @@ if ((typeof window !== 'undefined' && !window._babelPolyfill) ||
 // Use self as context to be able to remove event listeners on widget destroy
 let self = null
 export class BlipChatWidget {
-  constructor(appKey, buttonConfig, authConfig, target, events) {
+  constructor(appKey, buttonConfig, authConfig, target, events, environment) {
     self = this
     self.appKey = appKey
     self.buttonColor = buttonConfig.color
@@ -27,9 +27,9 @@ export class BlipChatWidget {
     self.isOpen = false
 
     self.CHAT_URL = Constants.CHAT_URL_LOCAL
-    if (process.env.NODE_ENV === 'homolog') {
+    if (environment === 'homolog') {
       self.CHAT_URL = Constants.CHAT_URL_HMG
-    } else if (process.env.NODE_ENV === 'production') {
+    } else if (environment === 'production') {
       self.CHAT_URL = Constants.CHAT_URL_PROD
     }
 

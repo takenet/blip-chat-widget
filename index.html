@@ -75,9 +75,10 @@
           }
 
           builder = new BlipChat()
-            .withAppKey('dGFrZXJvbGU6MzE1N0ZFMjktNTIzMi00NTk1LTk3NzAtOTQyMjk4QjFGRTQ0')
+            .withAppKey('YnVpbGRhb2RhZ2FsZXJhOTo1NjNCQTA0QS0yRkY5LTQ2MEYtQjBERi05NDJGMTNFNjBDMTc=')
             .withButton({"color":"#2f8413","icon":"https://s3-sa-east-1.amazonaws.com/msging.net/Services/Images/32659305-1594-439e-b4b4-047f592d5787"})
             .withTarget(target)
+            .withEnvironment('homolog')
             .withAuth(authConfig)
             .withEventHandler(BlipChat.ENTER_EVENT, function () {
               console.log('enter')
