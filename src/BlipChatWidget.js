@@ -93,7 +93,10 @@ export class BlipChatWidget {
 
     blipFAB.style.height = window.getComputedStyle(blipFAB).width
     blipChatIframe.style.bottom = `calc(15px + ${blipFAB.style.height} )`
-    blipChatIframe.style.maxHeight = `${screenHeight}px`
+    if (!self.target) {
+      // Chat presented on widget
+      blipChatIframe.style.maxHeight = `${screenHeight}px`
+    }
   }
 
   _parseAuthConfig(authConfig) {
