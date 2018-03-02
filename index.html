@@ -14,6 +14,11 @@
 
       <div class="row">
         <h1>BlipChat Sandbox</h1>
+        <p>Set your environment</p>
+        <form>
+          Environment:
+          <input type="text" id="environment">
+        </form>
         <p>Use buttons bellow to see different behaviours of BLiP Chat</p>
 
         <button onclick="buildChat()">Build SDK as GUEST (Default)</button>
@@ -69,16 +74,18 @@
 
           if (authConfig && authConfig.authType == BlipChat.DEV_AUTH) {
             authConfig.userIdentity = document.getElementById('userId').value ? document.getElementById('userId').value : '01684334-71c7-40e0-ad1a-5ce372de1a08', // Required
-            authConfig.userPassword = document.getElementById('userPass').value ? document.getElementById('userPass').value : 'MjU2OWNmOTItYmRjZi00Njg0LTljZDktMWQxNjQxYmYxMGU1', // Required
-            authConfig.userName = document.getElementById('fullName').value ? document.getElementById('fullName').value : '', // Optional
-            authConfig.userEmail = document.getElementById('email').value ? document.getElementById('email').value : ''// Optional
+              authConfig.userPassword = document.getElementById('userPass').value ? document.getElementById('userPass').value : 'MjU2OWNmOTItYmRjZi00Njg0LTljZDktMWQxNjQxYmYxMGU1', // Required
+              authConfig.userName = document.getElementById('fullName').value ? document.getElementById('fullName').value : '', // Optional
+              authConfig.userEmail = document.getElementById('email').value ? document.getElementById('email').value : ''// Optional
           }
+
+          const environment = document.getElementById('environment').value ? document.getElementById('environment').value : 'homolog'
 
           builder = new BlipChat()
             .withAppKey('YnVpbGRhb2RhZ2FsZXJhOTo1NjNCQTA0QS0yRkY5LTQ2MEYtQjBERi05NDJGMTNFNjBDMTc=')
-            .withButton({"color":"#2f8413","icon":"https://s3-sa-east-1.amazonaws.com/msging.net/Services/Images/32659305-1594-439e-b4b4-047f592d5787"})
+            .withButton({ "color": "#2f8413", "icon": "https://s3-sa-east-1.amazonaws.com/msging.net/Services/Images/32659305-1594-439e-b4b4-047f592d5787" })
             .withTarget(target)
-            .withEnvironment('homolog')
+            .withEnvironment(environment)
             .withAuth(authConfig)
             .withEventHandler(BlipChat.ENTER_EVENT, function () {
               console.log('enter')
