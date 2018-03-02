@@ -109,7 +109,9 @@ export class BlipChatWidget {
         ? window.btoa(authConfig.userPassword)
         : authConfig.userPassword
 
-    authConfig.userIdentity = encodeURIComponent(`${self.appKey}_${authConfig.userIdentity}`)
+    const [identifier] = window.atob(self.appKey).split(':')
+
+    authConfig.userIdentity = encodeURIComponent(`${authConfig.userIdentity}.${identifier}`)
 
     return authConfig
   }
