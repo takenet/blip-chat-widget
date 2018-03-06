@@ -120,7 +120,7 @@ export class BlipChatWidget {
     const blipChatIframe = document.getElementById('blip-chat-iframe')
     const blipChatIcon = document.getElementById('blip-chat-icon')
 
-    blipChatIframe.style.boxShadow = '0 -1px 12px 0 #c5c5c5'
+    blipChatIframe.style.boxShadow = '0 0 20px 1px rgba(0,0,0,.2)'
     blipChatIframe.style.borderRadius = '5px'
 
     if (!blipChatIframe.classList.contains('blip-chat-iframe-opened')) {
