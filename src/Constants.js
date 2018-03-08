@@ -8,7 +8,6 @@ const CREATE_ACCOUNT_CODE = 'CreateAccount'
 const CHAT_CONNECTED_CODE = 'ChatConnected'
 const SEND_MESSAGE_CODE = 'SendMessage'
 const USER_ACCOUNT_KEY = 'blipSdkUAccount'
-
 const COOKIES_EXPIRATION = 8.64e7
 const DEV_AUTH = 'Dev'
 const GUEST_AUTH = 'Guest'
