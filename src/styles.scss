@@ -14,14 +14,16 @@
     z-index: 1;
     height: 0;
     width: 0;
+    box-shadow: 0 0 20px 1px rgba(0,0,0,.2);
+    border-radius: 5px;
 
     &.blip-chat-iframe-opened {
       opacity: 1;
-    transform: translateY(0);
-    visibility: visible;
-    height: 610px;
-    width: 400px;
-    transition: opacity 500ms, transform 500ms, visibility 500ms;
+      transform: translateY(0);
+      visibility: visible;
+      height: 610px;
+      width: 400px;
+      transition: opacity 500ms, transform 500ms, visibility 500ms;
     }
 
   }
@@ -39,8 +41,6 @@
       min-width: 48px;
       right: 35px;
       bottom: 35px;
-      visibility: hidden;
-      opacity: 0;
       transition: transform 200ms, opacity 500ms;
       box-shadow: 0 1px 6px rgba(0,0,0,.1),0 2px 32px rgba(0,0,0,.1);
       background-size: 100%;

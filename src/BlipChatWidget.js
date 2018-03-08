@@ -54,6 +54,8 @@ export class BlipChatWidget {
       document
         .getElementById('blip-chat-open-iframe')
         .addEventListener('click', self._openChat)
+    } else {
+      self._createIframe()
     }
     self._resizeElements()
     window.addEventListener('resize', self._resizeElements)
@@ -92,10 +94,12 @@ export class BlipChatWidget {
     const screenHeight = window.outerHeight - 250
 
     blipFAB.style.height = window.getComputedStyle(blipFAB).width
-    blipChatIframe.style.bottom = `calc(15px + ${blipFAB.style.height} )`
-    if (!self.target) {
-      // Chat presented on widget
-      blipChatIframe.style.maxHeight = `${screenHeight}px`
+    if (blipChatIframe) {
+      blipChatIframe.style.bottom = `calc(15px + ${blipFAB.style.height} )`
+      if (!self.target) {
+        // Chat presented on widget
+        blipChatIframe.style.maxHeight = `${screenHeight}px`
+      }
     }
   }
 
@@ -116,32 +120,48 @@ export class BlipChatWidget {
     return authConfig
   }
 
+  _createIframe() {
+    self.blipChatIframe = document.createElement('iframe')
+    self.blipChatIframe.setAttribute('src', self.CHAT_URL)
+    self.blipChatIframe.setAttribute('id', 'blip-chat-iframe')
+    self.blipChatIframe.setAttribute('frameborder', 0)
+
+    self.blipChatContainer.appendChild(self.blipChatIframe)
+  }
+
   _openChat(event) {
-    const blipChatIframe = document.getElementById('blip-chat-iframe')
     const blipChatIcon = document.getElementById('blip-chat-icon')
 
-    blipChatIframe.style.boxShadow = '0 0 20px 1px rgba(0,0,0,.2)'
-    blipChatIframe.style.borderRadius = '5px'
+    if (!self.blipChatIframe) {
+      self._createIframe()
+    }
 
-    if (!blipChatIframe.classList.contains('blip-chat-iframe-opened')) {
-      if (!self.isOpen) {
-        // Is opening for the first time
-        const userAccount = self._getObfuscatedUserAccount()
-        blipChatIframe.contentWindow.postMessage(
-          { code: Constants.START_CONNECTION_CODE, userAccount },
-          self.CHAT_URL
-        )
-        self.isOpen = true
-      }
-      blipChatIframe.classList.add('blip-chat-iframe-opened')
+    if ((self.blipChatIframe && !self.blipChatIframe.classList.contains('blip-chat-iframe-opened'))) {
+      // Required for animation effect
+      setTimeout(() => {
+        self.blipChatIframe.classList.add('blip-chat-iframe-opened')
+      }, 100)
 
       blipChatIcon.src = closeIcon
 
+      if (!self.isOpen) {
+        // Is opening for the first time
+        const userAccount = self._getObfuscatedUserAccount()
+
+        self.blipChatIframe.onload = () => self.blipChatIframe.contentWindow.postMessage(
+          { code: Constants.START_CONNECTION_CODE, userAccount },
+          self.CHAT_URL
+        )
+
+        self.isOpen = true
+      }
+
       if (self.events.OnEnter) self.events.OnEnter()
     } else {
-      blipChatIframe.classList.remove('blip-chat-iframe-opened')
-
+      self.blipChatIframe.classList.remove('blip-chat-iframe-opened')
       blipChatIcon.src = self.buttonIcon
+
+      // Required for animation effect
 
       if (self.events.OnLeave) self.events.OnLeave()
     }
