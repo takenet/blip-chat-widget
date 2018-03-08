@@ -140,6 +140,7 @@ export class BlipChatWidget {
       // Required for animation effect
       setTimeout(() => {
         self.blipChatIframe.classList.add('blip-chat-iframe-opened')
+        self._resizeElements()
       }, 100)
 
       blipChatIcon.src = closeIcon
