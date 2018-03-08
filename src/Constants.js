@@ -1,6 +1,6 @@
 const CHAT_URL_LOCAL = 'http://localhost:8082/'
 const CHAT_URL_HMG = 'https://hmg-chat.blip.ai/'
-const CHAT_URL_PROD = 'https://chat.blip.ai/'
+const CHAT_URL_PROD = 'https://blipchatcommon.azurewebsites.net/'
 
 const CHAT_READY_CODE = 'RequestCookie'
 const START_CONNECTION_CODE = 'BlipSdkStartConnection'
