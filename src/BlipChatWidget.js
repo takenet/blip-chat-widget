@@ -125,6 +125,7 @@ export class BlipChatWidget {
     self.blipChatIframe.setAttribute('src', self.CHAT_URL)
     self.blipChatIframe.setAttribute('id', 'blip-chat-iframe')
     self.blipChatIframe.setAttribute('frameborder', 0)
+    self.blipChatIframe.setAttribute('allow', 'geolocation')
 
     self.blipChatContainer.appendChild(self.blipChatIframe)
   }
