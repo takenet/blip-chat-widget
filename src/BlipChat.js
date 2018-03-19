@@ -92,4 +92,12 @@ export class BlipChat {
   sendMessage(content) {
     this.widget.sendMessage(content)
   }
+
+  sendCommand(command) {
+    this.widget.sendCommand(command)
+  }
+
+  toogleChat() {
+    this.widget._openChat()
+  }
 }

@@ -25,6 +25,7 @@ export class BlipChatWidget {
     self.events = events
     self.blipChatContainer = target || self._createDiv('#blip-chat-container')
     self.isOpen = false
+    self.pendings = []
 
     self.CHAT_URL = Constants.CHAT_URL_LOCAL
     if (environment === 'homolog') {
@@ -145,18 +146,7 @@ export class BlipChatWidget {
       }, 100)
 
       blipChatIcon.src = closeIcon
-
-      if (!self.isOpen) {
-        // Is opening for the first time
-        const userAccount = self._getObfuscatedUserAccount()
-
-        self.blipChatIframe.onload = () => self.blipChatIframe.contentWindow.postMessage(
-          { code: Constants.START_CONNECTION_CODE, userAccount },
-          self.CHAT_URL
-        )
-
-        self.isOpen = true
-      }
+      self._startConnection()
 
       if (self.events.OnEnter) self.events.OnEnter()
     } else {
@@ -166,6 +156,20 @@ export class BlipChatWidget {
       // Required for animation effect
 
       if (self.events.OnLeave) self.events.OnLeave()
+    }
+  }
+
+  _startConnection() {
+    if (!self.isOpen) {
+      // Is opening for the first time
+      const userAccount = self._getObfuscatedUserAccount()
+
+      self.blipChatIframe.onload = () => self.blipChatIframe.contentWindow.postMessage(
+        { code: Constants.START_CONNECTION_CODE, userAccount },
+        self.CHAT_URL
+      )
+
+      self.isOpen = true
     }
   }
 
@@ -194,6 +198,15 @@ export class BlipChatWidget {
 
       case Constants.CHAT_CONNECTED_CODE:
         if (self.events.OnLoad) self.events.OnLoad()
+        if (self.pendings) {
+          self.pendings.map((pending) => {
+            if (pending.content) { // If is a message
+              self.sendMessage(pending.content)
+            } else { // is command
+              self.sendCommand(pending.command)
+            }
+          })
+        }
         break
     }
   }
@@ -207,9 +220,31 @@ export class BlipChatWidget {
   }
 
   sendMessage(content) {
+    // If chat is not connected, connect it and wait to send command
+    if (!self.isOpen) {
+      self.pendings.push({ content })
+      self._createIframe()
+      self._startConnection()
+      return
+    }
     const blipChatIframe = document.getElementById('blip-chat-iframe')
     blipChatIframe.contentWindow.postMessage(
       { code: Constants.SEND_MESSAGE_CODE, content },
+      self.CHAT_URL
+    )
+  }
+
+  sendCommand(command) {
+    // If chat is not connected, connect it and wait to send command
+    if (!self.isOpen) {
+      self.pendings.push({ command })
+      self._createIframe()
+      self._startConnection()
+      return
+    }
+    const blipChatIframe = document.getElementById('blip-chat-iframe')
+    blipChatIframe.contentWindow.postMessage(
+      { code: Constants.SEND_COMMAND_CODE, command },
       self.CHAT_URL
     )
   }

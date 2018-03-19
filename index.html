@@ -25,6 +25,8 @@
         <button onclick="buildChat({authType:BlipChat.DEV_AUTH})">Build SDK as DEV</button>
         <button onclick="changeSDK()">Change SDK Template</button>
         <button onclick="sendMessage()">Send test message</button>
+        <button onclick="sendCommand()">Send test command</button>
+        <button onclick="toogleChat()">Toogle open chat</button>
         <button onclick="destroyChat()">Destroy SDK</button>
       </div>
 
@@ -58,8 +60,19 @@
     var builder;
     (function () {
       window.onload = function () {
+        toogleChat = function () {
+          builder.toogleChat();
+        }
+
         sendMessage = function () {
           builder.sendMessage('teste');
+        }
+
+        sendCommand = function () {
+          builder.sendCommand({
+            "method": "get",
+            "uri": "/account"
+          });
         }
 
         destroyChat = function () {
