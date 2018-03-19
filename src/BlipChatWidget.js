@@ -1,10 +1,21 @@
-import chatView from './chat.html'
+// Styles
+import './styles/main.scss'
+
+// Static
+import chatView from './static/chat.html'
+
+// Images
 import blipIcon from './images/brand-logo.svg'
 import closeIcon from './images/close.svg'
-import Constants from './Constants.js'
-import StorageService from './StorageService.js'
-import './styles.scss'
-import { isBase64 } from './Validators'
+
+// Utils
+import Constants from './utils/Constants.js'
+import StorageService from './utils/StorageService.js'
+import { isBase64 } from './utils/Validators'
+import { NotificationHandler } from './utils/NotificationHandler'
+import { dom } from './utils/Misc'
+
+// Core
 import { BlipChat } from './BlipChat'
 
 if ((typeof window !== 'undefined' && !window._babelPolyfill) ||
@@ -23,7 +34,7 @@ export class BlipChatWidget {
     self.authConfig = self._parseAuthConfig(authConfig)
     self.target = target
     self.events = events
-    self.blipChatContainer = target || self._createDiv('#blip-chat-container')
+    self.blipChatContainer = target || dom.createDiv('#blip-chat-container')
     self.isOpen = false
 
     self._setChatUrlEnvironment(environment, authConfig, appKey)
@@ -32,10 +43,15 @@ export class BlipChatWidget {
     StorageService.processLocalStorageExpires()
 
     self._onInit()
+
+    // Needs to be after _onInit method because it instance needs some elements that will be created
+    self.NotificationHandler = new NotificationHandler(self)
+    // Set elements subscribers
+    self._setSubscribers()
   }
 
   _onInit() {
-    const rendered = self._render(chatView, this)
+    const rendered = dom.render(chatView, this)
     self.blipChatContainer.innerHTML = rendered
 
     window.addEventListener('message', self._onReceivePostMessage)
@@ -53,6 +69,16 @@ export class BlipChatWidget {
     window.addEventListener('resize', self._resizeElements)
   }
 
+  _setSubscribers() {
+    // Subscribe update count
+    const updateNotifications = count => document.getElementById('blip-chat-notifications').textContent = count
+    self.NotificationHandler.subscribe(updateNotifications)
+
+    // Subscribe update style
+    const toggleNotificationsButton = count => document.getElementById('blip-chat-notifications').style.opacity = count > 0 ? 1 : 0
+    self.NotificationHandler.subscribe(toggleNotificationsButton)
+  }
+
   _setChatUrlEnvironment(environment, authConfig, appKey) {
     if (environment === 'homolog') {
       self.CHAT_URL = Constants.CHAT_URL_HMG
@@ -64,33 +90,6 @@ export class BlipChatWidget {
 
     self.CHAT_URL += `?appKey=${encodeURIComponent(appKey)}`
     if (authConfig) self.CHAT_URL += `&authType=${authConfig.authType}`
-  }
-
-  _createDiv(selector) {
-    const div = document.createElement('div')
-
-    if (selector) {
-      if (selector.startsWith('.')) {
-        // is selector a Class
-        div.className = selector.substr(1)
-      } else if (selector.startsWith('#')) {
-        // is selector an ID
-        div.id = selector.substr(1)
-      }
-    }
-
-    return div
-  }
-
-  _render(template, context = this) {
-    return template.replace(/{{([^{}]*)}}/g, (replaced, bind) => {
-      let key = bind
-      if (typeof key === 'string') {
-        key = key.trim()
-      }
-
-      return context[key]
-    })
   }
 
   _resizeElements() {
@@ -162,13 +161,13 @@ export class BlipChatWidget {
         self.isOpen = true
       }
 
+      // Clear float button notifications
+      self.NotificationHandler.clearNotifications()
       if (self.events.OnEnter) self.events.OnEnter()
     } else {
       self.blipChatIframe.classList.remove('blip-chat-iframe-opened')
       blipChatIcon.src = self.buttonIcon
       self.isOpen = false
-
-      // Required for animation effect
 
       if (self.events.OnLeave) self.events.OnLeave()
     }
@@ -202,9 +201,8 @@ export class BlipChatWidget {
         break
 
       case Constants.PARENT_NOTIFICATION_CODE:
-        if (!self.isOpen) {
-          console.log(message)
-        }
+        // Handle notification and dispatch updates
+        self.NotificationHandler.handle(message.data.messageData)
         break
     }
   }
