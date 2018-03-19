@@ -26,15 +26,7 @@ export class BlipChatWidget {
     self.blipChatContainer = target || self._createDiv('#blip-chat-container')
     self.isOpen = false
 
-    self.CHAT_URL = Constants.CHAT_URL_LOCAL
-    if (environment === 'homolog') {
-      self.CHAT_URL = Constants.CHAT_URL_HMG
-    } else if (environment === 'production') {
-      self.CHAT_URL = Constants.CHAT_URL_PROD
-    }
-
-    self.CHAT_URL += `?appKey=${encodeURIComponent(appKey)}`
-    if (authConfig) self.CHAT_URL += `&authType=${authConfig.authType}`
+    self._setChatUrlEnvironment(environment, authConfig, appKey)
 
     // Check if local storage values expired
     StorageService.processLocalStorageExpires()
@@ -59,6 +51,19 @@ export class BlipChatWidget {
     }
     self._resizeElements()
     window.addEventListener('resize', self._resizeElements)
+  }
+
+  _setChatUrlEnvironment(environment, authConfig, appKey) {
+    if (environment === 'homolog') {
+      self.CHAT_URL = Constants.CHAT_URL_HMG
+    } else if (environment === 'production') {
+      self.CHAT_URL = Constants.CHAT_URL_PROD
+    } else if (environment === 'local') {
+      self.CHAT_URL = Constants.CHAT_URL_LOCAL
+    }
+
+    self.CHAT_URL += `?appKey=${encodeURIComponent(appKey)}`
+    if (authConfig) self.CHAT_URL += `&authType=${authConfig.authType}`
   }
 
   _createDiv(selector) {
@@ -161,6 +166,7 @@ export class BlipChatWidget {
     } else {
       self.blipChatIframe.classList.remove('blip-chat-iframe-opened')
       blipChatIcon.src = self.buttonIcon
+      self.isOpen = false
 
       // Required for animation effect
 
@@ -193,6 +199,12 @@ export class BlipChatWidget {
 
       case Constants.CHAT_CONNECTED_CODE:
         if (self.events.OnLoad) self.events.OnLoad()
+        break
+
+      case Constants.PARENT_NOTIFICATION_CODE:
+        if (!self.isOpen) {
+          console.log(message)
+        }
         break
     }
   }
