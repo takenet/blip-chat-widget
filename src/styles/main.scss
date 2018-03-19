@@ -1,3 +1,17 @@
+#blip-chat-notifications {
+  background-color: #F76556;
+  color: #fff;
+  border-radius: 50%;
+  line-height: 21px;
+  font-size: 12px;
+  width: 21px; height: 21px;
+  position: absolute;
+  text-align: center;
+  top: 8px;
+  right: -6px;
+  opacity: 0;
+}
+
 #blip-chat-container {
   position: fixed;
   bottom: 40px;
