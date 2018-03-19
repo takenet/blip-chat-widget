@@ -3,6 +3,7 @@
   "rules": {
     "no-new": 0,
     "space-before-function-paren": 0,
-    "brace-style": ["error", "1tbs"]
+    "brace-style": ["error", "1tbs"],
+    "no-return-assign": 0
   }
 }
