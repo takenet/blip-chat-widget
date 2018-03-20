@@ -47,6 +47,11 @@ export class BlipChat {
     return this
   }
 
+  withAccount(account) {
+    this.account = account
+    return this
+  }
+
   withEventHandler(name, handler) {
     this.events[name] = handler
     return this
@@ -67,6 +72,7 @@ export class BlipChat {
       this.appKey,
       this.buttonConfig,
       this.authConfig,
+      this.account,
       this.target,
       this.events,
       this.environment || process.env.NODE_ENV

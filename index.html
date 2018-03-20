@@ -14,20 +14,33 @@
 
       <div class="row">
         <h1>BlipChat Sandbox</h1>
-        <p>Set your environment</p>
-        <form>
-          Environment:
-          <input type="text" id="environment">
-        </form>
+        <p>Set your environment and app key</p>
+
+        <label for="app-key">App Key:</label>
+        <input type="text" id="app-key" name="app-key">
+
+        <label for="environment">Environment:</label>
+        <input type="text" id="environment" name="environment" value="local">
+
         <p>Use buttons bellow to see different behaviours of BLiP Chat</p>
 
         <button onclick="buildChat()">Build SDK as GUEST (Default)</button>
         <button onclick="buildChat({authType:BlipChat.DEV_AUTH})">Build SDK as DEV</button>
         <button onclick="changeSDK()">Change SDK Template</button>
-        <button onclick="sendMessage()">Send test message</button>
-        <button onclick="sendCommand()">Send test command</button>
         <button onclick="toogleChat()">Toogle open chat</button>
         <button onclick="destroyChat()">Destroy SDK</button>
+      </div>
+
+      <div class="row">
+        <label for="test-message">Write bellow your test message:</label>
+        <textarea id="test-message" style="width: 100%; height: 100px;"></textarea>
+        <button onclick="sendMessage()">Send test message</button>
+
+        <br>
+
+        <label for="test-command">Write bellow your test command:</label>
+        <textarea id="test-command" style="width: 100%; height: 100px;"></textarea>
+        <button onclick="sendCommand()">Send test command</button>
       </div>
 
       <div class="row">
@@ -40,9 +53,9 @@
           <br> Email:
           <input type="text" id="email">
           <br> Id:
-          <input type="text" id="userId" value="">
+          <input type="text" id="userId" value="testdevuser">
           <br> Password:
-          <input type="text" id="userPass" value="">
+          <input type="text" id="userPass" value="123456">
           <br>
         </form>
       </div>
@@ -65,14 +78,13 @@
         }
 
         sendMessage = function () {
-          builder.sendMessage('teste');
+          const message = (document.getElementById('test-message').value || 'teste');
+          builder.sendMessage(message);
         }
 
         sendCommand = function () {
-          builder.sendCommand({
-            "method": "get",
-            "uri": "/account"
-          });
+          const command = JSON.parse(document.getElementById('test-command').value)
+          builder.sendCommand(command);
         }
 
         destroyChat = function () {
@@ -93,13 +105,20 @@
           }
 
           const environment = document.getElementById('environment').value ? document.getElementById('environment').value : 'homolog'
+          const appKey = document.getElementById('app-key').value || 'YmxpcGNoYXR0ZXN0OkQyRDlGNDU4LTQyMzMtNDU4QS05ODAwLTFGN0VEMjQzMEFERQ=='
 
           builder = new BlipChat()
-            .withAppKey('YmxpcGNoYXR0ZXN0OkQyRDlGNDU4LTQyMzMtNDU4QS05ODAwLTFGN0VEMjQzMEFERQ==')
+            .withAppKey(appKey)
             .withButton({ "color": "#2f8413", "icon": "https://s3-sa-east-1.amazonaws.com/msging.net/Services/Images/32659305-1594-439e-b4b4-047f592d5787" })
             .withTarget(target)
             .withEnvironment(environment)
             .withAuth(authConfig)
+            .withAccount({
+              "fullName": "User name",
+              "phoneNumber": "+15055034455",
+              "city": "Albuquerque 2",
+              "email": "test@test.com"
+            })
             .withEventHandler(BlipChat.ENTER_EVENT, function () {
               console.log('enter')
             })

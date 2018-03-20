@@ -26,17 +26,20 @@ if ((typeof window !== 'undefined' && !window._babelPolyfill) ||
 // Use self as context to be able to remove event listeners on widget destroy
 let self = null
 export class BlipChatWidget {
-  constructor(appKey, buttonConfig, authConfig, target, events, environment) {
+  constructor(appKey, buttonConfig, authConfig, account, target, events, environment) {
     self = this
     self.appKey = appKey
     self.buttonColor = buttonConfig.color
     self.buttonIcon = buttonConfig.icon || blipIcon
     self.authConfig = self._parseAuthConfig(authConfig)
+    self.account = account
     self.target = target
     self.events = events
     self.blipChatContainer = target || dom.createDiv('#blip-chat-container')
     self.isOpen = false
     self.pendings = []
+
+    console.log('self.account', self.account)
 
     self._setChatUrlEnvironment(environment, authConfig, appKey)
 
@@ -135,6 +138,11 @@ export class BlipChatWidget {
     self.blipChatContainer.appendChild(self.blipChatIframe)
   }
 
+  _sendPostMessage(data) {
+    const blipChatIframe = document.getElementById('blip-chat-iframe')
+    blipChatIframe.contentWindow.postMessage(data, self.CHAT_URL)
+  }
+
   _openChat(event) {
     const blipChatIcon = document.getElementById('blip-chat-icon')
 
@@ -169,10 +177,7 @@ export class BlipChatWidget {
       // Is opening for the first time
       const userAccount = self._getObfuscatedUserAccount()
 
-      self.blipChatIframe.onload = () => self.blipChatIframe.contentWindow.postMessage(
-        { code: Constants.START_CONNECTION_CODE, userAccount },
-        self.CHAT_URL
-      )
+      self.blipChatIframe.onload = () => self._sendPostMessage({ code: Constants.START_CONNECTION_CODE, userAccount })
 
       self.isOpen = true
     }
@@ -202,7 +207,10 @@ export class BlipChatWidget {
         break
 
       case Constants.CHAT_CONNECTED_CODE:
+        if (self.account) self._sendPostMessage({ code: Constants.USER_IRIS_ACCOUNT, account: self.account })
+
         if (self.events.OnLoad) self.events.OnLoad()
+
         if (self.pendings) {
           self.pendings.map((pending) => {
             if (pending.content) { // If is a message
@@ -237,11 +245,7 @@ export class BlipChatWidget {
       self._startConnection()
       return
     }
-    const blipChatIframe = document.getElementById('blip-chat-iframe')
-    blipChatIframe.contentWindow.postMessage(
-      { code: Constants.SEND_MESSAGE_CODE, content },
-      self.CHAT_URL
-    )
+    self._sendPostMessage({ code: Constants.SEND_MESSAGE_CODE, content })
   }
 
   sendCommand(command) {
@@ -252,11 +256,7 @@ export class BlipChatWidget {
       self._startConnection()
       return
     }
-    const blipChatIframe = document.getElementById('blip-chat-iframe')
-    blipChatIframe.contentWindow.postMessage(
-      { code: Constants.SEND_COMMAND_CODE, command },
-      self.CHAT_URL
-    )
+    self._sendPostMessage({ code: Constants.SEND_COMMAND_CODE, command })
   }
 
   destroy() {
