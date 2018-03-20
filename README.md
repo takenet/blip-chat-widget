@@ -6,13 +6,14 @@
 
 # Optional parameters
 
-| Property          | Description                                            |
-| ----------------- | ------------------------------------------------------ |
-| withAppKey        | Set the bot's app key                                  |
-| withButton        | Set the button color and icon                          |
-| withAuth          | Set the auth type and user account                     |
-| withEventHandler  | Set the events to be called. Params: name and function |
-| withTarget        | Set the element that will present the chat             |
+| Property          | Description                                             |
+| ----------------- | ------------------------------------------------------- |
+| withAppKey        | Set the bot's app key                                   |
+| withButton        | Set the button color and icon                           |
+| withAuth          | Set the auth type, user identity and password           |
+| withAccount       | Set the user account                                    |
+| withEventHandler  | Set the events to be called. Params: name and function* |
+| withTarget        | Set the element that will present the chat              |
 
 *Supported events:
 OnEnter - Set the event to run on first time opening the chat
@@ -38,8 +39,12 @@ OnLoad  - Set the event to run on closing the chat
               authType: BlipChat.DEV_AUTH,
               userIdentity: '1234567',
               userPassword: 'MTIzNDU2',
-              userName: 'User test',
-              userEmail: 'user@blip.ai',
+            })
+            .withAccount({
+              fullName: 'John Doe',
+              email:'johndoe@gmail.com',
+              phoneNumber: '+15055034455',
+              city: 'Decatur',
             })
             .withEventHandler(BlipChat.ENTER_EVENT, function () {
               console.log('enter')
