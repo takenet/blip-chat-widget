@@ -29,8 +29,8 @@ export class BlipChatWidget {
   constructor(appKey, buttonConfig, authConfig, account, target, events, environment) {
     self = this
     self.appKey = appKey
-    self.buttonColor = buttonConfig.color
-    self.buttonIcon = buttonConfig.icon || blipIcon
+    self.buttonColor = buttonConfig ? buttonConfig.color : '#2CC3D5'
+    self.buttonIcon = buttonConfig && buttonConfig.icon ? buttonConfig.icon : blipIcon
     self.authConfig = self._parseAuthConfig(authConfig)
     self.account = account
     self.target = target
