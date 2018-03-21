@@ -101,7 +101,7 @@ export class BlipChatWidget {
 
     blipFAB.style.height = window.getComputedStyle(blipFAB).width
     if (blipChatIframe) {
-      blipChatIframe.style.bottom = `calc(15px + ${blipFAB.style.height} )`
+      blipChatIframe.style.bottom = `calc(55px + ${blipFAB.style.height} )`
       if (!self.target) {
         // Chat presented on widget
         blipChatIframe.style.maxHeight = `${screenHeight}px`
@@ -153,6 +153,8 @@ export class BlipChatWidget {
       setTimeout(() => {
         self.blipChatIframe.classList.add('blip-chat-iframe-opened')
         self._resizeElements()
+        document.getElementsByTagName('body')[0].classList.add('chatParent')
+        document.getElementsByTagName('html')[0].classList.add('chatParent')
       }, 100)
 
       blipChatIcon.src = closeIcon
@@ -162,6 +164,8 @@ export class BlipChatWidget {
       self.NotificationHandler.clearNotifications()
       if (self.events.OnEnter) self.events.OnEnter()
     } else {
+      document.getElementsByTagName('body')[0].classList.remove('chatParent')
+      document.getElementsByTagName('html')[0].classList.remove('chatParent')
       self.blipChatIframe.classList.remove('blip-chat-iframe-opened')
       blipChatIcon.src = self.buttonIcon
       self.isOpen = false
