@@ -39,8 +39,6 @@ export class BlipChatWidget {
     self.isOpen = false
     self.pendings = []
 
-    console.log('self.account', self.account)
-
     self._setChatUrlEnvironment(environment, authConfig, appKey)
 
     // Check if local storage values expired
