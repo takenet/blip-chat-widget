@@ -60,3 +60,15 @@ OnLoad  - Set the event to run on closing the chat
     })();
 </script>
 ```
+
+#Features
+
+##Destroy chat widget
+
+##Toogle chat widget
+
+##Send message
+
+##Send command
+
+

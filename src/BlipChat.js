@@ -52,11 +52,6 @@ export class BlipChat {
     return this
   }
 
-  withEventHandler(name, handler) {
-    this.events[name] = handler
-    return this
-  }
-
   withTarget(target) {
     this.target = document.getElementById(target)
     return this
@@ -64,6 +59,11 @@ export class BlipChat {
 
   withEnvironment(environment) {
     this.environment = environment
+    return this
+  }
+
+  withEventHandler(name, handler) {
+    this.events[name] = handler
     return this
   }
 
@@ -77,6 +77,10 @@ export class BlipChat {
       this.events,
       this.environment || process.env.NODE_ENV
     )
+  }
+
+  toogleChat() {
+    this.widget._openChat()
   }
 
   destroy() {
@@ -101,9 +105,5 @@ export class BlipChat {
 
   sendCommand(command) {
     this.widget.sendCommand(command)
-  }
-
-  toogleChat() {
-    this.widget._openChat()
   }
 }
