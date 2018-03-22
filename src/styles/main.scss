@@ -84,6 +84,14 @@ $maxHeight: 480px;
       background-repeat: no-repeat;
       background-position: center;
 
+      @media screen and (max-width: $maxWidth), screen and (max-height: $maxHeight) {
+        &.opened {
+          top: 0px;
+          right: 0px;
+          box-shadow: none;
+        }
+      } 
+
     &:active {
       transform: scale(0.9);
     }

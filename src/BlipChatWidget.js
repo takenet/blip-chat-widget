@@ -144,6 +144,7 @@ export class BlipChatWidget {
 
   _openChat(event) {
     const blipChatIcon = document.getElementById('blip-chat-icon')
+    const blipChatButton = document.getElementById('blip-chat-open-iframe')
 
     if (!self.blipChatIframe) {
       self._createIframe()
@@ -166,6 +167,10 @@ export class BlipChatWidget {
         document.getElementsByTagName('head')[0].appendChild(meta)
       }, 100)
 
+      if (self.isChatLoaded) {
+        blipChatButton.classList.add('opened')
+      }
+
       blipChatIcon.src = closeIcon
       self._startConnection()
 
@@ -174,12 +179,15 @@ export class BlipChatWidget {
       self.isOpen = true
       if (self.events.OnEnter) self.events.OnEnter()
     } else {
+      // Change display to prevent interaction on iOS
       setTimeout(() => {
         self.blipChatIframe.style.display = 'none'
       }, 500)
+
       document.getElementsByTagName('body')[0].classList.remove('chatParent')
       document.getElementsByTagName('html')[0].classList.remove('chatParent')
       self.blipChatIframe.classList.remove('blip-chat-iframe-opened')
+      blipChatButton.classList.remove('opened')
       blipChatIcon.src = self.buttonIcon
       self.isOpen = false
 
@@ -225,6 +233,9 @@ export class BlipChatWidget {
         if (self.account) self._sendPostMessage({ code: Constants.USER_IRIS_ACCOUNT, account: self.account })
 
         if (self.events.OnLoad) self.events.OnLoad()
+
+        const blipChatButton = document.getElementById('blip-chat-open-iframe')
+        blipChatButton.classList.add('opened')
 
         if (self.pendings) {
           self.pendings.map((pending) => {
