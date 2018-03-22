@@ -176,7 +176,7 @@ export class BlipChatWidget {
     } else {
       setTimeout(() => {
         self.blipChatIframe.style.display = 'none'
-      })
+      }, 500)
       document.getElementsByTagName('body')[0].classList.remove('chatParent')
       document.getElementsByTagName('html')[0].classList.remove('chatParent')
       self.blipChatIframe.classList.remove('blip-chat-iframe-opened')
