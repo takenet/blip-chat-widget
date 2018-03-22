@@ -39,11 +39,11 @@ $maxHeight: 480px;
     right: 38px;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 500ms, transform 500ms, visibility 500ms, height 500ms step-end, width 500ms step-end;
+    transition: opacity 500ms, transform 500ms, visibility 500ms;
     transform: translateY(10%);
     z-index: 1;
     height: 610px;
-    width: 0;
+    width: 400px;
     box-shadow: 0 0 20px 1px rgba(0,0,0,.2);
     border-radius: 5px;
     background: #faf9f8;
@@ -52,20 +52,15 @@ $maxHeight: 480px;
       right: 0px;
       bottom: 0px !important;
       max-height: 100vh !important;
+      height: 100%;
+      width: 100vw
     }
 
     &.blip-chat-iframe-opened {
       opacity: 1;
       transform: translateY(0);
-      visibility: visible;
-      height: 610px;
-      width: 400px;
+      visibility: visible;      
       transition: opacity 500ms, transform 500ms, visibility 500ms;
-
-      @media screen and (max-width: $maxWidth), screen and (max-height: $maxHeight) {
-        width: 100vw;
-        height: 100%;
-      }
     }
 
   }

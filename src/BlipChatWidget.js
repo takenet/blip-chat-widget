@@ -149,12 +149,20 @@ export class BlipChatWidget {
     }
 
     if ((self.blipChatIframe && !self.blipChatIframe.classList.contains('blip-chat-iframe-opened'))) {
+      self.blipChatIframe.style.display = 'block'
       // Required for animation effect
       setTimeout(() => {
         self.blipChatIframe.classList.add('blip-chat-iframe-opened')
         self._resizeElements()
         document.getElementsByTagName('body')[0].classList.add('chatParent')
         document.getElementsByTagName('html')[0].classList.add('chatParent')
+
+        // Add meta tag to prevent zoom on input focus
+        let meta = document.createElement('meta')
+        meta.name = 'viewport'
+        meta.content = 'width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no'
+        meta.id = 'blipChatMeta'
+        document.getElementsByTagName('head')[0].appendChild(meta)
       }, 100)
 
       blipChatIcon.src = closeIcon
@@ -164,6 +172,9 @@ export class BlipChatWidget {
       self.NotificationHandler.clearNotifications()
       if (self.events.OnEnter) self.events.OnEnter()
     } else {
+      setTimeout(() => {
+        self.blipChatIframe.style.display = 'none'
+      })
       document.getElementsByTagName('body')[0].classList.remove('chatParent')
       document.getElementsByTagName('html')[0].classList.remove('chatParent')
       self.blipChatIframe.classList.remove('blip-chat-iframe-opened')
