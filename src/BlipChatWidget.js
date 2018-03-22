@@ -37,6 +37,7 @@ export class BlipChatWidget {
     self.events = events
     self.blipChatContainer = target || dom.createDiv('#blip-chat-container')
     self.isOpen = false
+    self.isChatLoaded = false
     self.pendings = []
 
     self._setChatUrlEnvironment(environment, authConfig, appKey)
@@ -160,6 +161,7 @@ export class BlipChatWidget {
 
       // Clear float button notifications
       self.NotificationHandler.clearNotifications()
+      self.isOpen = true
       if (self.events.OnEnter) self.events.OnEnter()
     } else {
       self.blipChatIframe.classList.remove('blip-chat-iframe-opened')
@@ -171,13 +173,13 @@ export class BlipChatWidget {
   }
 
   _startConnection() {
-    if (!self.isOpen) {
+    if (!self.isChatLoaded) {
       // Is opening for the first time
       const userAccount = self._getObfuscatedUserAccount()
 
       self.blipChatIframe.onload = () => self._sendPostMessage({ code: Constants.START_CONNECTION_CODE, userAccount })
 
-      self.isOpen = true
+      self.isChatLoaded = true
     }
   }
 
@@ -237,7 +239,7 @@ export class BlipChatWidget {
 
   sendMessage(content) {
     // If chat is not connected, connect it and wait to send command
-    if (!self.isOpen) {
+    if (!self.isChatLoaded) {
       self.pendings.push({ content })
       self._createIframe()
       self._startConnection()
@@ -248,7 +250,7 @@ export class BlipChatWidget {
 
   sendCommand(command) {
     // If chat is not connected, connect it and wait to send command
-    if (!self.isOpen) {
+    if (!self.isChatLoaded) {
       self.pendings.push({ command })
       self._createIframe()
       self._startConnection()
