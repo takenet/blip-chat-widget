@@ -1,6 +1,7 @@
 import { Observable } from './Observable'
 
 export class NotificationHandler {
+
   constructor(context) {
     this.context = context
     this.observer = new Observable()
