@@ -6,7 +6,6 @@ import chatView from './static/chat.html'
 
 // Images
 import blipIcon from './images/brand-logo.svg'
-import closeIcon from './images/close.svg'
 
 // Utils
 import Constants from './utils/Constants.js'
@@ -144,6 +143,7 @@ export class BlipChatWidget {
 
   _openChat(event) {
     const blipChatIcon = document.getElementById('blip-chat-icon')
+    const blipChatCloseIcon = document.getElementById('blip-chat-close-icon')
     const blipChatButton = document.getElementById('blip-chat-open-iframe')
 
     if (!self.blipChatIframe) {
@@ -171,7 +171,8 @@ export class BlipChatWidget {
         blipChatButton.classList.add('opened')
       }
 
-      blipChatIcon.src = closeIcon
+      blipChatIcon.style.display = 'none'
+      blipChatCloseIcon.style.display = 'block'
       self._startConnection()
 
       // Clear float button notifications
@@ -188,7 +189,8 @@ export class BlipChatWidget {
       document.getElementsByTagName('html')[0].classList.remove('chatParent')
       self.blipChatIframe.classList.remove('blip-chat-iframe-opened')
       blipChatButton.classList.remove('opened')
-      blipChatIcon.src = self.buttonIcon
+      blipChatIcon.style.display = 'block'
+      blipChatCloseIcon.style.display = 'none'
       self.isOpen = false
 
       if (self.events.OnLeave) self.events.OnLeave()
@@ -234,8 +236,10 @@ export class BlipChatWidget {
 
         if (self.events.OnLoad) self.events.OnLoad()
 
-        const blipChatButton = document.getElementById('blip-chat-open-iframe')
-        blipChatButton.classList.add('opened')
+        if (self.isOpen) {
+          const blipChatButton = document.getElementById('blip-chat-open-iframe')
+          blipChatButton.classList.add('opened')
+        }
 
         if (self.pendings) {
           self.pendings.map((pending) => {
@@ -251,6 +255,15 @@ export class BlipChatWidget {
       case Constants.PARENT_NOTIFICATION_CODE:
         // Handle notification and dispatch updates
         self.NotificationHandler.handle(message.data.messageData)
+        break
+
+      case Constants.WELCOME_SCREEN_VISIBILITY:
+        const startButton = document.getElementById('blip-chat-open-iframe')
+        if (message.data.visibility && !startButton.classList.contains('welcomeScreen')) {
+          startButton.classList.add('welcomeScreen')
+        } else if (!message.data.visibility && startButton.classList.contains('welcomeScreen')) {
+          startButton.classList.remove('welcomeScreen')
+        }
         break
     }
   }

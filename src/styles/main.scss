@@ -78,7 +78,7 @@ $maxHeight: 480px;
       min-width: 48px;
       right: 35px;
       bottom: 35px;
-      transition: transform 200ms, opacity 500ms;
+      transition: transform 200ms, opacity 500ms, right 200ms;
       box-shadow: 0 1px 6px rgba(0,0,0,.1),0 2px 32px rgba(0,0,0,.1);
       background-size: 100%;
       background-repeat: no-repeat;
@@ -86,9 +86,15 @@ $maxHeight: 480px;
 
       @media screen and (max-width: $maxWidth), screen and (max-height: $maxHeight) {
         &.opened {
-          top: 0px;
+          bottom: calc(100% - 48px);
           right: 0px;
           box-shadow: none;
+        }
+        &.welcomeScreen {
+          background-color: #faf9f8 !important;
+          svg #Close{
+            fill: #52636c !important;
+          }
         }
       } 
 
@@ -96,7 +102,7 @@ $maxHeight: 480px;
       transform: scale(0.9);
     }
 
-    img {
+    img, svg {
       width: 100%;
       height: 100%;
       border-radius: 50%;
