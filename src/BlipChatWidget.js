@@ -6,7 +6,6 @@ import chatView from './static/chat.html'
 
 // Images
 import blipIcon from './images/brand-logo.svg'
-import closeIcon from './images/close.svg'
 
 // Utils
 import Constants from './utils/Constants.js'
@@ -102,7 +101,7 @@ export class BlipChatWidget {
 
     blipFAB.style.height = window.getComputedStyle(blipFAB).width
     if (blipChatIframe) {
-      blipChatIframe.style.bottom = `calc(15px + ${blipFAB.style.height} )`
+      blipChatIframe.style.bottom = `calc(55px + ${blipFAB.style.height} )`
       if (!self.target) {
         // Chat presented on widget
         blipChatIframe.style.maxHeight = `${screenHeight}px`
@@ -144,19 +143,36 @@ export class BlipChatWidget {
 
   _openChat(event) {
     const blipChatIcon = document.getElementById('blip-chat-icon')
+    const blipChatCloseIcon = document.getElementById('blip-chat-close-icon')
+    const blipChatButton = document.getElementById('blip-chat-open-iframe')
 
     if (!self.blipChatIframe) {
       self._createIframe()
     }
 
     if ((self.blipChatIframe && !self.blipChatIframe.classList.contains('blip-chat-iframe-opened'))) {
+      self.blipChatIframe.style.display = 'block'
       // Required for animation effect
       setTimeout(() => {
         self.blipChatIframe.classList.add('blip-chat-iframe-opened')
         self._resizeElements()
+        document.getElementsByTagName('body')[0].classList.add('chatParent')
+        document.getElementsByTagName('html')[0].classList.add('chatParent')
+
+        // Add meta tag to prevent zoom on input focus
+        let meta = document.createElement('meta')
+        meta.name = 'viewport'
+        meta.content = 'width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no'
+        meta.id = 'blipChatMeta'
+        document.getElementsByTagName('head')[0].appendChild(meta)
       }, 100)
 
-      blipChatIcon.src = closeIcon
+      if (self.isChatLoaded) {
+        blipChatButton.classList.add('opened')
+      }
+
+      blipChatIcon.style.display = 'none'
+      blipChatCloseIcon.style.display = 'block'
       self._startConnection()
 
       // Clear float button notifications
@@ -164,8 +180,17 @@ export class BlipChatWidget {
       self.isOpen = true
       if (self.events.OnEnter) self.events.OnEnter()
     } else {
+      // Change display to prevent interaction on iOS
+      setTimeout(() => {
+        self.blipChatIframe.style.display = 'none'
+      }, 500)
+
+      document.getElementsByTagName('body')[0].classList.remove('chatParent')
+      document.getElementsByTagName('html')[0].classList.remove('chatParent')
       self.blipChatIframe.classList.remove('blip-chat-iframe-opened')
-      blipChatIcon.src = self.buttonIcon
+      blipChatButton.classList.remove('opened')
+      blipChatIcon.style.display = 'block'
+      blipChatCloseIcon.style.display = 'none'
       self.isOpen = false
 
       if (self.events.OnLeave) self.events.OnLeave()
@@ -211,6 +236,11 @@ export class BlipChatWidget {
 
         if (self.events.OnLoad) self.events.OnLoad()
 
+        if (self.isOpen) {
+          const blipChatButton = document.getElementById('blip-chat-open-iframe')
+          blipChatButton.classList.add('opened')
+        }
+
         if (self.pendings) {
           self.pendings.map((pending) => {
             if (pending.content) { // If is a message
@@ -225,6 +255,15 @@ export class BlipChatWidget {
       case Constants.PARENT_NOTIFICATION_CODE:
         // Handle notification and dispatch updates
         self.NotificationHandler.handle(message.data.messageData)
+        break
+
+      case Constants.WELCOME_SCREEN_VISIBILITY:
+        const startButton = document.getElementById('blip-chat-open-iframe')
+        if (message.data.visibility && !startButton.classList.contains('welcomeScreen')) {
+          startButton.classList.add('welcomeScreen')
+        } else if (!message.data.visibility && startButton.classList.contains('welcomeScreen')) {
+          startButton.classList.remove('welcomeScreen')
+        }
         break
     }
   }
