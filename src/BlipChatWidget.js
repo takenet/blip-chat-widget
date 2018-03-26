@@ -185,6 +185,10 @@ export class BlipChatWidget {
         self.blipChatIframe.style.display = 'none'
       }, 500)
 
+      // Remove meta tag to prevent zoom on input focus
+      let meta = document.getElementById('blipChatMeta')
+      document.getElementsByTagName('head')[0].removeChild(meta)
+
       document.getElementsByTagName('body')[0].classList.remove('chatParent')
       document.getElementsByTagName('html')[0].classList.remove('chatParent')
       self.blipChatIframe.classList.remove('blip-chat-iframe-opened')
