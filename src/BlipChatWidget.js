@@ -156,8 +156,12 @@ export class BlipChatWidget {
       setTimeout(() => {
         self.blipChatIframe.classList.add('blip-chat-iframe-opened')
         self._resizeElements()
-        document.getElementsByTagName('body')[0].classList.add('chatParent')
-        document.getElementsByTagName('html')[0].classList.add('chatParent')
+
+        // Hide parent html when on widget mode
+        if (!self.target) {
+          document.getElementsByTagName('body')[0].classList.add('chatParent')
+          document.getElementsByTagName('html')[0].classList.add('chatParent')
+        }
 
         // Add meta tag to prevent zoom on input focus
         let meta = document.createElement('meta')
@@ -185,8 +189,11 @@ export class BlipChatWidget {
         self.blipChatIframe.style.display = 'none'
       }, 500)
 
-      document.getElementsByTagName('body')[0].classList.remove('chatParent')
-      document.getElementsByTagName('html')[0].classList.remove('chatParent')
+      // Hide parent html when on widget mode
+      if (!self.target) {
+        document.getElementsByTagName('body')[0].classList.remove('chatParent')
+        document.getElementsByTagName('html')[0].classList.remove('chatParent')
+      }
       self.blipChatIframe.classList.remove('blip-chat-iframe-opened')
       blipChatButton.classList.remove('opened')
       blipChatIcon.style.display = 'block'
