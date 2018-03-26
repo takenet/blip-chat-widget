@@ -65,10 +65,16 @@ OnLoad  - Set the event to run on closing the chat
 
 ##Destroy chat widget
 
+Destroys the widget that was added to your page. See example bellow:
+
 ##Toogle chat widget
+
+Toogles the chat widget window. See example bellow:
 
 ##Send message
 
+Sends a message to your bot. The message can be a simple text or any lime document. See example bellow:
+
 ##Send command
 
-
+Sends a command.

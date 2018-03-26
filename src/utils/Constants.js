@@ -10,10 +10,11 @@ const SEND_MESSAGE_CODE = 'SendMessage'
 const SEND_COMMAND_CODE = 'SendCommand'
 const USER_IRIS_ACCOUNT = 'UserIrisAccount'
 const USER_ACCOUNT_KEY = 'blipSdkUAccount'
+const PARENT_NOTIFICATION_CODE = 'NewBotMessage'
 const COOKIES_EXPIRATION = 8.64e7
+
 const DEV_AUTH = 'Dev'
 const GUEST_AUTH = 'Guest'
-const PARENT_NOTIFICATION_CODE = 'NewBotMessage'
 
 const CONSTANTS = {
   CHAT_URL_LOCAL,
