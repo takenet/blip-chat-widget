@@ -90,7 +90,7 @@ $maxHeight: 480px;
           right: 0px;
           box-shadow: none;
         }
-        &.welcomeScreen {
+        &.opened.welcomeScreen {
           background-color: #faf9f8 !important;
           svg #Close{
             fill: #52636c !important;
