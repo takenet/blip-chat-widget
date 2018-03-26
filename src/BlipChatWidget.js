@@ -133,6 +133,12 @@ export class BlipChatWidget {
     self.blipChatIframe.setAttribute('frameborder', 0)
     self.blipChatIframe.setAttribute('allow', 'geolocation')
 
+    self.blipChatIframe.onload = () => {
+      const userAccount = self._getObfuscatedUserAccount()
+      self._sendPostMessage({ code: Constants.START_CONNECTION_CODE, userAccount })
+      self.isChatLoaded = true
+    }
+
     self.blipChatContainer.appendChild(self.blipChatIframe)
   }
 
@@ -173,7 +179,6 @@ export class BlipChatWidget {
 
       blipChatIcon.style.display = 'none'
       blipChatCloseIcon.style.display = 'block'
-      self._startConnection()
 
       // Clear float button notifications
       self.NotificationHandler.clearNotifications()
@@ -198,17 +203,6 @@ export class BlipChatWidget {
       self.isOpen = false
 
       if (self.events.OnLeave) self.events.OnLeave()
-    }
-  }
-
-  _startConnection() {
-    if (!self.isChatLoaded) {
-      // Is opening for the first time
-      const userAccount = self._getObfuscatedUserAccount()
-
-      self.blipChatIframe.onload = () => self._sendPostMessage({ code: Constants.START_CONNECTION_CODE, userAccount })
-
-      self.isChatLoaded = true
     }
   }
 
@@ -285,7 +279,6 @@ export class BlipChatWidget {
     if (!self.isChatLoaded) {
       self.pendings.push({ content })
       self._createIframe()
-      self._startConnection()
       return
     }
     self._sendPostMessage({ code: Constants.SEND_MESSAGE_CODE, content })
@@ -296,7 +289,6 @@ export class BlipChatWidget {
     if (!self.isChatLoaded) {
       self.pendings.push({ command })
       self._createIframe()
-      self._startConnection()
       return
     }
     self._sendPostMessage({ code: Constants.SEND_COMMAND_CODE, command })
