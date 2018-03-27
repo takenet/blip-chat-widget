@@ -4,6 +4,27 @@
 * `npm start`
 * Project will be running on `http://localhost:3000`
 
+# Installation
+
+Add the script element inside the **body** of your web page. To get the script with your app key go to [BLiP portal][1]. Choose the desired bot, go to the upper menu and access `Channels > Blip Chat`. On the `Setup` tab you will be able to get the required script. You will also need to add domains from the websites where Blip Chat is inclued, in order to enabled them in your chatbot. 
+That's all :)
+
+*For **publishing** purpose, download the script and reference it locally. CDN may have availability problems and cause blip chat instability.*
+
+```html
+<script src="https://unpkg.com/blip-chat-widget" type="text/javascript"></script>
+<script>
+    (function () {
+        window.onload = function () {
+            new BlipChat()
+            .withAppKey('YOUR-APP-KEY')
+            .withButton({"color":"#2CC3D5"})
+            .build();
+        }
+    })();
+</script>
+```
+
 # Optional parameters
 
 | Property          | Description                                             |
@@ -61,20 +82,26 @@ OnLoad  - Set the event to run on closing the chat
 </script>
 ```
 
-#Features
+# Script usage
 
-##Destroy chat widget
+
+
+# Features
+
+## Destroy chat widget
 
 Destroys the widget that was added to your page. See example bellow:
 
-##Toogle chat widget
+## Toogle chat widget
 
 Toogles the chat widget window. See example bellow:
 
-##Send message
+## Send message
 
 Sends a message to your bot. The message can be a simple text or any lime document. See example bellow:
 
-##Send command
+## Send command
 
 Sends a command.
+
+ [1]: https://preview.blip.ai
