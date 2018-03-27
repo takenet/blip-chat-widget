@@ -20,7 +20,7 @@
         <input type="text" id="app-key" name="app-key">
 
         <label for="environment">Environment:</label>
-        <input type="text" id="environment" name="environment" value="local">
+        <input type="text" id="environment" name="environment" value="production">
 
         <p>Use buttons bellow to see different behaviours of BLiP Chat</p>
 
@@ -105,7 +105,7 @@
           }
 
           const environment = document.getElementById('environment').value ? document.getElementById('environment').value : 'homolog'
-          const appKey = document.getElementById('app-key').value || 'YmxpcGNoYXR0ZXN0OkQyRDlGNDU4LTQyMzMtNDU4QS05ODAwLTFGN0VEMjQzMEFERQ=='
+          const appKey = document.getElementById('app-key').value || 'dGV0ZWJ1aWxkZXJsdWl6OjE1YWQ0ODQ0LWM1NjktNGRjYy1hYWRiLTJlOGJjMzE0NmE4Nw=='
 
           builder = new BlipChat()
             .withAppKey(appKey)
