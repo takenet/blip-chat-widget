@@ -12,6 +12,8 @@ const USER_IRIS_ACCOUNT = 'UserIrisAccount'
 const USER_ACCOUNT_KEY = 'blipSdkUAccount'
 const PARENT_NOTIFICATION_CODE = 'NewBotMessage'
 const WELCOME_SCREEN_VISIBILITY = 'WelcomeScreenVisibility'
+const WEBVIEW_VISIBILITY = 'WebviewVisibility'
+
 const COOKIES_EXPIRATION = 8.64e7
 
 const DEV_AUTH = 'Dev'
@@ -33,7 +35,8 @@ const CONSTANTS = {
   DEV_AUTH,
   GUEST_AUTH,
   PARENT_NOTIFICATION_CODE,
-  WELCOME_SCREEN_VISIBILITY
+  WELCOME_SCREEN_VISIBILITY,
+  WEBVIEW_VISIBILITY
 }
 
 module.exports = CONSTANTS

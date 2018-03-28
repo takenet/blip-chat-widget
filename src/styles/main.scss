@@ -96,6 +96,9 @@ $maxHeight: 420px;
             fill: #52636c !important;
           }
         }
+        &.opened.webView {
+          display: none;
+        }
       } 
 
     &:active {

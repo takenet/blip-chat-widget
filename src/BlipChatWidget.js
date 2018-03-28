@@ -270,6 +270,15 @@ export class BlipChatWidget {
           startButton.classList.remove('welcomeScreen')
         }
         break
+
+      case Constants.WEBVIEW_VISIBILITY:
+        const floatButton = document.getElementById('blip-chat-open-iframe')
+        if (message.data.visibility && !floatButton.classList.contains('webView')) {
+          floatButton.classList.add('webView')
+        } else if (!message.data.visibility && floatButton.classList.contains('webView')) {
+          floatButton.classList.remove('webView')
+        }
+        break
     }
   }
 
