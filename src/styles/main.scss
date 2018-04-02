@@ -31,6 +31,8 @@ $maxHeight: 420px;
   @media screen and (max-width: $maxWidth), screen and (max-height: $maxHeight) {
     bottom: 0px;
     right: 0px;
+    position: absolute;
+    height: 100%;
   }
 
   #blip-chat-iframe {
@@ -53,7 +55,8 @@ $maxHeight: 420px;
       bottom: 0px !important;
       max-height: 100vh !important;
       height: 100%;
-      width: 100vw
+      width: 100vw;
+      position: absolute;
     }
 
     &.blip-chat-iframe-opened {

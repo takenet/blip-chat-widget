@@ -157,7 +157,7 @@ export class BlipChatWidget {
     }
 
     if ((self.blipChatIframe && !self.blipChatIframe.classList.contains('blip-chat-iframe-opened'))) {
-      self.blipChatIframe.style.display = 'block'
+      // self.blipChatIframe.style.display = 'block'
       // Required for animation effect
       setTimeout(() => {
         self.blipChatIframe.classList.add('blip-chat-iframe-opened')
@@ -191,7 +191,7 @@ export class BlipChatWidget {
     } else {
       // Change display to prevent interaction on iOS
       setTimeout(() => {
-        self.blipChatIframe.style.display = 'none'
+        // self.blipChatIframe.style.display = 'none'
       }, 500)
 
       // Remove meta tag to prevent zoom on input focus
@@ -290,7 +290,38 @@ export class BlipChatWidget {
     }
   }
 
-  sendMessage(content) {
+  sendMessage(userMessage) {
+    // Process Message before sending
+    let content
+    if (typeof userMessage === 'object') {
+      if (!userMessage.payload) { // Lime document
+        content = {
+          content: userMessage.content,
+          type: userMessage.type
+        }
+      } else { // { payload:, preview: } document
+        content = {
+          content: userMessage.payload.content,
+          type: userMessage.payload.type
+        }
+        if (userMessage.preview) {
+          content.metadata = {
+            '#blip.payload.content':
+              typeof userMessage.preview.content === 'string'
+                ? userMessage.preview.content
+                : JSON.stringify(userMessage.preview.content),
+            '#blip.payload.type': userMessage.preview.type
+          }
+        } else {
+          content.metadata = {
+            '#blip.hiddenMessage': true
+          }
+        }
+      }
+    } else {
+      content = userMessage
+    }
+
     // If chat is not connected, connect it and wait to send command
     if (!self.isChatLoaded) {
       self.pendings.push({ content })
