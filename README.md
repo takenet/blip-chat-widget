@@ -37,9 +37,9 @@ That's all :)
 | withTarget        | Set the element that will present the chat              |
 
 *Supported events:
-OnEnter - Set the event to run on first time opening the chat
-OnLeave - Set the event to run on openening the chat
-OnLoad  - Set the event to run on closing the chat
+OnEnter - Set the event to run on openening the chat
+OnLeave - Set the event to run on closing the chat
+OnLoad  - Set the event to run on finish loading the chat
 
 ## Example
 
