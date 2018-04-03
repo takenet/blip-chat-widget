@@ -57,6 +57,7 @@ $maxHeight: 420px;
       height: 100%;
       width: 100vw;
       position: absolute;
+      box-shadow: none;
     }
 
     &.blip-chat-iframe-opened {
