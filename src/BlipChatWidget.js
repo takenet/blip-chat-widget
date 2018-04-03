@@ -151,6 +151,7 @@ export class BlipChatWidget {
     const blipChatIcon = document.getElementById('blip-chat-icon')
     const blipChatCloseIcon = document.getElementById('blip-chat-close-icon')
     const blipChatButton = document.getElementById('blip-chat-open-iframe')
+    blipChatButton.classList.add('opened')
 
     if (!self.blipChatIframe) {
       self._createIframe()
@@ -240,11 +241,6 @@ export class BlipChatWidget {
         if (self.account) self._sendPostMessage({ code: Constants.USER_IRIS_ACCOUNT, account: self.account })
 
         if (self.events.OnLoad) self.events.OnLoad()
-
-        if (self.isOpen) {
-          const blipChatButton = document.getElementById('blip-chat-open-iframe')
-          blipChatButton.classList.add('opened')
-        }
 
         if (self.pendings) {
           self.pendings.map((pending) => {
