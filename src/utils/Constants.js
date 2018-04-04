@@ -11,8 +11,8 @@ const SEND_COMMAND_CODE = 'SendCommand'
 const USER_IRIS_ACCOUNT = 'UserIrisAccount'
 const USER_ACCOUNT_KEY = 'blipSdkUAccount'
 const PARENT_NOTIFICATION_CODE = 'NewBotMessage'
-const WELCOME_SCREEN_VISIBILITY = 'WelcomeScreenVisibility'
-const WEBVIEW_VISIBILITY = 'WebviewVisibility'
+const SHOW_CLOSE_BUTTON = 'ShowCloseButton'
+const CLOSE_WIDGET = 'CloseWidget'
 
 const COOKIES_EXPIRATION = 8.64e7
 
@@ -35,8 +35,8 @@ const CONSTANTS = {
   DEV_AUTH,
   GUEST_AUTH,
   PARENT_NOTIFICATION_CODE,
-  WELCOME_SCREEN_VISIBILITY,
-  WEBVIEW_VISIBILITY
+  SHOW_CLOSE_BUTTON,
+  CLOSE_WIDGET
 }
 
 module.exports = CONSTANTS

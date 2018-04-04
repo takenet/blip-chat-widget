@@ -80,6 +80,8 @@ $maxHeight: 420px;
       width: 4%;
       max-width:60px;
       min-width: 48px;
+      max-height:60px;
+      min-height: 48px;
       right: 35px;
       bottom: 35px;
       transition: transform 200ms, opacity 500ms, right 200ms;
@@ -90,17 +92,6 @@ $maxHeight: 420px;
 
       @media screen and (max-width: $maxWidth), screen and (max-height: $maxHeight) {
         &.opened {
-          bottom: calc(100% - 48px);
-          right: 0px;
-          box-shadow: none;
-        }
-        &.opened.welcomeScreen {
-          background-color: #faf9f8 !important;
-          svg #Close{
-            fill: #52636c !important;
-          }
-        }
-        &.opened.webView {
           display: none;
         }
       } 

@@ -37,6 +37,7 @@ export class BlipChatWidget {
     self.blipChatContainer = target || dom.createDiv('#blip-chat-container')
     self.isOpen = false
     self.isChatLoaded = false
+    self.isFullScreen = false
     self.pendings = []
 
     self._setChatUrlEnvironment(environment, authConfig, appKey)
@@ -107,6 +108,7 @@ export class BlipChatWidget {
         blipChatIframe.style.maxHeight = `${screenHeight}px`
       }
     }
+    self._checkFullScreen()
   }
 
   _parseAuthConfig(authConfig) {
@@ -136,7 +138,6 @@ export class BlipChatWidget {
     self.blipChatIframe.onload = () => {
       const userAccount = self._getObfuscatedUserAccount()
       self._sendPostMessage({ code: Constants.START_CONNECTION_CODE, userAccount })
-      self.isChatLoaded = true
     }
 
     self.blipChatContainer.appendChild(self.blipChatIframe)
@@ -144,10 +145,12 @@ export class BlipChatWidget {
 
   _sendPostMessage(data) {
     const blipChatIframe = document.getElementById('blip-chat-iframe')
-    blipChatIframe.contentWindow.postMessage(data, self.CHAT_URL)
+    if (blipChatIframe && blipChatIframe.contentWindow) {
+      blipChatIframe.contentWindow.postMessage(data, self.CHAT_URL)
+    }
   }
 
-  _openChat(event) {
+  _openChat(event, forceClose) {
     const blipChatIcon = document.getElementById('blip-chat-icon')
     const blipChatCloseIcon = document.getElementById('blip-chat-close-icon')
     const blipChatButton = document.getElementById('blip-chat-open-iframe')
@@ -157,7 +160,7 @@ export class BlipChatWidget {
       self._createIframe()
     }
 
-    if ((self.blipChatIframe && !self.blipChatIframe.classList.contains('blip-chat-iframe-opened'))) {
+    if ((!forceClose && self.blipChatIframe && !self.blipChatIframe.classList.contains('blip-chat-iframe-opened'))) {
       // self.blipChatIframe.style.display = 'block'
       // Required for animation effect
       setTimeout(() => {
@@ -226,6 +229,8 @@ export class BlipChatWidget {
           // Chat presented on fixed element
           self._openChat()
         }
+        self.isChatLoaded = true
+        self._checkFullScreen()
         break
 
       case Constants.CREATE_ACCOUNT_CODE:
@@ -258,23 +263,20 @@ export class BlipChatWidget {
         self.NotificationHandler.handle(message.data.messageData)
         break
 
-      case Constants.WELCOME_SCREEN_VISIBILITY:
-        const startButton = document.getElementById('blip-chat-open-iframe')
-        if (message.data.visibility && !startButton.classList.contains('welcomeScreen')) {
-          startButton.classList.add('welcomeScreen')
-        } else if (!message.data.visibility && startButton.classList.contains('welcomeScreen')) {
-          startButton.classList.remove('welcomeScreen')
-        }
+      case Constants.CLOSE_WIDGET:
+        self._openChat(null, true)
         break
+    }
+  }
 
-      case Constants.WEBVIEW_VISIBILITY:
-        const floatButton = document.getElementById('blip-chat-open-iframe')
-        if (message.data.visibility && !floatButton.classList.contains('webView')) {
-          floatButton.classList.add('webView')
-        } else if (!message.data.visibility && floatButton.classList.contains('webView')) {
-          floatButton.classList.remove('webView')
-        }
-        break
+  _checkFullScreen() {
+    if (!self.isChatLoaded || self.target) return
+    const width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
+    const height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
+    const enteredFullScreen = (width <= 480 || height <= 420)
+    if (((!self.isFullScreen && enteredFullScreen) || (self.isFullScreen && !enteredFullScreen))) {
+      self.isFullScreen = enteredFullScreen
+      self._sendPostMessage({ code: Constants.SHOW_CLOSE_BUTTON, showCloseButton: self.isFullScreen })
     }
   }
 
