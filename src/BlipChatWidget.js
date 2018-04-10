@@ -10,7 +10,6 @@ import blipIcon from './images/brand-logo.svg'
 // Utils
 import Constants from './utils/Constants.js'
 import StorageService from './utils/StorageService.js'
-import { isBase64 } from './utils/Validators'
 import { NotificationHandler } from './utils/NotificationHandler'
 import { dom } from './utils/Misc'
 
@@ -116,10 +115,7 @@ export class BlipChatWidget {
       return { authType: BlipChat.GUEST_AUTH }
     }
 
-    authConfig.userPassword =
-      authConfig.userPassword !== undefined && !isBase64(authConfig.userPassword)
-        ? window.btoa(authConfig.userPassword)
-        : authConfig.userPassword
+    authConfig.userPassword = window.btoa(authConfig.userPassword)
 
     const [identifier] = window.atob(self.appKey).split(':')
 
