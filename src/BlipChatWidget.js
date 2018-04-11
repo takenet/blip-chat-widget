@@ -30,7 +30,9 @@ export class BlipChatWidget {
     self.buttonColor = buttonConfig && buttonConfig.color ? buttonConfig.color : '#2CC3D5'
     self.buttonIcon = buttonConfig && buttonConfig.icon ? buttonConfig.icon : blipIcon
     self.authConfig = self._parseAuthConfig(authConfig)
-    self.account = account
+    self.account = self._addAuthTypeToExtras(account, authConfig)
+    console.log('self.account', self.account)
+
     self.target = target
     self.events = events
     self.blipChatContainer = target || dom.createDiv('#blip-chat-container')
@@ -108,6 +110,20 @@ export class BlipChatWidget {
       }
     }
     self._checkFullScreen()
+  }
+
+  _addAuthTypeToExtras(account, authConfig) {
+    let authType = authConfig ? authConfig.authType || BlipChat.GUEST_AUTH : BlipChat.GUEST_AUTH
+    if (account) {
+      account.extras = account.extras || {}
+      account.extras.authType = authType
+    } else {
+      account = {
+        extras: { authType }
+      }
+    }
+
+    return account
   }
 
   _parseAuthConfig(authConfig) {
@@ -239,6 +255,7 @@ export class BlipChatWidget {
         break
 
       case Constants.CHAT_CONNECTED_CODE:
+        console.log(self.account)
         if (self.account) self._sendPostMessage({ code: Constants.USER_IRIS_ACCOUNT, account: self.account })
 
         if (self.events.OnLoad) self.events.OnLoad()
