@@ -31,8 +31,6 @@ export class BlipChatWidget {
     self.buttonIcon = buttonConfig && buttonConfig.icon ? buttonConfig.icon : blipIcon
     self.authConfig = self._parseAuthConfig(authConfig)
     self.account = self._addAuthTypeToExtras(account, authConfig)
-    console.log('self.account', self.account)
-
     self.target = target
     self.events = events
     self.blipChatContainer = target || dom.createDiv('#blip-chat-container')
@@ -255,7 +253,6 @@ export class BlipChatWidget {
         break
 
       case Constants.CHAT_CONNECTED_CODE:
-        console.log(self.account)
         if (self.account) self._sendPostMessage({ code: Constants.USER_IRIS_ACCOUNT, account: self.account })
 
         if (self.events.OnLoad) self.events.OnLoad()
