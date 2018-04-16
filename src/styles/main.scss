@@ -84,7 +84,7 @@ $maxHeight: 420px;
       min-height: 48px;
       right: 35px;
       bottom: 35px;
-      transition: transform 200ms, opacity 500ms, right 200ms;
+      transition: transform 200ms, opacity 500ms, visibility 500ms;
       box-shadow: 0 1px 6px rgba(0,0,0,.1),0 2px 32px rgba(0,0,0,.1);
       background-size: 100%;
       background-repeat: no-repeat;
@@ -92,7 +92,8 @@ $maxHeight: 420px;
 
       @media screen and (max-width: $maxWidth), screen and (max-height: $maxHeight) {
         &.opened {
-          display: none;
+          visibility: hidden !important;
+          opacity: 0 !important;
         }
       } 
 
