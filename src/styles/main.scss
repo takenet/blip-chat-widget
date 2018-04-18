@@ -27,7 +27,8 @@ $maxHeight: 420px;
   position: fixed;
   bottom: 40px;
   right: 80px;
-
+  z-index: 1000000;
+  
   @media screen and (max-width: $maxWidth), screen and (max-height: $maxHeight) {
     bottom: 0px;
     right: 0px;
