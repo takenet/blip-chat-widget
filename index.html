@@ -78,7 +78,8 @@
         }
 
         sendMessage = function () {
-          const message = (document.getElementById('test-message').value || 'teste');
+          msgFieldValue = JSON.parse(document.getElementById('test-message').value); 
+          const message = msgFieldValue || 'teste';
           builder.sendMessage(message);
         }
 
@@ -116,8 +117,8 @@
             .withAccount({
               "fullName": "User name",
               "phoneNumber": "+15055034455",
-              "city": "Albuquerque 2",
-              "email": "test@test.com"
+              "email": "test@test.com",
+              "encryptMessageContent": true
             })
             .withEventHandler(BlipChat.ENTER_EVENT, function () {
               console.log('enter')
