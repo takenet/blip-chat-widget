@@ -306,7 +306,8 @@ export class BlipChatWidget {
       if (!userMessage.payload) { // Lime document
         content = {
           content: userMessage.content,
-          type: userMessage.type
+          type: userMessage.type,
+          metadata: userMessage.metadata
         }
       } else { // { payload:, preview: } document
         content = {

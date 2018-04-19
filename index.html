@@ -78,14 +78,22 @@
         }
 
         sendMessage = function () {
-          msgFieldValue = JSON.parse(document.getElementById('test-message').value); 
-          const message = msgFieldValue || 'teste';
-          builder.sendMessage(message);
+          let msgFieldValue
+          try {
+            msgFieldValue = JSON.parse(document.getElementById('test-message').value); 
+          } catch (error) {
+            msgFieldValue = document.getElementById('test-message').value;             
+          }
+          builder.sendMessage(msgFieldValue);
         }
 
         sendCommand = function () {
-          const command = JSON.parse(document.getElementById('test-command').value)
-          builder.sendCommand(command);
+          try {
+            const command = JSON.parse(document.getElementById('test-command').value); 
+            builder.sendCommand(command);
+          } catch (error) {
+            alert('Comando invalido')
+          }
         }
 
         destroyChat = function () {
