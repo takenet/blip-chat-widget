@@ -164,7 +164,6 @@ export class BlipChatWidget {
     const blipChatIcon = document.getElementById('blip-chat-icon')
     const blipChatCloseIcon = document.getElementById('blip-chat-close-icon')
     const blipChatButton = document.getElementById('blip-chat-open-iframe')
-    blipChatButton.classList.add('opened')
 
     if (!self.blipChatIframe) {
       self._createIframe()
@@ -240,6 +239,8 @@ export class BlipChatWidget {
           self._openChat()
         }
         self.isChatLoaded = true
+        const blipChatButton = document.getElementById('blip-chat-open-iframe')
+        blipChatButton.classList.add('opened')
         self._checkFullScreen()
         break
 
