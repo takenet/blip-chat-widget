@@ -352,5 +352,6 @@ export class BlipChatWidget {
 
   destroy() {
     window.removeEventListener('message', self._onReceivePostMessage)
+    window.removeEventListener('resize', self._resizeElements)
   }
 }
