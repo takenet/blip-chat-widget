@@ -11,7 +11,7 @@
 <body>
   <div class="container">
     <div class="column">
-
+ 
       <div class="row">
         <h1>BlipChat Sandbox</h1>
         <p>Set your environment and app key</p>
@@ -78,14 +78,22 @@
         }
 
         sendMessage = function () {
-          msgFieldValue = JSON.parse(document.getElementById('test-message').value); 
-          const message = msgFieldValue || 'teste';
-          builder.sendMessage(message);
+          let msgFieldValue
+          try {
+            msgFieldValue = JSON.parse(document.getElementById('test-message').value); 
+          } catch (error) {
+            msgFieldValue = document.getElementById('test-message').value;             
+          }
+          builder.sendMessage(msgFieldValue);
         }
 
         sendCommand = function () {
-          const command = JSON.parse(document.getElementById('test-command').value)
-          builder.sendCommand(command);
+          try {
+            const command = JSON.parse(document.getElementById('test-command').value); 
+            builder.sendCommand(command);
+          } catch (error) {
+            alert('Comando invalido')
+          }
         }
 
         destroyChat = function () {
