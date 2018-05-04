@@ -42,10 +42,10 @@ $maxHeight: 420px;
     right: 38px;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 500ms, transform 500ms, visibility 500ms;
+    transition: opacity 500ms, transform 500ms, visibility 500ms, height 0s 500ms;
     transform: translateY(10%);
     z-index: 1;
-    height: 610px;
+    height: 0;
     width: 400px;
     box-shadow: 0 0 20px 1px rgba(0,0,0,.2);
     border-radius: 5px;
@@ -55,7 +55,6 @@ $maxHeight: 420px;
       right: 0px;
       bottom: 0px !important;
       max-height: 100vh !important;
-      height: 100%;
       width: 100vw;
       position: absolute;
       box-shadow: none;
@@ -65,7 +64,12 @@ $maxHeight: 420px;
       opacity: 1;
       transform: translateY(0);
       visibility: visible;      
-      transition: opacity 500ms, transform 500ms, visibility 500ms;
+      transition: opacity 500ms 10ms, transform 500ms 10ms, visibility 500ms 10ms, height 0ms;
+      height: 610px;
+
+      @media screen and (max-width: $maxWidth), screen and (max-height: $maxHeight) {
+        height: 100%;
+      }
     }
 
   }
