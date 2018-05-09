@@ -82,6 +82,16 @@ That's all :)
 </script>
 ```
 
+# Guidelines
+
+### HTTPS
+
+It's pretty recommended to use SSL certificate for the site that will receive the BLiP Chat. This is necessary for security reasons and for good work of some cards.
+
+### Geolocalization Card
+
+This card only work if your website has SSL certificate and is accessed via https. This occurs because of security polices of browsers.
+
 # Script usage
 
 
