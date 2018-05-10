@@ -39,7 +39,7 @@ That's all :)
 *Supported events:
 <br>OnEnter - Set the event to run on opening the chat
 <br>OnLeave - Set the event to run on closing the chat
-<br>OnLoad  - Set the event to run when loading the chat is done
+<br>OnLoad  - Set the event to run after loading the chat
 
 ## Example
 
