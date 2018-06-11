@@ -40,8 +40,11 @@ That's all :)
 <br>OnEnter - Set the event to run on openening the chat
 <br>OnLeave - Set the event to run on closing the chat
 <br>OnLoad  - Set the event to run on finish loading the chat
+<br>OnCreateAccount - Set the event to run on creating new account
 
-## Example
+## Example 1
+
+Connecting on BLiP Chat passing user auth, account and event handlers
 
 ```js
 <script src="https://unpkg.com/blip-chat-widget" type="text/javascript">
@@ -74,13 +77,45 @@ That's all :)
               console.log('leave')
             })
             .withEventHandler(BlipChat.LOAD_EVENT, function () {
-              console.log('chatloaded')
+              console.log('chat loaded')
+            })
+            .withEventHandler(BlipChat.CREATE_ACCOUNT_EVENT, function () {
+              console.log('account created')
             })
           builder.build()
       }
     })();
 </script>
 ```
+## Example 2
+
+Connect on BLiP Chat and set create account event to send chat state on the first time that the user is interacting with the bot.
+
+```js
+<script src="https://unpkg.com/blip-chat-widget" type="text/javascript"></script>
+<script>
+    (function () {
+        window.onload = function () {
+          var blipClient = new BlipChat()
+          .withAppKey('YOUR-APP-KEY')
+          .withEventHandler(BlipChat.CREATE_ACCOUNT_EVENT, function () {
+			
+            if (blipClient.widget.isFirstTime) {
+              blipClient.sendMessage({
+                  "type": "application/vnd.lime.chatstate+json",
+                  "content": {
+                    "state": "starting"
+                  }
+              });
+            }
+				
+          });
+          blipClient.build();
+        }
+    })();
+</script>
+```
+
 
 # Script usage
 
