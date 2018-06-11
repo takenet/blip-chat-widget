@@ -37,6 +37,7 @@ export class BlipChatWidget {
     self.isOpen = false
     self.isChatLoaded = false
     self.isFullScreen = false
+    self.isFirstTime = StorageService.storageExpired()
     self.pendings = []
 
     self._setChatUrlEnvironment(environment, authConfig, appKey)

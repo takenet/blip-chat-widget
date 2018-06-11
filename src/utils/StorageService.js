@@ -49,6 +49,23 @@ class StorageService {
       }
     } catch (e) {}
   }
+
+  static storageExpired() {
+    try {
+      const currentDate = new Date().getTime()
+
+      let account = window.localStorage.getItem('blipSdkUAccount')
+      account = JSON.parse(window.atob(account))
+
+      if (account.expires && account.expires <= currentDate) {
+        return true
+      }
+
+      return false
+    } catch (e) {
+      return true
+    }
+  }
 }
 
 export default StorageService
