@@ -246,11 +246,16 @@ export class BlipChatWidget {
 
       case Constants.CREATE_ACCOUNT_CODE:
         let data = window.atob(message.data.userAccount)
-        StorageService.setToLocalStorage(
-          Constants.USER_ACCOUNT_KEY,
-          JSON.parse(data),
-          Constants.COOKIES_EXPIRATION
-        )
+
+        if (self.events.OnCreateAccount) self.events.OnCreateAccount()
+
+        if (data.authType === Constants.GUEST_AUTH) {
+          StorageService.setToLocalStorage(
+            Constants.USER_ACCOUNT_KEY,
+            JSON.parse(data),
+            Constants.COOKIES_EXPIRATION
+          )
+        }
         break
 
       case Constants.CHAT_CONNECTED_CODE:

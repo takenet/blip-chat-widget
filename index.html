@@ -135,7 +135,10 @@
               console.log('leave')
             })
             .withEventHandler(BlipChat.LOAD_EVENT, function () {
-              console.log('chatloaded')
+              console.log('chat loaded')
+            })
+            .withEventHandler(BlipChat.CREATE_ACCOUNT_EVENT, function () {
+              console.log('account created')
             })
           builder.build()
         }

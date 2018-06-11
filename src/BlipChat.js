@@ -6,6 +6,7 @@ const GUEST_AUTH = 'Guest'
 const ENTER_EVENT = 'OnEnter'
 const LEAVE_EVENT = 'OnLeave'
 const LOAD_EVENT = 'OnLoad'
+const CREATE_ACCOUNT_EVENT = 'OnCreateAccount'
 
 export class BlipChat {
   constructor() {
@@ -30,6 +31,10 @@ export class BlipChat {
 
   static get LOAD_EVENT() {
     return LOAD_EVENT
+  }
+
+  static get CREATE_ACCOUNT_EVENT() {
+    return CREATE_ACCOUNT_EVENT
   }
 
   withAppKey(appkey) {
