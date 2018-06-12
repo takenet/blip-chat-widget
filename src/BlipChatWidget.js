@@ -249,10 +249,11 @@ export class BlipChatWidget {
 
         if (self.events.OnCreateAccount) self.events.OnCreateAccount()
 
-        if (data.authType === Constants.GUEST_AUTH) {
+        const accountObj = JSON.parse(data)
+        if (accountObj.authType === Constants.GUEST_AUTH) {
           StorageService.setToLocalStorage(
             Constants.USER_ACCOUNT_KEY,
-            JSON.parse(data),
+            accountObj,
             Constants.COOKIES_EXPIRATION
           )
         }
