@@ -99,16 +99,12 @@ Connect on BLiP Chat and set create account event to send chat state on the firs
           var blipClient = new BlipChat()
           .withAppKey('YOUR-APP-KEY')
           .withEventHandler(BlipChat.CREATE_ACCOUNT_EVENT, function () {
-			
-            if (blipClient.widget.isFirstTime) {
               blipClient.sendMessage({
                   "type": "application/vnd.lime.chatstate+json",
                   "content": {
                     "state": "starting"
                   }
               });
-            }
-				
           });
           blipClient.build();
         }
