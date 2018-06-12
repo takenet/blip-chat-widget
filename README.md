@@ -6,10 +6,10 @@
 
 # Installation
 
-Add the script element inside the **body** of your web page. To get the script with your app key go to [BLiP portal][1]. Choose the desired bot, go to the upper menu and access `Channels > Blip Chat`. On the `Setup` tab you will be able to get the required script. You will also need to add domains from the websites where Blip Chat is inclued, in order to enabled them in your chatbot. 
+Add the script element inside the **body** of your web page. To get the script with your app key, go to [BLiP portal][1]. Choose the desired bot, go to the upper menu and access `Channels > Blip Chat`. On the `Setup` tab you will be able to get the required script. You also have to sign up all website domains into which Blip Chat will be included, otherwise it will not work. 
 That's all :)
 
-*For **publishing** purpose, download the script and reference it locally. CDN may have availability problems and cause blip chat instability.*
+*For **publishing** purposes, download the script and make a reference to it locally. CDN may have availability problems and cause BLiP Chat instability.*
 
 ```html
 <script src="https://unpkg.com/blip-chat-widget" type="text/javascript"></script>
@@ -30,14 +30,14 @@ That's all :)
 | Property          | Description                                             |
 | ----------------- | ------------------------------------------------------- |
 | withAppKey        | Set the bot's app key                                   |
-| withButton        | Set the button color and icon                           |
+| withButton        | Set the button's color and icon                           |
 | withAuth          | Set the auth type, user identity and password           |
 | withAccount       | Set the user account                                    |
 | withEventHandler  | Set the events to be called. Params: name and function* |
-| withTarget        | Set the element that will present the chat              |
+| withTarget        | Set the element that will contain the chat              |
 
 *Supported events:
-<br>OnEnter - Set the event to run on openening the chat
+<br>OnEnter - Set the event to run on opening the chat
 <br>OnLeave - Set the event to run on closing the chat
 <br>OnLoad  - Set the event to run on finish loading the chat
 <br>OnCreateAccount - Set the event to run on creating new account
@@ -117,6 +117,16 @@ Connect on BLiP Chat and set create account event to send chat state on the firs
 ```
 
 
+# Guidelines
+
+### HTTPS
+
+It's pretty recommended to use SSL certificate for the site that will receive the BLiP Chat. This is necessary for security reasons and for some cards to work properly.
+
+### Geolocalization Card
+
+This card only works if your website has a SSL certificate and is accessed via HTTPS. This occurs because of security polices of browsers.
+
 # Script usage
 
 
@@ -125,15 +135,15 @@ Connect on BLiP Chat and set create account event to send chat state on the firs
 
 ## Destroy chat widget
 
-Destroys the widget that was added to your page. See example bellow:
+Destroys the widget that was added to your page. See example below:
 
 ## Toogle chat widget
 
-Toogles the chat widget window. See example bellow:
+Toggles the chat widget window. See example below:
 
 ## Send message
 
-Sends a message to your bot. The message can be a simple text or any lime document. See example bellow:
+Sends a message to your bot. The message can be a simple text or any LIME Protocol document. See example below:
 
 ## Send command
 
