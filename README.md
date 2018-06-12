@@ -150,3 +150,34 @@ Sends a message to your bot. The message can be a simple text or any LIME Protoc
 Sends a command.
 
  [1]: https://preview.blip.ai
+
+## Check if is user first interaction
+
+Boolean value indicating if it is the first time that the user is interacting with the bot.
+
+Example showing the bot starting the interaction, if it is the first time of the user openning it.
+
+```js
+<script src="https://unpkg.com/blip-chat-widget" type="text/javascript"></script>
+<script>
+    (function () {
+        window.onload = function () {
+          var blipClient = new BlipChat()
+          .withAppKey('YOUR-APP-KEY')
+          .withEventHandler(BlipChat.LOAD_EVENT, function () {
+			
+            if (blipClient.widget.isFirstTime) {
+              blipClient.sendMessage({
+                  "type": "application/vnd.lime.chatstate+json",
+                  "content": {
+                    "state": "starting"
+                  }
+              });
+            }
+				
+          });
+          blipClient.build();
+        }
+    })();
+</script>
+```
