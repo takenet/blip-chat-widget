@@ -40,7 +40,7 @@ That's all :)
 <br>OnEnter - Set the event to run on opening the chat
 <br>OnLeave - Set the event to run on closing the chat
 <br>OnLoad  - Set the event to run on finish loading the chat
-<br>OnCreateAccount - Set the event to run on creating new account
+<br>OnCreateAccount - Set the event to run on creating new user account
 
 ## Example 1
 
