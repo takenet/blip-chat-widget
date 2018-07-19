@@ -114,7 +114,47 @@
           }
 
           const environment = document.getElementById('environment').value ? document.getElementById('environment').value : 'homolog'
-          const appKey = document.getElementById('app-key').value || 'Ym90dGVzdGx1aXo6ZjY0ZjUwMTEtYWZiMy00Y2ZjLTk1MDMtMmQ2NjNkMDdjYTEz'
+          const appKey = document.getElementById('app-key').value || 'Ym90Ym90MTo4MDM4MTZjZC1mMzJmLTQ2NDYtOTMzNi1lYmNiNzk2ZjlhODk='
+
+          const customStyle = `
+            body {
+              background: transparent;
+            }
+            #blip-chat-welcome-container {
+              background-color: transparent;
+            }
+            #blip-chat-welcome-container ~ #message-input {
+              display: none;
+            }
+            #blip-chat-header {
+              display: none;
+            }
+            #app {
+              padding-top: 0;
+              height: 100%;
+              background-color: transparent !important;
+            }
+            .blip-container {
+              margin-bottom: 0;
+            }
+            .blip-card-container, .blip-card .bubble {
+              font-size: 12px;
+            }
+            #message-input {
+              box-sizing: border-box;
+              border: 1px solid #0CC8CC;
+              border-radius: 6px;
+              background: #252B39;
+            }
+            #message-input textarea {
+              background: #252B39;
+              font-size: 12px;
+              color: white;
+            }
+            #message-input .message-options {
+              display: none;
+            }
+          `
 
           builder = new BlipChat()
             .withAppKey(appKey)
@@ -128,6 +168,7 @@
               "email": "test@test.com",
               "encryptMessageContent": true
             })
+            .withCustomStyle(customStyle)
             .withEventHandler(BlipChat.ENTER_EVENT, function () {
               console.log('enter')
             })
