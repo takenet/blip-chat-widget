@@ -24,7 +24,7 @@ if ((typeof window !== 'undefined' && !window._babelPolyfill) ||
 // Use self as context to be able to remove event listeners on widget destroy
 let self = null
 export class BlipChatWidget {
-  constructor(appKey, buttonConfig, authConfig, account, target, events, environment) {
+  constructor(appKey, buttonConfig, authConfig, account, target, events, environment, customStyle) {
     self = this
     self.appKey = appKey
     self.buttonColor = buttonConfig && buttonConfig.color ? buttonConfig.color : '#2CC3D5'
@@ -38,6 +38,7 @@ export class BlipChatWidget {
     self.isChatLoaded = false
     self.isFullScreen = false
     self.pendings = []
+    self.customStyle = customStyle
 
     self._setChatUrlEnvironment(environment, authConfig, appKey)
 
@@ -242,6 +243,7 @@ export class BlipChatWidget {
         const blipChatButton = document.getElementById('blip-chat-open-iframe')
         blipChatButton.classList.add('opened')
         self._checkFullScreen()
+        self._sendPostMessage({ code: Constants.CUSTOM_STYLE_CODE, customStyle: self.customStyle })
         break
 
       case Constants.CREATE_ACCOUNT_CODE:

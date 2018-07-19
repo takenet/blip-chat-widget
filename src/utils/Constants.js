@@ -8,6 +8,7 @@ const CREATE_ACCOUNT_CODE = 'CreateAccount'
 const CHAT_CONNECTED_CODE = 'ChatConnected'
 const SEND_MESSAGE_CODE = 'SendMessage'
 const SEND_COMMAND_CODE = 'SendCommand'
+const CUSTOM_STYLE_CODE = 'CustomStyle'
 const USER_IRIS_ACCOUNT = 'UserIrisAccount'
 const USER_ACCOUNT_KEY = 'blipSdkUAccount'
 const PARENT_NOTIFICATION_CODE = 'NewBotMessage'
@@ -28,6 +29,7 @@ const CONSTANTS = {
   CHAT_CONNECTED_CODE,
   SEND_MESSAGE_CODE,
   SEND_COMMAND_CODE,
+  CUSTOM_STYLE_CODE,
   USER_IRIS_ACCOUNT,
   USER_ACCOUNT_KEY,
   CREATE_ACCOUNT_CODE,

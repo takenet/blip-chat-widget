@@ -72,6 +72,11 @@ export class BlipChat {
     return this
   }
 
+  withCustomStyle(style) {
+    this.customStyle = style
+    return this
+  }
+
   build() {
     this.widget = new BlipChatWidget(
       this.appKey,
@@ -80,7 +85,8 @@ export class BlipChat {
       this.account,
       this.target,
       this.events,
-      this.environment || process.env.NODE_ENV
+      this.environment || process.env.NODE_ENV,
+      this.customStyle
     )
   }
 
