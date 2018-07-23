@@ -243,7 +243,7 @@ export class BlipChatWidget {
         const blipChatButton = document.getElementById('blip-chat-open-iframe')
         blipChatButton.classList.add('opened')
         self._checkFullScreen()
-        self._sendPostMessage({ code: Constants.CUSTOM_STYLE_CODE, customStyle: self.customStyle })
+        if (self.customStyle) self._sendPostMessage({ code: Constants.CUSTOM_STYLE_CODE, customStyle: self.customStyle })
         break
 
       case Constants.CREATE_ACCOUNT_CODE:
