@@ -25,6 +25,16 @@ That's all :)
 </script>
 ```
 
+You can also use BlipChat Widget as npm module:
+
+```javascript
+import { BlipChat } from "blip-chat-widget";
+new BlipChat()
+  .withAppKey("YOUR-APP-KEY")
+  .withButton({ color: "#2CC3D5" })
+  .build();
+```
+
 # Optional parameters
 
 | Property          | Description                                             |
