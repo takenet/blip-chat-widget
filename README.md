@@ -40,11 +40,12 @@ new BlipChat()
 | Property          | Description                                             |
 | ----------------- | ------------------------------------------------------- |
 | withAppKey        | Set the bot's app key                                   |
-| withButton        | Set the button's color and icon                           |
+| withButton        | Set the button's color and icon                         |
 | withAuth          | Set the auth type, user identity and password           |
 | withAccount       | Set the user account                                    |
 | withEventHandler  | Set the events to be called. Params: name and function* |
 | withTarget        | Set the element that will contain the chat              |
+| withCustomStyle   | Set a custom style for BLiP Chat                        |
 
 *Supported events:
 <br>OnEnter - Set the event to run on opening the chat
@@ -116,6 +117,37 @@ Connect on BLiP Chat and set create account event to send chat state on the firs
                   }
               });
           });
+          blipClient.build();
+        }
+    })();
+</script>
+```
+
+## Example 3
+
+Connect on BLiP Chat and use a custom style.
+
+```js
+<script src="https://unpkg.com/blip-chat-widget@1.3.*" type="text/javascript"></script>
+<script>
+    (function () {
+        window.onload = function () {
+
+          var customStyle = `#message-input {
+              box-sizing: border-box;
+              border: 1px solid #0CC8CC;
+              border-radius: 6px;
+              background: #252B39;
+            }
+            #message-input textarea {
+              background: #252B39;
+              font-size: 12px;
+              color: white;
+            }`
+
+          var blipClient = new BlipChat()
+          .withAppKey('YOUR-APP-KEY')
+          .withCustomStyle(customStyle);
           blipClient.build();
         }
     })();
