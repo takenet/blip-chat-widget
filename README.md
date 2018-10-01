@@ -40,11 +40,13 @@ new BlipChat()
 | Property          | Description                                             |
 | ----------------- | ------------------------------------------------------- |
 | withAppKey        | Set the bot's app key                                   |
-| withButton        | Set the button's color and icon                           |
+| withButton        | Set the button's color and icon                         |
 | withAuth          | Set the auth type, user identity and password           |
 | withAccount       | Set the user account                                    |
 | withEventHandler  | Set the events to be called. Params: name and function* |
 | withTarget        | Set the element that will contain the chat              |
+
+*When using DEV auth type, 'userIdentity' and 'userPassword' are required.
 
 *Supported events:
 <br>OnEnter - Set the event to run on opening the chat
@@ -54,7 +56,7 @@ new BlipChat()
 
 ## Example 1
 
-Connecting on BLiP Chat passing user auth, account and event handlers
+Connecting on BLiP Chat passing user auth, account and event handlers.
 
 ```js
 <script src="https://unpkg.com/blip-chat-widget@1.3.*" type="text/javascript">
