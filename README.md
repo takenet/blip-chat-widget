@@ -41,17 +41,20 @@ new BlipChat()
 | ----------------- | ------------------------------------------------------- |
 | withAppKey        | Set the bot's app key                                   |
 | withButton        | Set the button's color and icon                         |
-| withAuth          | Set the auth type, user identity and password           |
-| withAccount       | Set the user account                                    |
+| withAuth          | Set the auth type, user identity and password [(see more)](https://github.com/takenet/blip-chat-widget/wiki/Authentication-Types)          |
+| withAccount       | Set the user account [(see more)](https://github.com/takenet/blip-chat-widget/wiki/Authentication-Types)                                   |
 | withEventHandler  | Set the events to be called. Params: name and function* |
 | withTarget        | Set the element that will contain the chat              |
 | withCustomStyle   | Set a custom style for BLiP Chat                        |
 
 *Supported events:
-<br>OnEnter - Set the event to run on opening the chat
-<br>OnLeave - Set the event to run on closing the chat
-<br>OnLoad  - Set the event to run on finish loading the chat
-<br>OnCreateAccount - Set the event to run on creating new user account
+
+* OnEnter - Set the event to run on opening the chat
+* OnLeave - Set the event to run on closing the chat
+* OnLoad  - Set the event to run on finish loading the chat
+* OnCreateAccount - Set the event to run on creating new user account
+
+**[Click here](https://github.com/takenet/blip-chat-widget/wiki/Authentication-Types)** to see how to use BLiP Chat in a logged web page.
 
 ## Example 1
 
