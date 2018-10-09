@@ -47,6 +47,8 @@ new BlipChat()
 | withTarget        | Set the element that will contain the chat              |
 | withCustomStyle   | Set a custom style for BLiP Chat                        |
 
+*When using DEV auth type, 'userIdentity' and 'userPassword' are required.
+
 *Supported events:
 
 * OnEnter - Set the event to run on opening the chat
@@ -58,7 +60,7 @@ new BlipChat()
 
 ## Example 1
 
-Connecting on BLiP Chat passing user auth, account and event handlers
+Connecting on BLiP Chat passing user auth, account and event handlers.
 
 ```js
 <script src="https://unpkg.com/blip-chat-widget@1.3.*" type="text/javascript">
