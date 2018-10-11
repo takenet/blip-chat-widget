@@ -47,7 +47,7 @@ new BlipChat()
 | withTarget        | Set the element that will contain the chat              |
 | withCustomStyle   | Set a custom style for BLiP Chat                        |
 
-*When using DEV auth type, 'userIdentity' and 'userPassword' are required.
+*Guest auth will keep the same generated 'userIdentity' for 30 days. When using DEV auth type, 'userIdentity' and 'userPassword' are required.
 
 *Supported events:
 
