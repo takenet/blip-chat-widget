@@ -24,7 +24,7 @@ if ((typeof window !== 'undefined' && !window._babelPolyfill) ||
 // Use self as context to be able to remove event listeners on widget destroy
 let self = null
 export class BlipChatWidget {
-  constructor(appKey, buttonConfig, authConfig, account, target, events, environment, customStyle) {
+  constructor(appKey, buttonConfig, authConfig, account, target, events, environment, customStyle, connectionData) {
     self = this
     self.appKey = appKey
     self.buttonColor = buttonConfig && buttonConfig.color ? buttonConfig.color : '#2CC3D5'
@@ -39,6 +39,7 @@ export class BlipChatWidget {
     self.isFullScreen = false
     self.pendings = []
     self.customStyle = customStyle
+    self.connectionData = connectionData
 
     self._setChatUrlEnvironment(environment, authConfig, appKey)
 
@@ -148,7 +149,8 @@ export class BlipChatWidget {
 
     self.blipChatIframe.onload = () => {
       const userAccount = self._getObfuscatedUserAccount()
-      self._sendPostMessage({ code: Constants.START_CONNECTION_CODE, userAccount })
+      const connectionData = self._getObfuscatedConnectionData()
+      self._sendPostMessage({ code: Constants.START_CONNECTION_CODE, userAccount, connectionData })
     }
 
     self.blipChatContainer.appendChild(self.blipChatIframe)
@@ -305,6 +307,10 @@ export class BlipChatWidget {
     } else if (self.authConfig.authType === Constants.DEV_AUTH) {
       return window.btoa(JSON.stringify(self.authConfig))
     }
+  }
+
+  _getObfuscatedConnectionData() {
+    return window.btoa(JSON.stringify(self.connectionData))
   }
 
   sendMessage(userMessage) {

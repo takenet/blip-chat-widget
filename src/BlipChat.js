@@ -52,6 +52,11 @@ export class BlipChat {
     return this
   }
 
+  withConnectionData(connectionData) {
+    this.connectionData = connectionData
+    return this
+  }
+
   withAccount(account) {
     this.account = account
     return this
@@ -86,7 +91,8 @@ export class BlipChat {
       this.target,
       this.events,
       this.environment || process.env.NODE_ENV,
-      this.customStyle
+      this.customStyle,
+      this.connectionData || {}
     )
   }
 
