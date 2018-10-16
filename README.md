@@ -25,26 +25,42 @@ That's all :)
 </script>
 ```
 
+You can also use BlipChat Widget as npm module:
+
+```javascript
+import { BlipChat } from "blip-chat-widget";
+new BlipChat()
+  .withAppKey("YOUR-APP-KEY")
+  .withButton({ color: "#2CC3D5" })
+  .build();
+```
+
 # Optional parameters
 
 | Property          | Description                                             |
 | ----------------- | ------------------------------------------------------- |
 | withAppKey        | Set the bot's app key                                   |
-| withButton        | Set the button's color and icon                           |
-| withAuth          | Set the auth type, user identity and password           |
-| withAccount       | Set the user account                                    |
+| withButton        | Set the button's color and icon                         |
+| withAuth          | Set the auth type, user identity and password [(see more)](https://github.com/takenet/blip-chat-widget/wiki/Authentication-Types)          |
+| withAccount       | Set the user account [(see more)](https://github.com/takenet/blip-chat-widget/wiki/Authentication-Types)                                   |
 | withEventHandler  | Set the events to be called. Params: name and function* |
 | withTarget        | Set the element that will contain the chat              |
+| withCustomStyle   | Set a custom style for BLiP Chat                        |
+
+*Guest auth will keep the same generated 'userIdentity' for 30 days. When using DEV auth type, 'userIdentity' and 'userPassword' are required.
 
 *Supported events:
-<br>OnEnter - Set the event to run on opening the chat
-<br>OnLeave - Set the event to run on closing the chat
-<br>OnLoad  - Set the event to run on finish loading the chat
-<br>OnCreateAccount - Set the event to run on creating new user account
+
+* OnEnter - Set the event to run on opening the chat
+* OnLeave - Set the event to run on closing the chat
+* OnLoad  - Set the event to run on finish loading the chat
+* OnCreateAccount - Set the event to run on creating new user account
+
+**[Click here](https://github.com/takenet/blip-chat-widget/wiki/Authentication-Types)** to see how to use BLiP Chat in a logged web page.
 
 ## Example 1
 
-Connecting on BLiP Chat passing user auth, account and event handlers
+Connecting on BLiP Chat passing user auth, account and event handlers.
 
 ```js
 <script src="https://unpkg.com/blip-chat-widget@1.3.*" type="text/javascript">
@@ -106,6 +122,37 @@ Connect on BLiP Chat and set create account event to send chat state on the firs
                   }
               });
           });
+          blipClient.build();
+        }
+    })();
+</script>
+```
+
+## Example 3
+
+Connect on BLiP Chat and use a custom style.
+
+```js
+<script src="https://unpkg.com/blip-chat-widget@1.3.*" type="text/javascript"></script>
+<script>
+    (function () {
+        window.onload = function () {
+
+          var customStyle = `#message-input {
+              box-sizing: border-box;
+              border: 1px solid #0CC8CC;
+              border-radius: 6px;
+              background: #252B39;
+            }
+            #message-input textarea {
+              background: #252B39;
+              font-size: 12px;
+              color: white;
+            }`
+
+          var blipClient = new BlipChat()
+          .withAppKey('YOUR-APP-KEY')
+          .withCustomStyle(customStyle);
           blipClient.build();
         }
     })();

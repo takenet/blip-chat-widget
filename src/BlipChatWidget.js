@@ -131,6 +131,11 @@ export class BlipChatWidget {
       return { authType: BlipChat.GUEST_AUTH }
     }
 
+    if (authConfig.authType === Constants.DEV_AUTH &&
+      (!authConfig.userIdentity || !authConfig.userPassword)) {
+      throw new Error(`Parameters 'userIdentity' and 'userPassword' must be provided when using DEV auth`)
+    }
+
     authConfig.userPassword = window.btoa(authConfig.userPassword)
 
     const [identifier] = window.atob(self.appKey).split(':')

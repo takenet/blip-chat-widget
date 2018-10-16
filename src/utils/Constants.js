@@ -15,7 +15,7 @@ const PARENT_NOTIFICATION_CODE = 'NewBotMessage'
 const SHOW_CLOSE_BUTTON = 'ShowCloseButton'
 const CLOSE_WIDGET = 'CloseWidget'
 
-const COOKIES_EXPIRATION = 8.64e7
+const COOKIES_EXPIRATION = 2.592e+9
 
 const DEV_AUTH = 'Dev'
 const GUEST_AUTH = 'Guest'
