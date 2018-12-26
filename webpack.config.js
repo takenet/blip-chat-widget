@@ -2,6 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 
 const cssPlugin = new ExtractTextPlugin('[name].css')
 
@@ -128,6 +129,19 @@ if (process.env.NODE_ENV === 'production') {
       pkg: require('./package.json'),
       template: './index.html',
       inject: 'body'
+    })
+  )
+  config.plugins.push(
+    new UglifyJsPlugin({
+      extractComments: true,
+      uglifyOptions: {
+        compress: {
+          warnings: false,
+          drop_debugger: true,
+          drop_console: true
+        }
+      },
+      test: /\.js(\?\S*)?/i
     })
   )
 } else {
