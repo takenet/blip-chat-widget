@@ -251,6 +251,7 @@ export class BlipChatWidget {
         blipChatButton.classList.add('opened')
         self._checkFullScreen()
         if (self.customStyle) self._sendPostMessage({ code: Constants.CUSTOM_STYLE_CODE, customStyle: self.customStyle })
+        if (self.events.OnSendMessage) self._sendPostMessage({ code: Constants.CUSTOM_SEND_MESSAGE, CustomSendMessage: self.events.OnSendMessage })
         break
 
       case Constants.CREATE_ACCOUNT_CODE:
