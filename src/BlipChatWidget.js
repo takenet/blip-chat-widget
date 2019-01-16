@@ -16,19 +16,34 @@ import { dom } from './utils/Misc'
 // Core
 import { BlipChat } from './BlipChat'
 
-if ((typeof window !== 'undefined' && !window._babelPolyfill) ||
-  (typeof global !== 'undefined' && !global._babelPolyfill)) {
+if (
+  (typeof window !== 'undefined' && !window._babelPolyfill) ||
+  (typeof global !== 'undefined' && !global._babelPolyfill)
+) {
   require('babel-polyfill')
 }
 
 // Use self as context to be able to remove event listeners on widget destroy
 let self = null
 export class BlipChatWidget {
-  constructor(appKey, buttonConfig, authConfig, account, target, events, environment, customStyle, connectionData) {
+  constructor(
+    appKey,
+    buttonConfig,
+    authConfig,
+    account,
+    target,
+    events,
+    environment,
+    customStyle,
+    customMessageMetadata,
+    connectionData
+  ) {
     self = this
     self.appKey = appKey
-    self.buttonColor = buttonConfig && buttonConfig.color ? buttonConfig.color : '#2CC3D5'
-    self.buttonIcon = buttonConfig && buttonConfig.icon ? buttonConfig.icon : blipIcon
+    self.buttonColor =
+      buttonConfig && buttonConfig.color ? buttonConfig.color : '#2CC3D5'
+    self.buttonIcon =
+      buttonConfig && buttonConfig.icon ? buttonConfig.icon : blipIcon
     self.authConfig = self._parseAuthConfig(authConfig)
     self.account = self._addAuthTypeToExtras(account, authConfig)
     self.target = target
@@ -39,6 +54,7 @@ export class BlipChatWidget {
     self.isFullScreen = false
     self.pendings = []
     self.customStyle = customStyle
+    self.customMessageMetadata = customMessageMetadata
     self.connectionData = connectionData
 
     self._setChatUrlEnvironment(environment, authConfig, appKey)
@@ -75,11 +91,14 @@ export class BlipChatWidget {
 
   _setSubscribers() {
     // Subscribe update count
-    const updateNotifications = count => document.getElementById('blip-chat-notifications').textContent = count
+    const updateNotifications = (count) =>
+      (document.getElementById('blip-chat-notifications').textContent = count)
     self.NotificationHandler.subscribe(updateNotifications)
 
     // Subscribe update style
-    const toggleNotificationsButton = count => document.getElementById('blip-chat-notifications').style.opacity = count > 0 ? 1 : 0
+    const toggleNotificationsButton = (count) =>
+      (document.getElementById('blip-chat-notifications').style.opacity =
+        count > 0 ? 1 : 0)
     self.NotificationHandler.subscribe(toggleNotificationsButton)
   }
 
@@ -113,7 +132,9 @@ export class BlipChatWidget {
   }
 
   _addAuthTypeToExtras(account, authConfig) {
-    let authType = authConfig ? authConfig.authType || BlipChat.GUEST_AUTH : BlipChat.GUEST_AUTH
+    let authType = authConfig
+      ? authConfig.authType || BlipChat.GUEST_AUTH
+      : BlipChat.GUEST_AUTH
     if (account) {
       account.extras = account.extras || {}
       account.extras.authType = authType
@@ -131,16 +152,22 @@ export class BlipChatWidget {
       return { authType: BlipChat.GUEST_AUTH }
     }
 
-    if (authConfig.authType === Constants.DEV_AUTH &&
-      (!authConfig.userIdentity || !authConfig.userPassword)) {
-      throw new Error(`Parameters 'userIdentity' and 'userPassword' must be provided when using DEV auth`)
+    if (
+      authConfig.authType === Constants.DEV_AUTH &&
+      (!authConfig.userIdentity || !authConfig.userPassword)
+    ) {
+      throw new Error(
+        `Parameters 'userIdentity' and 'userPassword' must be provided when using DEV auth`
+      )
     }
 
     authConfig.userPassword = window.btoa(authConfig.userPassword)
 
     const [identifier] = window.atob(self.appKey).split(':')
 
-    authConfig.userIdentity = encodeURIComponent(`${authConfig.userIdentity}.${identifier}`)
+    authConfig.userIdentity = encodeURIComponent(
+      `${authConfig.userIdentity}.${identifier}`
+    )
 
     return authConfig
   }
@@ -155,7 +182,11 @@ export class BlipChatWidget {
     self.blipChatIframe.onload = () => {
       const userAccount = self._getObfuscatedUserAccount()
       const connectionData = self._getObfuscatedConnectionData()
-      self._sendPostMessage({ code: Constants.START_CONNECTION_CODE, userAccount, connectionData })
+      self._sendPostMessage({
+        code: Constants.START_CONNECTION_CODE,
+        userAccount,
+        connectionData
+      })
     }
 
     self.blipChatContainer.appendChild(self.blipChatIframe)
@@ -177,7 +208,11 @@ export class BlipChatWidget {
       self._createIframe()
     }
 
-    if ((!forceClose && self.blipChatIframe && !self.blipChatIframe.classList.contains('blip-chat-iframe-opened'))) {
+    if (
+      !forceClose &&
+      self.blipChatIframe &&
+      !self.blipChatIframe.classList.contains('blip-chat-iframe-opened')
+    ) {
       // self.blipChatIframe.style.display = 'block'
       // Required for animation effect
       setTimeout(() => {
@@ -193,7 +228,8 @@ export class BlipChatWidget {
         // Add meta tag to prevent zoom on input focus
         let meta = document.createElement('meta')
         meta.name = 'viewport'
-        meta.content = 'width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no'
+        meta.content =
+          'width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no'
         meta.id = 'blipChatMeta'
         document.getElementsByTagName('head')[0].appendChild(meta)
       }, 100)
@@ -250,8 +286,24 @@ export class BlipChatWidget {
         const blipChatButton = document.getElementById('blip-chat-open-iframe')
         blipChatButton.classList.add('opened')
         self._checkFullScreen()
-        if (self.customStyle) self._sendPostMessage({ code: Constants.CUSTOM_STYLE_CODE, customStyle: self.customStyle })
-        if (self.events.OnSendMessage) self._sendPostMessage({ code: Constants.CUSTOM_SEND_MESSAGE, CustomSendMessage: self.events.OnSendMessage })
+        if (self.customStyle) {
+          self._sendPostMessage({
+            code: Constants.CUSTOM_STYLE_CODE,
+            customStyle: self.customStyle
+          })
+        }
+
+        if (self.customMessageMetadata) {
+          console.log(
+            'postado: ' +
+              Constants.CUSTOM_MESSAGE_METADATA +
+              self.customMessageMetadata
+          )
+          self._sendPostMessage({
+            code: Constants.CUSTOM_MESSAGE_METADATA,
+            customMessageMetadata: self.customMessageMetadata
+          })
+        }
         break
 
       case Constants.CREATE_ACCOUNT_CODE:
@@ -270,15 +322,21 @@ export class BlipChatWidget {
         break
 
       case Constants.CHAT_CONNECTED_CODE:
-        if (self.account) self._sendPostMessage({ code: Constants.USER_IRIS_ACCOUNT, account: self.account })
-
+        if (self.account) {
+          self._sendPostMessage({
+            code: Constants.USER_IRIS_ACCOUNT,
+            account: self.account
+          })
+        }
         if (self.events.OnLoad) self.events.OnLoad()
 
         if (self.pendings) {
           self.pendings.map((pending) => {
-            if (pending.content) { // If is a message
+            if (pending.content) {
+              // If is a message
               self.sendMessage(pending.content)
-            } else { // is command
+            } else {
+              // is command
               self.sendCommand(pending.command)
             }
           })
@@ -296,14 +354,32 @@ export class BlipChatWidget {
     }
   }
 
+  serializeFunction(f) {
+    if (typeof f === 'function') {
+      return encodeURI(f.toString())
+    }
+  }
+
   _checkFullScreen() {
     if (!self.isChatLoaded || self.target) return
-    const width = Math.max(document.documentElement.clientWidth, window.innerWidth || 0)
-    const height = Math.max(document.documentElement.clientHeight, window.innerHeight || 0)
-    const enteredFullScreen = (width <= 480 || height <= 420)
-    if (((!self.isFullScreen && enteredFullScreen) || (self.isFullScreen && !enteredFullScreen))) {
+    const width = Math.max(
+      document.documentElement.clientWidth,
+      window.innerWidth || 0
+    )
+    const height = Math.max(
+      document.documentElement.clientHeight,
+      window.innerHeight || 0
+    )
+    const enteredFullScreen = width <= 480 || height <= 420
+    if (
+      (!self.isFullScreen && enteredFullScreen) ||
+      (self.isFullScreen && !enteredFullScreen)
+    ) {
       self.isFullScreen = enteredFullScreen
-      self._sendPostMessage({ code: Constants.SHOW_CLOSE_BUTTON, showCloseButton: self.isFullScreen })
+      self._sendPostMessage({
+        code: Constants.SHOW_CLOSE_BUTTON,
+        showCloseButton: self.isFullScreen
+      })
     }
   }
 
@@ -323,13 +399,15 @@ export class BlipChatWidget {
     // Process Message before sending
     let content
     if (typeof userMessage === 'object') {
-      if (!userMessage.payload) { // Lime document
+      if (!userMessage.payload) {
+        // Lime document
         content = {
           content: userMessage.content,
           type: userMessage.type,
           metadata: userMessage.metadata
         }
-      } else { // { payload:, preview: } document
+      } else {
+        // { payload:, preview: } document
         content = {
           content: userMessage.payload.content,
           type: userMessage.payload.type

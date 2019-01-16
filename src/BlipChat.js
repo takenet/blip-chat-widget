@@ -7,6 +7,7 @@ const ENTER_EVENT = 'OnEnter'
 const LEAVE_EVENT = 'OnLeave'
 const LOAD_EVENT = 'OnLoad'
 const CREATE_ACCOUNT_EVENT = 'OnCreateAccount'
+const CUSTOM_SEND_MESSAGE = 'CustomSendMessage'
 
 export class BlipChat {
   constructor() {
@@ -31,6 +32,10 @@ export class BlipChat {
 
   static get LOAD_EVENT() {
     return LOAD_EVENT
+  }
+
+  static get CUSTOM_SEND_MESSAGE() {
+    return CUSTOM_SEND_MESSAGE
   }
 
   static get CREATE_ACCOUNT_EVENT() {
@@ -74,11 +79,17 @@ export class BlipChat {
 
   withEventHandler(name, handler) {
     this.events[name] = handler
+    console.log('EVENT POSTED: ' + name)
     return this
   }
 
   withCustomStyle(style) {
     this.customStyle = style
+    return this
+  }
+
+  withCustomMessageMetadata(metadata) {
+    this.customMessageMetadata = metadata
     return this
   }
 
@@ -92,6 +103,7 @@ export class BlipChat {
       this.events,
       this.environment || process.env.NODE_ENV,
       this.customStyle,
+      this.customMessageMetadata,
       this.connectionData || {}
     )
   }
