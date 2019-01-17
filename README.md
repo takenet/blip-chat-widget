@@ -25,6 +25,7 @@ That's all :)
 </script>
 ```
 
+
 You can also use BlipChat Widget as npm module:
 
 ```javascript
