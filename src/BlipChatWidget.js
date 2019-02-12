@@ -36,6 +36,7 @@ export class BlipChatWidget {
     environment,
     customStyle,
     customMessageMetadata,
+    customCommonUrl,
     connectionData
   ) {
     self = this
@@ -55,6 +56,7 @@ export class BlipChatWidget {
     self.pendings = []
     self.customStyle = customStyle
     self.customMessageMetadata = customMessageMetadata
+    self.customCommonUrl = customCommonUrl
     self.connectionData = connectionData
 
     self._setChatUrlEnvironment(environment, authConfig, appKey)
@@ -103,7 +105,9 @@ export class BlipChatWidget {
   }
 
   _setChatUrlEnvironment(environment, authConfig, appKey) {
-    if (environment === 'homolog') {
+    if (self.customCommonUrl) {
+      self.CHAT_URL = self.customCommonUrl
+    } else if (environment === 'homolog') {
       self.CHAT_URL = Constants.CHAT_URL_HMG
     } else if (environment === 'production') {
       self.CHAT_URL = Constants.CHAT_URL_PROD

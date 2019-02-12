@@ -93,6 +93,15 @@ export class BlipChat {
     return this
   }
 
+  withCustomCommonUrl(commonUrl) {
+    if (!commonUrl.endsWith('/')) {
+      commonUrl += '/'
+    }
+
+    this.customCommonUrl = commonUrl
+    return this
+  }
+
   build() {
     this.widget = new BlipChatWidget(
       this.appKey,
@@ -104,6 +113,7 @@ export class BlipChat {
       this.environment || process.env.NODE_ENV,
       this.customStyle,
       this.customMessageMetadata,
+      this.customCommonUrl,
       this.connectionData || {}
     )
   }
