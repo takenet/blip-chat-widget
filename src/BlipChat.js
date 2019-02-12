@@ -94,7 +94,7 @@ export class BlipChat {
   }
 
   withCustomCommonUrl(commonUrl) {
-    if (!commonUrl.endsWith('/')) {
+    if (commonUrl && !commonUrl.endsWith('/')) {
       commonUrl += '/'
     }
 
