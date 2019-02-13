@@ -79,7 +79,6 @@ export class BlipChat {
 
   withEventHandler(name, handler) {
     this.events[name] = handler
-    console.log('EVENT POSTED: ' + name)
     return this
   }
 
@@ -97,7 +96,6 @@ export class BlipChat {
     if (commonUrl && !commonUrl.endsWith('/')) {
       commonUrl += '/'
     }
-
     this.customCommonUrl = commonUrl
     return this
   }
