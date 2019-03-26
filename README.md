@@ -12,7 +12,7 @@ That's all :)
 *For **publishing** purposes, download the script and make a reference to it locally. CDN may have availability problems and cause BLiP Chat instability.*
 
 ```html
-<script src="https://unpkg.com/blip-chat-widget@1.3.*" type="text/javascript"></script>
+<script src="https://unpkg.com/blip-chat-widget@1.5.*" type="text/javascript"></script>
 <script>
     (function () {
         window.onload = function () {
@@ -64,7 +64,7 @@ new BlipChat()
 Connecting on BLiP Chat passing user auth, account and event handlers.
 
 ```js
-<script src="https://unpkg.com/blip-chat-widget@1.3.*" type="text/javascript">
+<script src="https://unpkg.com/blip-chat-widget@1.5.*" type="text/javascript">
 </script>
 <script>
     (function () {
@@ -109,7 +109,7 @@ Connecting on BLiP Chat passing user auth, account and event handlers.
 Connect on BLiP Chat and set create account event to send chat state on the first time that the user is interacting with the bot.
 
 ```js
-<script src="https://unpkg.com/blip-chat-widget@1.3.*" type="text/javascript"></script>
+<script src="https://unpkg.com/blip-chat-widget@1.5.*" type="text/javascript"></script>
 <script>
     (function () {
         window.onload = function () {
@@ -134,7 +134,7 @@ Connect on BLiP Chat and set create account event to send chat state on the firs
 Connect on BLiP Chat and use a custom style.
 
 ```js
-<script src="https://unpkg.com/blip-chat-widget@1.3.*" type="text/javascript"></script>
+<script src="https://unpkg.com/blip-chat-widget@1.5.*" type="text/javascript"></script>
 <script>
     (function () {
         window.onload = function () {
