@@ -192,7 +192,7 @@ export class BlipChatWidget {
         code: Constants.START_CONNECTION_CODE,
         userAccount,
         connectionData,
-        disableHistory
+        disableHistory: self.disableHistory
       })
     }
 

@@ -100,7 +100,7 @@ export class BlipChat {
     return this
   }
 
-  withoutHistory(){
+  withoutHistory() {
     this.disableHistory = true
     return this
   }
