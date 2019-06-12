@@ -37,7 +37,8 @@ export class BlipChatWidget {
     customStyle,
     customMessageMetadata,
     customCommonUrl,
-    connectionData
+    connectionData,
+    disableHistory
   ) {
     self = this
     self.appKey = appKey
@@ -58,6 +59,7 @@ export class BlipChatWidget {
     self.customMessageMetadata = customMessageMetadata
     self.customCommonUrl = customCommonUrl
     self.connectionData = connectionData
+    self.disableHistory = disableHistory
 
     self._setChatUrlEnvironment(environment, authConfig, appKey)
 
@@ -189,7 +191,8 @@ export class BlipChatWidget {
       self._sendPostMessage({
         code: Constants.START_CONNECTION_CODE,
         userAccount,
-        connectionData
+        connectionData,
+        disableHistory
       })
     }
 

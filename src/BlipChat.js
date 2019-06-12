@@ -100,6 +100,11 @@ export class BlipChat {
     return this
   }
 
+  withoutHistory(){
+    this.disableHistory = true
+    return this
+  }
+
   build() {
     this.widget = new BlipChatWidget(
       this.appKey,
@@ -112,7 +117,8 @@ export class BlipChat {
       this.customStyle,
       this.customMessageMetadata,
       this.customCommonUrl,
-      this.connectionData || {}
+      this.connectionData || {},
+      this.disableHistory || false
     )
   }
 
