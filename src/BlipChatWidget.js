@@ -392,7 +392,6 @@ export class BlipChatWidget {
 
   _getObfuscatedUserAccount() {
     if (!self.authConfig || self.authConfig.authType === Constants.GUEST_AUTH) {
-      // TODO: ver quem salva essa userAccount no localstorage
       return StorageService.getFromLocalStorage(Constants.USER_ACCOUNT_KEY)
     } else if (self.authConfig.authType === Constants.DEV_AUTH) {
       let userAccount = self.account
