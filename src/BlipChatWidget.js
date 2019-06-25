@@ -394,7 +394,13 @@ export class BlipChatWidget {
     if (!self.authConfig || self.authConfig.authType === Constants.GUEST_AUTH) {
       return StorageService.getFromLocalStorage(Constants.USER_ACCOUNT_KEY)
     } else if (self.authConfig.authType === Constants.DEV_AUTH) {
-      return window.btoa(JSON.stringify(self.authConfig))
+      let userAccount = self.account
+      userAccount.userIdentity = self.authConfig.userIdentity
+      userAccount.userName = self.authConfig.userName
+      userAccount.userPassword = self.authConfig.userPassword
+      userAccount.authType = self.authConfig.authType
+
+      return window.btoa(JSON.stringify(userAccount))
     }
   }
 
