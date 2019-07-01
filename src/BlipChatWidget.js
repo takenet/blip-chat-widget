@@ -396,9 +396,10 @@ export class BlipChatWidget {
     } else if (self.authConfig.authType === Constants.DEV_AUTH) {
       let userAccount = self.account
       userAccount.userIdentity = self.authConfig.userIdentity
-      userAccount.userName = self.authConfig.userName
       userAccount.userPassword = self.authConfig.userPassword
       userAccount.authType = self.authConfig.authType
+      userAccount.userName = self.authConfig.userName
+      userAccount.userEmail = self.authConfig.userEmail
 
       return window.btoa(JSON.stringify(userAccount))
     }
