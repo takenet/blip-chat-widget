@@ -392,7 +392,16 @@ export class BlipChatWidget {
 
   _getObfuscatedUserAccount() {
     if (!self.authConfig || self.authConfig.authType === Constants.GUEST_AUTH) {
-      return StorageService.getFromLocalStorage(Constants.USER_ACCOUNT_KEY)
+      const localUserAccount = StorageService.getFromLocalStorage(Constants.USER_ACCOUNT_KEY)
+
+      if (!localUserAccount) {
+        const botIdentity = dom.decodeBlipKey(self.appKey)
+        let userAccount = dom.createGuestUser(botIdentity)
+        userAccount = { ...userAccount, ...self.account }
+        return window.btoa(JSON.stringify(userAccount))
+      } else {
+        return localUserAccount
+      }
     } else if (self.authConfig.authType === Constants.DEV_AUTH) {
       let userAccount = self.account
       userAccount.userIdentity = self.authConfig.userIdentity

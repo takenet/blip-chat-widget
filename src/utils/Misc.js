@@ -1,4 +1,15 @@
+import * as uuid from 'uuid'
+
 export const dom = {
+  decodeBlipKey(encodedkey) {
+    return window.atob(encodedkey).split(':')[0]
+  },
+  createGuestUser(botIdentity) {
+    return {
+      userIdentity: `${uuid.v4()}.${botIdentity}`,
+      userPassword: window.btoa(uuid.v4())
+    }
+  },
   createDiv(selector) {
     const div = document.createElement('div')
 
