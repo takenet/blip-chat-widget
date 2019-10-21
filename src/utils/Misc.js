@@ -1,15 +1,20 @@
 import * as uuid from 'uuid'
 
-export const dom = {
+export const misc = {
   decodeBlipKey(encodedkey) {
-    return window.atob(encodedkey).split(':')[0]
+    const [identifier, key] = window.atob(encodedkey).split(':')
+
+    return { botIdentifier: identifier, botKey: key }
   },
   createGuestUser(botIdentity) {
     return {
       userIdentity: `${uuid.v4()}.${botIdentity}`,
       userPassword: window.btoa(uuid.v4())
     }
-  },
+  }
+}
+
+export const dom = {
   createDiv(selector) {
     const div = document.createElement('div')
 

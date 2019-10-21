@@ -11,7 +11,7 @@ import blipIcon from './images/brand-logo.svg'
 import Constants from './utils/Constants.js'
 import StorageService from './utils/StorageService.js'
 import { NotificationHandler } from './utils/NotificationHandler'
-import { dom } from './utils/Misc'
+import { dom, misc } from './utils/Misc'
 
 // Core
 import { BlipChat } from './BlipChat'
@@ -395,8 +395,8 @@ export class BlipChatWidget {
       const localUserAccount = StorageService.getFromLocalStorage(Constants.USER_ACCOUNT_KEY)
 
       if (!localUserAccount) {
-        const botIdentity = dom.decodeBlipKey(self.appKey)
-        let userAccount = dom.createGuestUser(botIdentity)
+        const { botIdentifier } = misc.decodeBlipKey(self.appKey)
+        let userAccount = misc.createGuestUser(botIdentifier)
         userAccount = { ...userAccount, ...self.account }
         return window.btoa(JSON.stringify(userAccount))
       } else {
