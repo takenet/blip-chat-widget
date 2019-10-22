@@ -165,6 +165,12 @@ Connect on BLiP Chat and use a custom style.
 
 It's pretty recommended to use SSL certificate for the site that will receive the BLiP Chat. This is necessary for security reasons and for some cards to work properly.
 
+### Permissions
+
+BLiP Chat needs the document.referrer value to communicate with the website hosting it. But in some servers, we can have a Referrer-Policy header configurated. In this case, we cannot have a `no-referrer` and `same-origin` policies, because we won't receive the value in this situation (we just receive a blank string).
+
+Reference Article: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
+
 ### Geolocalization Card
 
 This card only works if your website has a SSL certificate and is accessed via HTTPS. This occurs because of security polices of browsers.
