@@ -6,7 +6,7 @@
 
 # Installation
 
-Add the script element inside the **body** of your web page. To get the script with your app key, go to [BLiP portal][1]. Choose the desired bot, go to the upper menu and access `Channels > Blip Chat`. On the `Setup` tab you will be able to get the required script. You also have to sign up all website domains into which Blip Chat will be included, otherwise it will not work. 
+Add the script element inside the **body** of your web page. To get the script with your app key, go to [BLiP portal][1]. Choose the desired bot, go to the upper menu and access `Channels > Blip Chat`. On the `Setup` tab you will be able to get the required script. You also have to sign up all website domains into which Blip Chat will be included, otherwise it will not work.
 That's all :)
 
 *For **publishing** purposes, download the script and make a reference to it locally. CDN may have availability problems and cause BLiP Chat instability.*
@@ -18,7 +18,7 @@ That's all :)
         window.onload = function () {
             new BlipChat()
             .withAppKey('YOUR-APP-KEY')
-            .withButton({"color":"#2CC3D5"})
+            .withButton({"color":"#2CC3D6"})
             .build();
         }
     })();
