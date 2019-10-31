@@ -58,7 +58,7 @@
     "extract-text-webpack-plugin": "^2.0.0-rc.3",
     "html-loader": "^0.4.4",
     "html-webpack-plugin": "^2.26.0",
-    "node-sass": "^4.7.2",
+    "node-sass": "4.13.0",
     "resolve-url-loader": "^1.6.1",
     "sass-loader": "^6.0.6",
     "semantic-release": "^12.4.1",
