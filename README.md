@@ -170,6 +170,31 @@ It's pretty recommended to use SSL certificate for the site that will receive th
 BLiP Chat needs the document.referrer value to communicate with the website hosting it. But in some servers, we can have a Referrer-Policy header configurated. In this case, we cannot have a `no-referrer` and `same-origin` policies, because we won't receive the value in this situation (we just receive a blank string).
 
 Reference Article: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
+___
+
+If your website blocks iframe origins by using the `Content-Security-Policy`, you need to add the domain `https://chat.blip.ai/` on `frame-src` policy. If you do not add that domain, the BLiP Chat will not load and the following error will be showed on browser console:
+
+```
+Refused to frame 'https://chat.blip.ai/' because it violates the following Content Security Policy directive: "frame-src {domains}"
+```
+
+If you are using IIS server, your web.config file will looks like:
+
+```XML
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <system.webServer>
+        <directoryBrowse enabled="true" />
+        <httpProtocol>
+                <customHeaders>
+                    <add name="Content-Security-Policy" value="frame-src 'self' https://chat.blip.ai/;" />
+                </customHeaders>
+        </httpProtocol>
+    </system.webServer>
+</configuration>
+```
+
+Reference Article: https://developers.google.com/web/fundamentals/security/csp
 
 ### Geolocalization Card
 
