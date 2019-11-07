@@ -184,6 +184,7 @@ export class BlipChatWidget {
     self.blipChatIframe.setAttribute('id', 'blip-chat-iframe')
     self.blipChatIframe.setAttribute('frameborder', 0)
     self.blipChatIframe.setAttribute('allow', 'geolocation')
+    self.blipChatIframe.setAttribute('allowFullscreen', true)
 
     self.blipChatIframe.onload = () => {
       const userAccount = self._getObfuscatedUserAccount()
