@@ -3,8 +3,8 @@ $maxHeight: 420px;
 
 @media screen and (max-width: $maxWidth), screen and (max-height: $maxHeight) {
   .chatParent {
-    overflow-y: hidden;
-    position: static;
+    overflow-y: hidden !important;
+    position: static !important;
     height: 0px;
     width: 0px;
   }
