@@ -208,18 +208,65 @@ This card only works if your website has a SSL certificate and is accessed via H
 
 ## Destroy chat widget
 
-Destroys the widget that was added to your page. See example below:
+Destroys the widget that was added to your page.
+
+```javascript
+blipClient.destroy();
+```
 
 ## Toogle chat widget
 
-Toggles the chat widget window. See example below:
+Toggles the chat widget window.
+
+```javascript
+blipClient.toogleChat();
+```
 
 ## Send message
 
 Sends a message to your bot. The message can be a simple text or any LIME Protocol document. See example below:
 
+```javascript
+<script src="https://unpkg.com/blip-chat-widget@1.6.*" type="text/javascript"></script>
+<script>
+(function () {
+        window.onload = function () {
+			var blipClient = new BlipChat();
+			blipClient.withAppKey('YOUR-APP-KEY')
+		.withEventHandler(BlipChat.LOAD_EVENT, function () {
+      blipClient.sendMessage({
+                "type": "text/plain",
+                "content": "This is my first message"
+        });
+			})
+            .build();
+        }
+    })();
+</script>
+```
+
 ## Send command
 
-Sends a command.
+Sends a command. See example below:
+
+```javascript
+<script src="https://unpkg.com/blip-chat-widget@1.6.*" type="text/javascript"></script>
+<script>
+(function () {
+        window.onload = function () {
+			var blipClient = new BlipChat();
+			blipClient.withAppKey('YOUR-APP-KEY')
+		.withEventHandler(BlipChat.LOAD_EVENT, function () {
+      blipClient.sendCommand({
+        id: "ag0asd0as-daasdasd0a",
+        to: 'postmaster@ai.msging.net',
+        method: Lime.CommandMethod.GET,
+        uri: '/entities'
+      })
+      .build();
+        }
+    })();
+</script>
+```
 
  [1]: https://preview.blip.ai
