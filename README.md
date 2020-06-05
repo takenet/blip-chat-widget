@@ -47,6 +47,7 @@ new BlipChat()
 | withEventHandler  | Set the events to be called. Params: name and function* |
 | withTarget        | Set the element that will contain the chat              |
 | withCustomStyle   | Set a custom style for BLiP Chat                        |
+| withCustomCommonUrl   | Set a custom URL for BLiP Chat                      |
 
 *Guest auth will keep the same generated 'userIdentity' for 30 days. When using DEV auth type, 'userIdentity' and 'userPassword' are required.
 
@@ -158,6 +159,24 @@ Connect on BLiP Chat and use a custom style.
 </script>
 ```
 
+## Example 4
+
+Connect on BLiP Chat with a custom URL. Specifying how to use organizations in BLiP Chat Widget. 
+
+```js
+<script src="https://unpkg.com/blip-chat-widget@1.6.*" type="text/javascript"></script>
+<script>
+    (function () {
+        window.onload = function () {
+          var blipClient = new BlipChat()
+          .withAppKey('YOUR-APP-KEY')
+          .withCustomCommonUrl('https://take.chat.blip.ai/'); // Add the organization BLiP Chat URL here
+
+          blipClient.build();
+        }
+    })();
+</script>
+```
 
 # Guidelines
 
