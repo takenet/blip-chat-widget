@@ -161,7 +161,7 @@ Connect on BLiP Chat and use a custom style.
 
 ## Example 4
 
-Connect on BLiP Chat with a custom URL. Specifying how to use organizations in BLiP Chat Widget. 
+Connect on BLiP Chat with a custom URL. Specifying how to use organizations in BLiP Chat Widget.
 
 ```js
 <script src="https://unpkg.com/blip-chat-widget@1.6.*" type="text/javascript"></script>
@@ -288,4 +288,20 @@ Sends a command. See example below:
 </script>
 ```
 
+# Supported mobile technologies
+
+* [Android][2]
+* [iOS][3]
+* [React Native][4]
+* [Ionic/React][5]
+* [Ionic/Angular][6]
+* [Flutter][7]
+
  [1]: https://preview.blip.ai
+ [2]: https://github.com/takenet/blip-chat-android
+ [3]: https://github.com/takenet/blip-chat-ios
+ [4]: https://github.com/takenet/blip-chat-react-native-example
+ [5]: https://github.com/takenet/blip-chat-ionic-example
+ [6]: https://github.com/takenet/blip-chat-ionic-angular-example
+ [7]: https://github.com/takenet/blip-chat-flutter-example
+
