@@ -15,6 +15,7 @@ const USER_ACCOUNT_KEY = 'blipSdkUAccount'
 const PARENT_NOTIFICATION_CODE = 'NewBotMessage'
 const SHOW_CLOSE_BUTTON = 'ShowCloseButton'
 const CLOSE_WIDGET = 'CloseWidget'
+const REDIRECT_URI = 'RedirectUri'
 
 const COOKIES_EXPIRATION = 2.592e+9
 
@@ -40,7 +41,8 @@ const CONSTANTS = {
   GUEST_AUTH,
   PARENT_NOTIFICATION_CODE,
   SHOW_CLOSE_BUTTON,
-  CLOSE_WIDGET
+  CLOSE_WIDGET,
+  REDIRECT_URI
 }
 
 module.exports = CONSTANTS

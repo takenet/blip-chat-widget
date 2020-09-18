@@ -178,9 +178,9 @@ export class BlipChatWidget {
     return authConfig
   }
 
-  _createIframe() {
+  _createIframe(uri = self.CHAT_URL) {
     self.blipChatIframe = document.createElement('iframe')
-    self.blipChatIframe.setAttribute('src', self.CHAT_URL)
+    self.blipChatIframe.setAttribute('src', uri)
     self.blipChatIframe.setAttribute('id', 'blip-chat-iframe')
     self.blipChatIframe.setAttribute('frameborder', 0)
     self.blipChatIframe.setAttribute('allow', 'geolocation')
@@ -280,6 +280,9 @@ export class BlipChatWidget {
 
   _onReceivePostMessage(message) {
     switch (message.data.code) {
+      case Constants.REDIRECT_URI:
+        this._createIframe(message.data.uri)
+        break
       case Constants.CHAT_READY_CODE:
         if (!self.target) {
           // Chat presented on widget
