@@ -194,16 +194,16 @@ export class BlipChatWidget {
         userAccount,
         connectionData,
         disableHistory: self.disableHistory
-      })
+      }, uri)
     }
 
     self.blipChatContainer.appendChild(self.blipChatIframe)
   }
 
-  _sendPostMessage(data) {
+  _sendPostMessage(data, uri = self.CHAT_URL) {
     const blipChatIframe = document.getElementById('blip-chat-iframe')
     if (blipChatIframe && blipChatIframe.contentWindow) {
-      blipChatIframe.contentWindow.postMessage(data, self.CHAT_URL)
+      blipChatIframe.contentWindow.postMessage(data, uri)
     }
   }
 
