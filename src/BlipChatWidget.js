@@ -200,10 +200,10 @@ export class BlipChatWidget {
     self.blipChatContainer.appendChild(self.blipChatIframe)
   }
 
-  _sendPostMessage(data, url = self.CHAT_URL) {
+  _sendPostMessage(data) {
     const blipChatIframe = document.getElementById('blip-chat-iframe')
     if (blipChatIframe && blipChatIframe.contentWindow) {
-      blipChatIframe.contentWindow.postMessage(data, url)
+      blipChatIframe.contentWindow.postMessage(data, self.CHAT_URL)
     }
   }
 
