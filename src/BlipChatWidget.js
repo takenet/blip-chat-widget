@@ -178,6 +178,10 @@ export class BlipChatWidget {
     return authConfig
   }
 
+  _reloadIframe() {
+    self.blipChatIframe.src = self.NEW_URL
+  }
+
   _createIframe(url = self.CHAT_URL) {
     self.blipChatIframe = document.createElement('iframe')
     self.blipChatIframe.setAttribute('src', url)
@@ -194,7 +198,7 @@ export class BlipChatWidget {
         userAccount,
         connectionData,
         disableHistory: self.disableHistory
-      }, url)
+      })
     }
 
     self.blipChatContainer.appendChild(self.blipChatIframe)
@@ -203,7 +207,7 @@ export class BlipChatWidget {
   _sendPostMessage(data) {
     const blipChatIframe = document.getElementById('blip-chat-iframe')
     if (blipChatIframe && blipChatIframe.contentWindow) {
-      blipChatIframe.contentWindow.postMessage(data, self.CHAT_URL)
+      blipChatIframe.contentWindow.postMessage(data, self.NEW_URL || self.CHAT_URL)
     }
   }
 
@@ -281,7 +285,8 @@ export class BlipChatWidget {
   _onReceivePostMessage(message) {
     switch (message.data.code) {
       case Constants.REDIRECT_URL:
-        self._createIframe(message.data.url)
+        self.NEW_URL = message.data.url
+        self._reloadIframe()
         break
       case Constants.CHAT_READY_CODE:
         if (!self.target) {
