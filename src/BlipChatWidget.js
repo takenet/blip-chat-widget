@@ -179,7 +179,14 @@ export class BlipChatWidget {
   }
 
   _reloadIframe() {
-    self.blipChatIframe.src = self.NEW_URL
+    console.log('newUrl: ' + self.NEW_URL)
+    console.log('protocolo: ' + window.location.protocol)
+
+    if (self.NEW_URL.startsWith(window.location.protocol)) {
+      self.blipChatIframe.src = self.NEW_URL
+    } else {
+      self.blipChatIframe.src = `${window.location.protocol}//${self.NEW_URL}`
+    }
   }
 
   _createIframe(url = self.CHAT_URL) {
@@ -207,6 +214,7 @@ export class BlipChatWidget {
   _sendPostMessage(data) {
     const blipChatIframe = document.getElementById('blip-chat-iframe')
     if (blipChatIframe && blipChatIframe.contentWindow) {
+      console.log('sendPostMessage: url' + self.NEW_URL, data)
       blipChatIframe.contentWindow.postMessage(data, self.NEW_URL || self.CHAT_URL)
     }
   }
@@ -286,6 +294,7 @@ export class BlipChatWidget {
     switch (message.data.code) {
       case Constants.REDIRECT_URL:
         self.NEW_URL = message.data.url
+        console.log('url redirecionamento: ' + self.NEW_URL)
         self._reloadIframe()
         break
       case Constants.CHAT_READY_CODE:
