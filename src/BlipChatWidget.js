@@ -181,12 +181,7 @@ export class BlipChatWidget {
   _reloadIframe() {
     console.log('newUrl: ' + self.NEW_URL)
     console.log('protocolo: ' + window.location.protocol)
-
-    if (self.NEW_URL.startsWith(window.location.protocol)) {
-      self.blipChatIframe.src = self.NEW_URL
-    } else {
-      self.blipChatIframe.src = `${window.location.protocol}//${self.NEW_URL}`
-    }
+    self.blipChatIframe.src = self.NEW_URL
   }
 
   _createIframe(url = self.CHAT_URL) {
@@ -293,8 +288,12 @@ export class BlipChatWidget {
   _onReceivePostMessage(message) {
     switch (message.data.code) {
       case Constants.REDIRECT_URL:
-        self.NEW_URL = message.data.url
-        console.log('url redirecionamento: ' + self.NEW_URL)
+        if (message.data.url.startsWith(window.location.protocol)) {
+          self.NEW_URL = message.data.url
+        } else {
+          self.NEW_URL = `${window.location.protocol}//${message.data.url}`
+        }
+        console.log('url protocolo: ' + self.NEW_URL)
         self._reloadIframe()
         break
       case Constants.CHAT_READY_CODE:
