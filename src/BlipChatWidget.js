@@ -178,9 +178,13 @@ export class BlipChatWidget {
     return authConfig
   }
 
-  _createIframe() {
+  _reloadIframe() {
+    self.blipChatIframe.src = self.NEW_URL
+  }
+
+  _createIframe(url = self.CHAT_URL) {
     self.blipChatIframe = document.createElement('iframe')
-    self.blipChatIframe.setAttribute('src', self.CHAT_URL)
+    self.blipChatIframe.setAttribute('src', url)
     self.blipChatIframe.setAttribute('id', 'blip-chat-iframe')
     self.blipChatIframe.setAttribute('frameborder', 0)
     self.blipChatIframe.setAttribute('allow', 'geolocation')
@@ -203,7 +207,7 @@ export class BlipChatWidget {
   _sendPostMessage(data) {
     const blipChatIframe = document.getElementById('blip-chat-iframe')
     if (blipChatIframe && blipChatIframe.contentWindow) {
-      blipChatIframe.contentWindow.postMessage(data, self.CHAT_URL)
+      blipChatIframe.contentWindow.postMessage(data, self.NEW_URL || self.CHAT_URL)
     }
   }
 
@@ -278,8 +282,16 @@ export class BlipChatWidget {
     }
   }
 
+  _getNewUrlWithWebProtocol(newUrl) {
+    return `${window.location.protocol}//${newUrl}`
+  }
+
   _onReceivePostMessage(message) {
     switch (message.data.code) {
+      case Constants.REDIRECT_URL:
+        self.NEW_URL = self._getNewUrlWithWebProtocol(message.data.url)
+        self._reloadIframe()
+        break
       case Constants.CHAT_READY_CODE:
         if (!self.target) {
           // Chat presented on widget
