@@ -292,14 +292,8 @@ Sends a command. See example below:
 
 * [Android][2]
 * [iOS][3]
-* [Ionic/React][4]
-* [Ionic/Angular][5]
-* [Flutter][6]
 
  [1]: https://portal.blip.ai
  [2]: https://github.com/takenet/blip-chat-android
  [3]: https://github.com/takenet/blip-chat-ios
- [4]: https://github.com/takenet/blip-chat-ionic-example
- [5]: https://github.com/takenet/blip-chat-ionic-angular-example
- [6]: https://github.com/takenet/blip-chat-flutter-example
 
