@@ -1,6 +1,6 @@
 {
   "name": "blip-chat-widget",
-  "version": "1.6.0-beta.4",
+  "version": "1.8.0-beta.2",
   "description": "",
   "main": "dist/blip-chat.js",
   "files": [
