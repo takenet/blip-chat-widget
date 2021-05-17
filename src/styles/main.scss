@@ -109,17 +109,9 @@ $maxHeight: 420px;
     img, svg {
       width: 100%;
       height: 100%;
-      border-radius: 0%;
+      border-radius: 50%;
     }
-    .blip-container-img{
-      max-width: 27px;
-      max-height: 29.97px;
-      width: auto;
-      height: auto;
-    }
-
   }
-
 }
 
 #blip-chat-open-iframe {
