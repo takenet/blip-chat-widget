@@ -294,6 +294,6 @@ Sends a command. See example below:
 * [iOS][3]
 
  [1]: https://portal.blip.ai
- [2]: https://github.com/takenet/blip-chat-android
- [3]: https://github.com/takenet/blip-chat-ios
+ [2]: https://help.blip.ai/hc/pt-br/articles/360057510674-Como-adicionar-um-bot-em-um-aplicativo-Android-utilizando-o-BLiP-Chat-
+ [3]: https://help.blip.ai/hc/pt-br/articles/360059367773-Como-adicionar-um-bot-em-um-aplicativo-iOS-utilizando-o-BLiP-Chat-
 
