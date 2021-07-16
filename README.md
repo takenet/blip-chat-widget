@@ -233,12 +233,12 @@ Destroys the widget that was added to your page.
 blipClient.destroy();
 ```
 
-## Toogle chat widget
+## Toggle chat widget
 
 Toggles the chat widget window.
 
 ```javascript
-blipClient.toogleChat();
+blipClient.toggleChat();
 ```
 
 ## Send message
