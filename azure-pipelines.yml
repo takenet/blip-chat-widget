@@ -11,6 +11,16 @@ pool:
 
 variables:
 - group: npmjs-sample-variables
+- name: skipDecorator
+  value: false
+- name: sonarQubeTags
+  value: blip-chat-widget
+- name: sonarQubeKey
+  value: blip-chat-widget
+- name: sonarQubeName
+  value: 'Blip Chat Widget'
+- name: framework
+  value: javascript
 
 resources:
   repositories:   
