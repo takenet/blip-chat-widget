@@ -61,7 +61,7 @@
     "node-sass": "4.13.0",
     "resolve-url-loader": "^1.6.1",
     "sass-loader": "^6.0.6",
-    "semantic-release": "^12.4.1",
+    "semantic-release": "^17.2.3",
     "style-loader": "^0.13.1",
     "travis-deploy-once": "^4.3.4",
     "uglifyjs-webpack-plugin": "^1.1.1",
