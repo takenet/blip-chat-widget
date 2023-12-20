@@ -164,7 +164,7 @@ Connect on BLiP Chat and use a custom style.
 Connect on BLiP Chat with a custom URL. Specifying how to use organizations in BLiP Chat Widget.
 
 ```js
-<script src="https://unpkg.com/blip-chat-widget@1.6.*" type="text/javascript"></script>
+<script src="https://unpkg.com/blip-chat-widget@1.9.*" type="text/javascript"></script>
 <script>
     (function () {
         window.onload = function () {
@@ -246,7 +246,7 @@ blipClient.toogleChat();
 Sends a message to your bot. The message can be a simple text or any LIME Protocol document. See example below:
 
 ```javascript
-<script src="https://unpkg.com/blip-chat-widget@1.6.*" type="text/javascript"></script>
+<script src="https://unpkg.com/blip-chat-widget@1.9.*" type="text/javascript"></script>
 <script>
 (function () {
         window.onload = function () {
