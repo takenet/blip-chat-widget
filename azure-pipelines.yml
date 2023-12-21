@@ -20,20 +20,21 @@ variables:
   value: $[counter('buildCounter',1)]
 
 resources:
-  repositories:   
+  repositories:
   - repository: templates
     type: git
     name: Operações/template-take-blip
     ref: refs/tags/v1.4.46
 
 extends:
-  template: template-pipeline.yml@templates    
-  parameters:    
+  template: template-pipeline.yml@templates
+  parameters:
     packagename: blip-chat-widget
     type: javascript
     to: semantic-release
     skipSast: true
     skipSonarBranch: false
+    nodeVersion: "14.21.3"
     npmCmds:
     - 'npm prune'
     - 'npm run build'
