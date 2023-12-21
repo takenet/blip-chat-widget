@@ -1,8 +1,3 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
-
 trigger:
 - master
 
@@ -21,6 +16,8 @@ variables:
   value: 'Blip Chat Widget'
 - name: framework
   value: javascript
+- name: BuildCounter
+  value: $[counter('buildCounter',1)]
 
 resources:
   repositories:   
@@ -35,6 +32,8 @@ extends:
     packagename: blip-chat-widget
     type: javascript
     to: semantic-release
+    skipSast: true
+    skipSonarBranch: false
     npmCmds:
     - 'npm prune'
     - 'npm run build'
