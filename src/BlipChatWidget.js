@@ -187,7 +187,7 @@ export class BlipChatWidget {
     self.blipChatIframe.setAttribute('src', url)
     self.blipChatIframe.setAttribute('id', 'blip-chat-iframe')
     self.blipChatIframe.setAttribute('frameborder', 0)
-    self.blipChatIframe.setAttribute('allow', 'geolocation; microphone')
+    self.blipChatIframe.setAttribute('allow', 'geolocation; microphone; clipboard-read; clipboard-write')
     self.blipChatIframe.setAttribute('allowFullscreen', true)
 
     self.blipChatIframe.onload = () => {
