@@ -122,7 +122,7 @@ export class BlipChat {
     )
   }
 
-  toogleChat() {
+  toggleChat() {
     this.widget._openChat()
   }
 
