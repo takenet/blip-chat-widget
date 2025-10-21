@@ -38,7 +38,8 @@ export class BlipChatWidget {
     customMessageMetadata,
     customCommonUrl,
     connectionData,
-    disableHistory
+    disableHistory,
+    customSearchParams
   ) {
     self = this
     self.appKey = appKey
@@ -60,6 +61,7 @@ export class BlipChatWidget {
     self.customCommonUrl = customCommonUrl
     self.connectionData = connectionData
     self.disableHistory = disableHistory
+    self.customSearchParams = customSearchParams
 
     self._setChatUrlEnvironment(environment, authConfig, appKey)
 
@@ -119,6 +121,13 @@ export class BlipChatWidget {
 
     self.CHAT_URL += `?appKey=${encodeURIComponent(appKey)}`
     if (authConfig) self.CHAT_URL += `&authType=${authConfig.authType}`
+
+    // Append custom search parameters if provided
+    if (self.customSearchParams) {
+      Object.keys(self.customSearchParams).forEach((key) => {
+        self.CHAT_URL += `&${encodeURIComponent(key)}=${encodeURIComponent(self.customSearchParams[key])}`
+      })
+    }
   }
 
   _resizeElements() {
