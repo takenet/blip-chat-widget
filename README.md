@@ -48,6 +48,7 @@ new BlipChat()
 | withTarget        | Set the element that will contain the chat              |
 | withCustomStyle   | Set a custom style for BLiP Chat                        |
 | withCustomCommonUrl   | Set a custom URL for BLiP Chat                      |
+| withCustomSearchParams | Set custom query parameters for the iframe URL     |
 
 *Guest auth will keep the same generated 'userIdentity' for 30 days. When using DEV auth type, 'userIdentity' and 'userPassword' are required.
 
@@ -171,6 +172,29 @@ Connect on BLiP Chat with a custom URL. Specifying how to use organizations in B
           var blipClient = new BlipChat()
           .withAppKey('YOUR-APP-KEY')
           .withCustomCommonUrl('https://take.chat.blip.ai/'); // Add the organization BLiP Chat URL here
+
+          blipClient.build();
+        }
+    })();
+</script>
+```
+
+## Example 5
+
+Connect on BLiP Chat with custom search parameters. Add additional query parameters to the iframe URL.
+
+```js
+<script src="https://unpkg.com/blip-chat-widget@1.11.*" type="text/javascript"></script>
+<script>
+    (function () {
+        window.onload = function () {
+          var blipClient = new BlipChat()
+          .withAppKey('YOUR-APP-KEY')
+          .withCustomSearchParams({
+            param1: 'value1',
+            param2: 'value2',
+            userId: '12345'
+          }); // Adds &param1=value1&param2=value2&userId=12345 to the iframe URL
 
           blipClient.build();
         }

@@ -29,6 +29,10 @@
             value="production"
           />
 
+          <!-- started selected -->
+          <input type="checkbox" id="hideWelcome" name="hideWelcome" />
+          <label for="hideWelcome">Hide Welcome Message</label>
+
           <p>Use buttons bellow to see different behaviours of BLiP Chat</p>
 
           <button onclick="buildChat({authType:BlipChat.GUEST_AUTH})">
@@ -159,6 +163,7 @@
             const environment = document.getElementById('environment').value
               ? document.getElementById('environment').value
               : 'homolog'
+            const hideWelcomeValue = document.getElementById('hideWelcome').checked;
             const appKey =
               document.getElementById('app-key').value ||
               'YmxpcHRlc3RjYXJkczo3YTcwZTUyNi04YzNjLTRmNGQtYWZjYi00ZWFmNzk5ZDFmNjk='
@@ -224,6 +229,9 @@
                 encryptMessageContent: true
               })
               .withCustomStyle(customStyle)
+              .withCustomSearchParams({
+                hideWelcome: hideWelcomeValue,
+              })
               .withEventHandler(BlipChat.ENTER_EVENT, function() {
                 console.log('enter')
               })

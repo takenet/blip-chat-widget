@@ -100,6 +100,11 @@ export class BlipChat {
     return this
   }
 
+  withCustomSearchParams(params) {
+    this.customSearchParams = params
+    return this
+  }
+
   withoutHistory() {
     this.disableHistory = true
     return this
@@ -118,7 +123,8 @@ export class BlipChat {
       this.customMessageMetadata,
       this.customCommonUrl,
       this.connectionData || {},
-      this.disableHistory || false
+      this.disableHistory || false,
+      this.customSearchParams || {}
     )
   }
 
