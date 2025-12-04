@@ -43,10 +43,8 @@ export class BlipChatWidget {
   ) {
     self = this
     self.appKey = appKey
-    self.buttonColor =
-      buttonConfig && buttonConfig.color ? buttonConfig.color : '#2CC3D5'
-    self.buttonIcon =
-      buttonConfig && buttonConfig.icon ? buttonConfig.icon : blipIcon
+    self.buttonColor = buttonConfig?.color || '#2CC3D5'
+    self.buttonIcon = buttonConfig?.icon || blipIcon
     self.authConfig = self._parseAuthConfig(authConfig)
     self.account = self._addAuthTypeToExtras(account, authConfig)
     self.target = target
@@ -88,7 +86,8 @@ export class BlipChatWidget {
       document
         .getElementById('blip-chat-open-iframe')
         .addEventListener('click', self._openChat)
-    } else {
+    } 
+	if (self.target) {
       self._createIframe()
     }
     self._resizeElements()
@@ -147,16 +146,14 @@ export class BlipChatWidget {
   }
 
   _addAuthTypeToExtras(account, authConfig) {
-    let authType = authConfig
-      ? authConfig.authType || BlipChat.GUEST_AUTH
-      : BlipChat.GUEST_AUTH
+    let authType = authConfig?.authType || BlipChat.GUEST_AUTH
     if (account) {
       account.extras = account.extras || {}
       account.extras.authType = authType
-    } else {
-      account = {
-        extras: { authType }
-      }
+	  return account
+    } 
+    account = {
+      extras: { authType } 
     }
 
     return account
