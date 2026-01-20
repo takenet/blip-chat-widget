@@ -129,6 +129,10 @@ export class BlipChat {
   }
 
   toogleChat() {
+    this.toggleChat()
+  }
+
+  toggleChat() {
     this.widget._openChat()
   }
 
