@@ -196,7 +196,10 @@ export class BlipChatWidget {
     self.blipChatIframe.setAttribute('src', url)
     self.blipChatIframe.setAttribute('id', 'blip-chat-iframe')
     self.blipChatIframe.setAttribute('frameborder', 0)
-    self.blipChatIframe.setAttribute('allow', 'geolocation; microphone; clipboard-read; clipboard-write')
+    self.blipChatIframe.setAttribute(
+      'allow',
+      'geolocation; microphone; clipboard-read; clipboard-write'
+    )
     self.blipChatIframe.setAttribute('allowFullscreen', true)
 
     self.blipChatIframe.onload = () => {
@@ -216,7 +219,10 @@ export class BlipChatWidget {
   _sendPostMessage(data) {
     const blipChatIframe = document.getElementById('blip-chat-iframe')
     if (blipChatIframe && blipChatIframe.contentWindow) {
-      blipChatIframe.contentWindow.postMessage(data, self.NEW_URL || self.CHAT_URL)
+      blipChatIframe.contentWindow.postMessage(
+        data,
+        self.NEW_URL || self.CHAT_URL
+      )
     }
   }
 
@@ -364,6 +370,9 @@ export class BlipChatWidget {
             if (pending.content) {
               // If is a message
               self.sendMessage(pending.content)
+            } else if (pending.draft !== undefined) {
+              // If is a draft message
+              self.setDraftMessage(pending.draft)
             } else {
               // is command
               self.sendCommand(pending.command)
@@ -414,7 +423,9 @@ export class BlipChatWidget {
 
   _getObfuscatedUserAccount() {
     if (!self.authConfig || self.authConfig.authType === Constants.GUEST_AUTH) {
-      const localUserAccount = StorageService.getFromLocalStorage(Constants.USER_ACCOUNT_KEY)
+      const localUserAccount = StorageService.getFromLocalStorage(
+        Constants.USER_ACCOUNT_KEY
+      )
 
       if (!localUserAccount) {
         const { botIdentifier } = misc.decodeBlipKey(self.appKey)
@@ -492,6 +503,19 @@ export class BlipChatWidget {
       return
     }
     self._sendPostMessage({ code: Constants.SEND_COMMAND_CODE, command })
+  }
+
+  setDraftMessage(text) {
+    // If chat is not connected, connect it and wait to set the draft message
+    if (!self.isChatLoaded) {
+      self.pendings.push({ draft: text })
+      self._createIframe()
+      return
+    }
+    self._sendPostMessage({
+      code: Constants.SET_DRAFT_MESSAGE_CODE,
+      draft: text
+    })
   }
 
   destroy() {

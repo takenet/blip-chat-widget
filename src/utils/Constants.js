@@ -8,6 +8,7 @@ const CREATE_ACCOUNT_CODE = 'CreateAccount'
 const CHAT_CONNECTED_CODE = 'ChatConnected'
 const SEND_MESSAGE_CODE = 'SendMessage'
 const SEND_COMMAND_CODE = 'SendCommand'
+const SET_DRAFT_MESSAGE_CODE = 'SetDraftMessage'
 const CUSTOM_STYLE_CODE = 'CustomStyle'
 const CUSTOM_MESSAGE_METADATA = 'CustomMessageMetadata'
 const USER_IRIS_ACCOUNT = 'UserIrisAccount'
@@ -17,7 +18,7 @@ const SHOW_CLOSE_BUTTON = 'ShowCloseButton'
 const CLOSE_WIDGET = 'CloseWidget'
 const REDIRECT_URL = 'RedirectUrl'
 
-const COOKIES_EXPIRATION = 2.592e+9
+const COOKIES_EXPIRATION = 2.592e9
 
 const DEV_AUTH = 'Dev'
 const GUEST_AUTH = 'Guest'
@@ -31,6 +32,7 @@ const CONSTANTS = {
   CHAT_CONNECTED_CODE,
   SEND_MESSAGE_CODE,
   SEND_COMMAND_CODE,
+  SET_DRAFT_MESSAGE_CODE,
   CUSTOM_STYLE_CODE,
   CUSTOM_MESSAGE_METADATA,
   USER_IRIS_ACCOUNT,

@@ -155,4 +155,8 @@ export class BlipChat {
   sendCommand(command) {
     this.widget.sendCommand(command)
   }
+
+  setDraftMessage(text) {
+    this.widget.setDraftMessage(text)
+  }
 }
