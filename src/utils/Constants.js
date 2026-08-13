@@ -9,6 +9,7 @@ const CHAT_CONNECTED_CODE = 'ChatConnected'
 const SEND_MESSAGE_CODE = 'SendMessage'
 const SEND_COMMAND_CODE = 'SendCommand'
 const SET_DRAFT_MESSAGE_CODE = 'SetDraftMessage'
+const UPDATE_CONNECTION_DATA_CODE = 'UpdateConnectionData'
 const CUSTOM_STYLE_CODE = 'CustomStyle'
 const CUSTOM_MESSAGE_METADATA = 'CustomMessageMetadata'
 const USER_IRIS_ACCOUNT = 'UserIrisAccount'
@@ -33,6 +34,7 @@ const CONSTANTS = {
   SEND_MESSAGE_CODE,
   SEND_COMMAND_CODE,
   SET_DRAFT_MESSAGE_CODE,
+  UPDATE_CONNECTION_DATA_CODE,
   CUSTOM_STYLE_CODE,
   CUSTOM_MESSAGE_METADATA,
   USER_IRIS_ACCOUNT,

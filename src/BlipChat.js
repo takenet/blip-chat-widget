@@ -159,4 +159,8 @@ export class BlipChat {
   setDraftMessage(text) {
     this.widget.setDraftMessage(text)
   }
+
+  updateConnectionData(connectionData) {
+    this.widget.updateConnectionData(connectionData)
+  }
 }

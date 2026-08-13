@@ -518,6 +518,18 @@ export class BlipChatWidget {
     })
   }
 
+  updateConnectionData(connectionData) {
+    // Always keep the latest value so the next connection/reconnection sends it automatically
+    self.connectionData = connectionData
+    if (!self.isChatLoaded) {
+      return
+    }
+    self._sendPostMessage({
+      code: Constants.UPDATE_CONNECTION_DATA_CODE,
+      connectionData: self._getObfuscatedConnectionData()
+    })
+  }
+
   destroy() {
     window.removeEventListener('message', self._onReceivePostMessage)
     window.removeEventListener('resize', self._resizeElements)
