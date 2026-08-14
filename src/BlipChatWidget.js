@@ -23,8 +23,6 @@ if (
   require('babel-polyfill')
 }
 
-// Use self as context to be able to remove event listeners on widget destroy
-let self = null
 export class BlipChatWidget {
   constructor(
     appKey,
@@ -41,91 +39,96 @@ export class BlipChatWidget {
     disableHistory,
     customSearchParams
   ) {
-    self = this
-    self.appKey = appKey
-    self.buttonColor =
+    this.appKey = appKey
+    this.buttonColor =
       buttonConfig && buttonConfig.color ? buttonConfig.color : '#2CC3D5'
-    self.buttonIcon =
+    this.buttonIcon =
       buttonConfig && buttonConfig.icon ? buttonConfig.icon : blipIcon
-    self.authConfig = self._parseAuthConfig(authConfig)
-    self.account = self._addAuthTypeToExtras(account, authConfig)
-    self.target = target
-    self.events = events
-    self.blipChatContainer = target || dom.createDiv('#blip-chat-container')
-    self.isOpen = false
-    self.isChatLoaded = false
-    self.isFullScreen = false
-    self.pendings = []
-    self.customStyle = customStyle
-    self.customMessageMetadata = customMessageMetadata
-    self.customCommonUrl = customCommonUrl
-    self.connectionData = connectionData
-    self.disableHistory = disableHistory
-    self.customSearchParams = customSearchParams
+    this.authConfig = this._parseAuthConfig(authConfig)
+    this.account = this._addAuthTypeToExtras(account, authConfig)
+    this.target = target
+    this.events = events
+    this.blipChatContainer = target || dom.createDiv('#blip-chat-container')
+    this.isOpen = false
+    this.isChatLoaded = false
+    this.isFullScreen = false
+    this.pendings = []
+    this.customStyle = customStyle
+    this.customMessageMetadata = customMessageMetadata
+    this.customCommonUrl = customCommonUrl
+    this.connectionData = connectionData
+    this.disableHistory = disableHistory
+    this.customSearchParams = customSearchParams
 
-    self._setChatUrlEnvironment(environment, authConfig, appKey)
+    this._setChatUrlEnvironment(environment, authConfig, appKey)
 
     // Check if local storage values expired
     StorageService.processLocalStorageExpires()
 
-    self._onInit()
+    // Bind methods used as event listener references so `this` stays correct
+    // per instance and destroy() can remove the exact same bound reference
+    this._boundOnReceivePostMessage = this._onReceivePostMessage.bind(this)
+    this._boundResizeElements = this._resizeElements.bind(this)
+    this._boundOpenChat = this._openChat.bind(this)
+
+    this._onInit()
 
     // Needs to be after _onInit method because it instance needs some elements that will be created
-    self.NotificationHandler = new NotificationHandler(self)
+    this.NotificationHandler = new NotificationHandler(this)
     // Set elements subscribers
-    self._setSubscribers()
+    this._setSubscribers()
   }
 
   _onInit() {
     const rendered = dom.render(chatView, this)
-    self.blipChatContainer.innerHTML = rendered
+    this.blipChatContainer.innerHTML = rendered
 
-    window.addEventListener('message', self._onReceivePostMessage)
+    window.addEventListener('message', this._boundOnReceivePostMessage)
 
-    if (!self.target) {
+    if (!this.target) {
       // Chat presented on widget
-      document.body.appendChild(self.blipChatContainer)
+      document.body.appendChild(this.blipChatContainer)
       document
         .getElementById('blip-chat-open-iframe')
-        .addEventListener('click', self._openChat)
+        .addEventListener('click', this._boundOpenChat)
     } else {
-      self._createIframe()
+      this._createIframe()
     }
-    self._resizeElements()
-    window.addEventListener('resize', self._resizeElements)
+    this._resizeElements()
+    window.addEventListener('resize', this._boundResizeElements)
   }
 
   _setSubscribers() {
     // Subscribe update count
     const updateNotifications = (count) =>
       (document.getElementById('blip-chat-notifications').textContent = count)
-    self.NotificationHandler.subscribe(updateNotifications)
+    this.NotificationHandler.subscribe(updateNotifications)
 
     // Subscribe update style
     const toggleNotificationsButton = (count) =>
       (document.getElementById('blip-chat-notifications').style.opacity =
         count > 0 ? 1 : 0)
-    self.NotificationHandler.subscribe(toggleNotificationsButton)
+    this.NotificationHandler.subscribe(toggleNotificationsButton)
   }
 
   _setChatUrlEnvironment(environment, authConfig, appKey) {
-    if (self.customCommonUrl) {
-      self.CHAT_URL = self.customCommonUrl
+    if (this.customCommonUrl) {
+      this.CHAT_URL = this.customCommonUrl
     } else if (environment === 'homolog') {
-      self.CHAT_URL = Constants.CHAT_URL_HMG
+      this.CHAT_URL = Constants.CHAT_URL_HMG
     } else if (environment === 'production') {
-      self.CHAT_URL = Constants.CHAT_URL_PROD
+      this.CHAT_URL = Constants.CHAT_URL_PROD
     } else if (environment === 'local') {
-      self.CHAT_URL = Constants.CHAT_URL_LOCAL
+      this.CHAT_URL = Constants.CHAT_URL_LOCAL
     }
 
-    self.CHAT_URL += `?appKey=${encodeURIComponent(appKey)}`
-    if (authConfig) self.CHAT_URL += `&authType=${authConfig.authType}`
+    this.CHAT_URL += `?appKey=${encodeURIComponent(appKey)}`
+    if (authConfig) this.CHAT_URL += `&authType=${authConfig.authType}`
 
     // Append custom search parameters if provided
-    if (self.customSearchParams) {
-      Object.keys(self.customSearchParams).forEach((key) => {
-        self.CHAT_URL += `&${encodeURIComponent(key)}=${encodeURIComponent(self.customSearchParams[key])}`
+    if (this.customSearchParams) {
+      Object.keys(this.customSearchParams).forEach((key) => {
+        this.CHAT_URL += `&${encodeURIComponent(key)}=${encodeURIComponent(this.customSearchParams[key])}`
       })
     }
   }
@@ -138,12 +141,12 @@ export class BlipChatWidget {
     blipFAB.style.height = window.getComputedStyle(blipFAB).width
     if (blipChatIframe) {
       blipChatIframe.style.bottom = `calc(55px + ${blipFAB.style.height} )`
-      if (!self.target) {
+      if (!this.target) {
         // Chat presented on widget
         blipChatIframe.style.maxHeight = `${screenHeight}px`
       }
     }
-    self._checkFullScreen()
+    this._checkFullScreen()
   }
 
   _addAuthTypeToExtras(account, authConfig) {
@@ -178,7 +181,7 @@ export class BlipChatWidget {
 
     authConfig.userPassword = window.btoa(authConfig.userPassword)
 
-    const [identifier] = window.atob(self.appKey).split(':')
+    const [identifier] = window.atob(this.appKey).split(':')
 
     authConfig.userIdentity = encodeURIComponent(
       `${authConfig.userIdentity}.${identifier}`
@@ -188,32 +191,32 @@ export class BlipChatWidget {
   }
 
   _reloadIframe() {
-    self.blipChatIframe.src = self.NEW_URL
+    this.blipChatIframe.src = this.NEW_URL
   }
 
-  _createIframe(url = self.CHAT_URL) {
-    self.blipChatIframe = document.createElement('iframe')
-    self.blipChatIframe.setAttribute('src', url)
-    self.blipChatIframe.setAttribute('id', 'blip-chat-iframe')
-    self.blipChatIframe.setAttribute('frameborder', 0)
-    self.blipChatIframe.setAttribute(
+  _createIframe(url = this.CHAT_URL) {
+    this.blipChatIframe = document.createElement('iframe')
+    this.blipChatIframe.setAttribute('src', url)
+    this.blipChatIframe.setAttribute('id', 'blip-chat-iframe')
+    this.blipChatIframe.setAttribute('frameborder', 0)
+    this.blipChatIframe.setAttribute(
       'allow',
       'geolocation; microphone; clipboard-read; clipboard-write'
     )
-    self.blipChatIframe.setAttribute('allowFullscreen', true)
+    this.blipChatIframe.setAttribute('allowFullscreen', true)
 
-    self.blipChatIframe.onload = () => {
-      const userAccount = self._getObfuscatedUserAccount()
-      const connectionData = self._getObfuscatedConnectionData()
-      self._sendPostMessage({
+    this.blipChatIframe.onload = () => {
+      const userAccount = this._getObfuscatedUserAccount()
+      const connectionData = this._getObfuscatedConnectionData()
+      this._sendPostMessage({
         code: Constants.START_CONNECTION_CODE,
         userAccount,
         connectionData,
-        disableHistory: self.disableHistory
+        disableHistory: this.disableHistory
       })
     }
 
-    self.blipChatContainer.appendChild(self.blipChatIframe)
+    this.blipChatContainer.appendChild(this.blipChatIframe)
   }
 
   _sendPostMessage(data) {
@@ -221,7 +224,7 @@ export class BlipChatWidget {
     if (blipChatIframe && blipChatIframe.contentWindow) {
       blipChatIframe.contentWindow.postMessage(
         data,
-        self.NEW_URL || self.CHAT_URL
+        this.NEW_URL || this.CHAT_URL
       )
     }
   }
@@ -231,23 +234,23 @@ export class BlipChatWidget {
     const blipChatCloseIcon = document.getElementById('blip-chat-close-icon')
     const blipChatButton = document.getElementById('blip-chat-open-iframe')
 
-    if (!self.blipChatIframe) {
-      self._createIframe()
+    if (!this.blipChatIframe) {
+      this._createIframe()
     }
 
     if (
       !forceClose &&
-      self.blipChatIframe &&
-      !self.blipChatIframe.classList.contains('blip-chat-iframe-opened')
+      this.blipChatIframe &&
+      !this.blipChatIframe.classList.contains('blip-chat-iframe-opened')
     ) {
-      // self.blipChatIframe.style.display = 'block'
+      // this.blipChatIframe.style.display = 'block'
       // Required for animation effect
       setTimeout(() => {
-        self.blipChatIframe.classList.add('blip-chat-iframe-opened')
-        self._resizeElements()
+        this.blipChatIframe.classList.add('blip-chat-iframe-opened')
+        this._resizeElements()
 
         // Hide parent html when on widget mode
-        if (!self.target) {
+        if (!this.target) {
           document.getElementsByTagName('body')[0].classList.add('chatParent')
           document.getElementsByTagName('html')[0].classList.add('chatParent')
         }
@@ -261,7 +264,7 @@ export class BlipChatWidget {
         document.getElementsByTagName('head')[0].appendChild(meta)
       }, 100)
 
-      if (self.isChatLoaded) {
+      if (this.isChatLoaded) {
         blipChatButton.classList.add('opened')
       }
 
@@ -269,13 +272,13 @@ export class BlipChatWidget {
       blipChatCloseIcon.style.display = 'block'
 
       // Clear float button notifications
-      self.NotificationHandler.clearNotifications()
-      self.isOpen = true
-      if (self.events.OnEnter) self.events.OnEnter()
+      this.NotificationHandler.clearNotifications()
+      this.isOpen = true
+      if (this.events.OnEnter) this.events.OnEnter()
     } else {
       // Change display to prevent interaction on iOS
       setTimeout(() => {
-        // self.blipChatIframe.style.display = 'none'
+        // this.blipChatIframe.style.display = 'none'
       }, 500)
 
       // Remove meta tag to prevent zoom on input focus
@@ -283,17 +286,17 @@ export class BlipChatWidget {
       document.getElementsByTagName('head')[0].removeChild(meta)
 
       // Hide parent html when on widget mode
-      if (!self.target) {
+      if (!this.target) {
         document.getElementsByTagName('body')[0].classList.remove('chatParent')
         document.getElementsByTagName('html')[0].classList.remove('chatParent')
       }
-      self.blipChatIframe.classList.remove('blip-chat-iframe-opened')
+      this.blipChatIframe.classList.remove('blip-chat-iframe-opened')
       blipChatButton.classList.remove('opened')
       blipChatIcon.style.display = 'block'
       blipChatCloseIcon.style.display = 'none'
-      self.isOpen = false
+      this.isOpen = false
 
-      if (self.events.OnLeave) self.events.OnLeave()
+      if (this.events.OnLeave) this.events.OnLeave()
     }
   }
 
@@ -304,39 +307,39 @@ export class BlipChatWidget {
   _onReceivePostMessage(message) {
     switch (message.data.code) {
       case Constants.REDIRECT_URL:
-        self.NEW_URL = self._getNewUrlWithWebProtocol(message.data.url)
-        self._reloadIframe()
+        this.NEW_URL = this._getNewUrlWithWebProtocol(message.data.url)
+        this._reloadIframe()
         break
       case Constants.CHAT_READY_CODE:
-        if (!self.target) {
+        if (!this.target) {
           // Chat presented on widget
           let button = document.getElementById('blip-chat-open-iframe')
           button.style.visibility = 'visible'
           button.style.opacity = 1
         } else {
           // Chat presented on fixed element
-          self._openChat()
+          this._openChat()
         }
-        self.isChatLoaded = true
+        this.isChatLoaded = true
         const blipChatButton = document.getElementById('blip-chat-open-iframe')
         blipChatButton.classList.add('opened')
-        self._checkFullScreen()
-        if (self.customStyle) {
-          self._sendPostMessage({
+        this._checkFullScreen()
+        if (this.customStyle) {
+          this._sendPostMessage({
             code: Constants.CUSTOM_STYLE_CODE,
-            customStyle: self.customStyle
+            customStyle: this.customStyle
           })
         }
 
-        if (self.customMessageMetadata) {
+        if (this.customMessageMetadata) {
           console.log(
             'postado: ' +
               Constants.CUSTOM_MESSAGE_METADATA +
-              self.customMessageMetadata
+              this.customMessageMetadata
           )
-          self._sendPostMessage({
+          this._sendPostMessage({
             code: Constants.CUSTOM_MESSAGE_METADATA,
-            customMessageMetadata: self.customMessageMetadata
+            customMessageMetadata: this.customMessageMetadata
           })
         }
         break
@@ -344,7 +347,7 @@ export class BlipChatWidget {
       case Constants.CREATE_ACCOUNT_CODE:
         let data = window.atob(message.data.userAccount)
 
-        if (self.events.OnCreateAccount) self.events.OnCreateAccount()
+        if (this.events.OnCreateAccount) this.events.OnCreateAccount()
 
         const accountObj = JSON.parse(data)
         if (accountObj.authType === Constants.GUEST_AUTH) {
@@ -357,25 +360,25 @@ export class BlipChatWidget {
         break
 
       case Constants.CHAT_CONNECTED_CODE:
-        if (self.account) {
-          self._sendPostMessage({
+        if (this.account) {
+          this._sendPostMessage({
             code: Constants.USER_IRIS_ACCOUNT,
-            account: self.account
+            account: this.account
           })
         }
-        if (self.events.OnLoad) self.events.OnLoad()
+        if (this.events.OnLoad) this.events.OnLoad()
 
-        if (self.pendings) {
-          self.pendings.map((pending) => {
+        if (this.pendings) {
+          this.pendings.map((pending) => {
             if (pending.content) {
               // If is a message
-              self.sendMessage(pending.content)
+              this.sendMessage(pending.content)
             } else if (pending.draft !== undefined) {
               // If is a draft message
-              self.setDraftMessage(pending.draft)
+              this.setDraftMessage(pending.draft)
             } else {
               // is command
-              self.sendCommand(pending.command)
+              this.sendCommand(pending.command)
             }
           })
         }
@@ -383,11 +386,11 @@ export class BlipChatWidget {
 
       case Constants.PARENT_NOTIFICATION_CODE:
         // Handle notification and dispatch updates
-        self.NotificationHandler.handle(message.data.messageData)
+        this.NotificationHandler.handle(message.data.messageData)
         break
 
       case Constants.CLOSE_WIDGET:
-        self._openChat(null, true)
+        this._openChat(null, true)
         break
     }
   }
@@ -399,7 +402,7 @@ export class BlipChatWidget {
   }
 
   _checkFullScreen() {
-    if (!self.isChatLoaded || self.target) return
+    if (!this.isChatLoaded || this.target) return
     const width = Math.max(
       document.documentElement.clientWidth,
       window.innerWidth || 0
@@ -410,45 +413,45 @@ export class BlipChatWidget {
     )
     const enteredFullScreen = width <= 480 || height <= 420
     if (
-      (!self.isFullScreen && enteredFullScreen) ||
-      (self.isFullScreen && !enteredFullScreen)
+      (!this.isFullScreen && enteredFullScreen) ||
+      (this.isFullScreen && !enteredFullScreen)
     ) {
-      self.isFullScreen = enteredFullScreen
-      self._sendPostMessage({
+      this.isFullScreen = enteredFullScreen
+      this._sendPostMessage({
         code: Constants.SHOW_CLOSE_BUTTON,
-        showCloseButton: self.isFullScreen
+        showCloseButton: this.isFullScreen
       })
     }
   }
 
   _getObfuscatedUserAccount() {
-    if (!self.authConfig || self.authConfig.authType === Constants.GUEST_AUTH) {
+    if (!this.authConfig || this.authConfig.authType === Constants.GUEST_AUTH) {
       const localUserAccount = StorageService.getFromLocalStorage(
         Constants.USER_ACCOUNT_KEY
       )
 
       if (!localUserAccount) {
-        const { botIdentifier } = misc.decodeBlipKey(self.appKey)
+        const { botIdentifier } = misc.decodeBlipKey(this.appKey)
         let userAccount = misc.createGuestUser(botIdentifier)
-        userAccount = { ...userAccount, ...self.account }
+        userAccount = { ...userAccount, ...this.account }
         return window.btoa(JSON.stringify(userAccount))
       } else {
         return localUserAccount
       }
-    } else if (self.authConfig.authType === Constants.DEV_AUTH) {
-      let userAccount = self.account
-      userAccount.userIdentity = self.authConfig.userIdentity
-      userAccount.userPassword = self.authConfig.userPassword
-      userAccount.authType = self.authConfig.authType
-      userAccount.userName = self.authConfig.userName
-      userAccount.userEmail = self.authConfig.userEmail
+    } else if (this.authConfig.authType === Constants.DEV_AUTH) {
+      let userAccount = this.account
+      userAccount.userIdentity = this.authConfig.userIdentity
+      userAccount.userPassword = this.authConfig.userPassword
+      userAccount.authType = this.authConfig.authType
+      userAccount.userName = this.authConfig.userName
+      userAccount.userEmail = this.authConfig.userEmail
 
       return window.btoa(JSON.stringify(userAccount))
     }
   }
 
   _getObfuscatedConnectionData() {
-    return window.btoa(JSON.stringify(self.connectionData))
+    return window.btoa(JSON.stringify(this.connectionData))
   }
 
   sendMessage(userMessage) {
@@ -487,32 +490,32 @@ export class BlipChatWidget {
     }
 
     // If chat is not connected, connect it and wait to send command
-    if (!self.isChatLoaded) {
-      self.pendings.push({ content })
-      self._createIframe()
+    if (!this.isChatLoaded) {
+      this.pendings.push({ content })
+      this._createIframe()
       return
     }
-    self._sendPostMessage({ code: Constants.SEND_MESSAGE_CODE, content })
+    this._sendPostMessage({ code: Constants.SEND_MESSAGE_CODE, content })
   }
 
   sendCommand(command) {
     // If chat is not connected, connect it and wait to send command
-    if (!self.isChatLoaded) {
-      self.pendings.push({ command })
-      self._createIframe()
+    if (!this.isChatLoaded) {
+      this.pendings.push({ command })
+      this._createIframe()
       return
     }
-    self._sendPostMessage({ code: Constants.SEND_COMMAND_CODE, command })
+    this._sendPostMessage({ code: Constants.SEND_COMMAND_CODE, command })
   }
 
   setDraftMessage(text) {
     // If chat is not connected, connect it and wait to set the draft message
-    if (!self.isChatLoaded) {
-      self.pendings.push({ draft: text })
-      self._createIframe()
+    if (!this.isChatLoaded) {
+      this.pendings.push({ draft: text })
+      this._createIframe()
       return
     }
-    self._sendPostMessage({
+    this._sendPostMessage({
       code: Constants.SET_DRAFT_MESSAGE_CODE,
       draft: text
     })
@@ -520,30 +523,30 @@ export class BlipChatWidget {
 
   updateConnectionData(connectionData) {
     // Always keep the latest value so the next connection/reconnection sends it automatically
-    self.connectionData = connectionData
-    if (!self.isChatLoaded) {
+    this.connectionData = connectionData
+    if (!this.isChatLoaded) {
       return
     }
-    self._sendPostMessage({
+    this._sendPostMessage({
       code: Constants.UPDATE_CONNECTION_DATA_CODE,
-      connectionData: self._getObfuscatedConnectionData()
+      connectionData: this._getObfuscatedConnectionData()
     })
   }
 
   updateCustomStyle(customStyle) {
     // Always keep the latest value so CHAT_READY_CODE sends it on future (re)connections
-    self.customStyle = customStyle
-    if (!self.isChatLoaded) {
+    this.customStyle = customStyle
+    if (!this.isChatLoaded) {
       return
     }
-    self._sendPostMessage({
+    this._sendPostMessage({
       code: Constants.CUSTOM_STYLE_CODE,
-      customStyle: self.customStyle
+      customStyle: this.customStyle
     })
   }
 
   destroy() {
-    window.removeEventListener('message', self._onReceivePostMessage)
-    window.removeEventListener('resize', self._resizeElements)
+    window.removeEventListener('message', this._boundOnReceivePostMessage)
+    window.removeEventListener('resize', this._boundResizeElements)
   }
 }
