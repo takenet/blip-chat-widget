@@ -88,8 +88,8 @@ export class BlipChatWidget {
     if (!this.target) {
       // Chat presented on widget
       document.body.appendChild(this.blipChatContainer)
-      document
-        .getElementById('blip-chat-open-iframe')
+      this.blipChatContainer
+        .querySelector('#blip-chat-open-iframe')
         .addEventListener('click', this._boundOpenChat)
     } else {
       this._createIframe()
@@ -101,12 +101,12 @@ export class BlipChatWidget {
   _setSubscribers() {
     // Subscribe update count
     const updateNotifications = (count) =>
-      (document.getElementById('blip-chat-notifications').textContent = count)
+      (this.blipChatContainer.querySelector('#blip-chat-notifications').textContent = count)
     this.NotificationHandler.subscribe(updateNotifications)
 
     // Subscribe update style
     const toggleNotificationsButton = (count) =>
-      (document.getElementById('blip-chat-notifications').style.opacity =
+      (this.blipChatContainer.querySelector('#blip-chat-notifications').style.opacity =
         count > 0 ? 1 : 0)
     this.NotificationHandler.subscribe(toggleNotificationsButton)
   }
@@ -134,8 +134,8 @@ export class BlipChatWidget {
   }
 
   _resizeElements() {
-    const blipFAB = document.getElementById('blip-chat-open-iframe')
-    const blipChatIframe = document.getElementById('blip-chat-iframe')
+    const blipFAB = this.blipChatContainer.querySelector('#blip-chat-open-iframe')
+    const blipChatIframe = this.blipChatContainer.querySelector('#blip-chat-iframe')
     const screenHeight = window.outerHeight - 250
 
     blipFAB.style.height = window.getComputedStyle(blipFAB).width
@@ -220,7 +220,7 @@ export class BlipChatWidget {
   }
 
   _sendPostMessage(data) {
-    const blipChatIframe = document.getElementById('blip-chat-iframe')
+    const blipChatIframe = this.blipChatContainer.querySelector('#blip-chat-iframe')
     if (blipChatIframe && blipChatIframe.contentWindow) {
       blipChatIframe.contentWindow.postMessage(
         data,
@@ -230,9 +230,9 @@ export class BlipChatWidget {
   }
 
   _openChat(event, forceClose) {
-    const blipChatIcon = document.getElementById('blip-chat-icon')
-    const blipChatCloseIcon = document.getElementById('blip-chat-close-icon')
-    const blipChatButton = document.getElementById('blip-chat-open-iframe')
+    const blipChatIcon = this.blipChatContainer.querySelector('#blip-chat-icon')
+    const blipChatCloseIcon = this.blipChatContainer.querySelector('#blip-chat-close-icon')
+    const blipChatButton = this.blipChatContainer.querySelector('#blip-chat-open-iframe')
 
     if (!this.blipChatIframe) {
       this._createIframe()
@@ -243,25 +243,31 @@ export class BlipChatWidget {
       this.blipChatIframe &&
       !this.blipChatIframe.classList.contains('blip-chat-iframe-opened')
     ) {
-      // this.blipChatIframe.style.display = 'block'
-      // Required for animation effect
-      setTimeout(() => {
-        this.blipChatIframe.classList.add('blip-chat-iframe-opened')
-        this._resizeElements()
-
-        // Hide parent html when on widget mode
-        if (!this.target) {
+      // Hide parent html when on widget mode, only for the first widget instance opening
+      if (!this.target) {
+        BlipChatWidget._openWidgetsCount++
+        if (BlipChatWidget._openWidgetsCount === 1) {
           document.getElementsByTagName('body')[0].classList.add('chatParent')
           document.getElementsByTagName('html')[0].classList.add('chatParent')
         }
+      }
 
-        // Add meta tag to prevent zoom on input focus
+      // Add meta tag to prevent zoom on input focus, only if not already present
+      BlipChatWidget._openMetaRefCount++
+      if (!document.getElementById('blipChatMeta')) {
         let meta = document.createElement('meta')
         meta.name = 'viewport'
         meta.content =
           'width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no'
         meta.id = 'blipChatMeta'
         document.getElementsByTagName('head')[0].appendChild(meta)
+      }
+
+      // this.blipChatIframe.style.display = 'block'
+      // Required for animation effect
+      setTimeout(() => {
+        this.blipChatIframe.classList.add('blip-chat-iframe-opened')
+        this._resizeElements()
       }, 100)
 
       if (this.isChatLoaded) {
@@ -281,14 +287,20 @@ export class BlipChatWidget {
         // this.blipChatIframe.style.display = 'none'
       }, 500)
 
-      // Remove meta tag to prevent zoom on input focus
-      let meta = document.getElementById('blipChatMeta')
-      document.getElementsByTagName('head')[0].removeChild(meta)
+      // Remove meta tag to prevent zoom on input focus, only when the last open instance closes
+      BlipChatWidget._openMetaRefCount = Math.max(0, BlipChatWidget._openMetaRefCount - 1)
+      if (BlipChatWidget._openMetaRefCount === 0) {
+        let meta = document.getElementById('blipChatMeta')
+        if (meta) meta.parentElement.removeChild(meta)
+      }
 
-      // Hide parent html when on widget mode
+      // Hide parent html when on widget mode, only when the last widget instance closes
       if (!this.target) {
-        document.getElementsByTagName('body')[0].classList.remove('chatParent')
-        document.getElementsByTagName('html')[0].classList.remove('chatParent')
+        BlipChatWidget._openWidgetsCount = Math.max(0, BlipChatWidget._openWidgetsCount - 1)
+        if (BlipChatWidget._openWidgetsCount === 0) {
+          document.getElementsByTagName('body')[0].classList.remove('chatParent')
+          document.getElementsByTagName('html')[0].classList.remove('chatParent')
+        }
       }
       this.blipChatIframe.classList.remove('blip-chat-iframe-opened')
       blipChatButton.classList.remove('opened')
@@ -327,7 +339,7 @@ export class BlipChatWidget {
       case Constants.CHAT_READY_CODE:
         if (!this.target) {
           // Chat presented on widget
-          let button = document.getElementById('blip-chat-open-iframe')
+          let button = this.blipChatContainer.querySelector('#blip-chat-open-iframe')
           button.style.visibility = 'visible'
           button.style.opacity = 1
         } else {
@@ -335,7 +347,7 @@ export class BlipChatWidget {
           this._openChat()
         }
         this.isChatLoaded = true
-        const blipChatButton = document.getElementById('blip-chat-open-iframe')
+        const blipChatButton = this.blipChatContainer.querySelector('#blip-chat-open-iframe')
         blipChatButton.classList.add('opened')
         this._checkFullScreen()
         if (this.customStyle) {
@@ -590,7 +602,33 @@ export class BlipChatWidget {
   }
 
   destroy() {
+    // Treat a destroy while still open as an implicit close, so the shared
+    // 'chatParent' class / '#blipChatMeta' ref counts don't leak.
+    if (this.isOpen) {
+      BlipChatWidget._openMetaRefCount = Math.max(0, BlipChatWidget._openMetaRefCount - 1)
+      if (BlipChatWidget._openMetaRefCount === 0) {
+        let meta = document.getElementById('blipChatMeta')
+        if (meta) meta.parentElement.removeChild(meta)
+      }
+
+      if (!this.target) {
+        BlipChatWidget._openWidgetsCount = Math.max(0, BlipChatWidget._openWidgetsCount - 1)
+        if (BlipChatWidget._openWidgetsCount === 0) {
+          document.getElementsByTagName('body')[0].classList.remove('chatParent')
+          document.getElementsByTagName('html')[0].classList.remove('chatParent')
+        }
+      }
+      this.isOpen = false
+    }
+
     window.removeEventListener('message', this._boundOnReceivePostMessage)
     window.removeEventListener('resize', this._boundResizeElements)
   }
 }
+
+// Reference counters for document-level singletons shared across all BlipChatWidget instances.
+// _openWidgetsCount tracks open widget-mode (!target) instances and gates the 'chatParent'
+// class on <body>/<html>. _openMetaRefCount tracks open instances of any mode and gates the
+// shared '#blipChatMeta' viewport tag, since that tag was previously created for both modes.
+BlipChatWidget._openWidgetsCount = 0
+BlipChatWidget._openMetaRefCount = 0
