@@ -530,6 +530,18 @@ export class BlipChatWidget {
     })
   }
 
+  updateCustomStyle(customStyle) {
+    // Always keep the latest value so CHAT_READY_CODE sends it on future (re)connections
+    self.customStyle = customStyle
+    if (!self.isChatLoaded) {
+      return
+    }
+    self._sendPostMessage({
+      code: Constants.CUSTOM_STYLE_CODE,
+      customStyle: self.customStyle
+    })
+  }
+
   destroy() {
     window.removeEventListener('message', self._onReceivePostMessage)
     window.removeEventListener('resize', self._resizeElements)

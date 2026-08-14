@@ -163,4 +163,8 @@ export class BlipChat {
   updateConnectionData(connectionData) {
     this.widget.updateConnectionData(connectionData)
   }
+
+  updateCustomStyle(style) {
+    this.widget.updateCustomStyle(style)
+  }
 }

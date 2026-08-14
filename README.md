@@ -1,63 +1,65 @@
 # Running
 
-* `npm install`
-* `npm start`
-* Project will be running on `http://localhost:3000`
+- `npm install`
+- `npm start`
+- Project will be running on `http://localhost:3000`
 
 # Installation
 
 Add the script element inside the **body** of your web page. To get the script with your app key, go to [BLiP portal][1]. Choose the desired bot, go to the upper menu and access `Channels > Blip Chat`. On the `Setup` tab you will be able to get the required script. You also have to sign up all website domains into which Blip Chat will be included, otherwise it will not work.
 That's all :)
 
-*For **publishing** purposes, download the script and make a reference to it locally. CDN may have availability problems and cause BLiP Chat instability.*
+_For **publishing** purposes, download the script and make a reference to it locally. CDN may have availability problems and cause BLiP Chat instability._
 
 ```html
-<script src="https://unpkg.com/blip-chat-widget@1.11.*" type="text/javascript"></script>
+<script
+  src="https://unpkg.com/blip-chat-widget@1.11.*"
+  type="text/javascript"
+></script>
 <script>
-    (function () {
-        window.onload = function () {
-            new BlipChat()
-            .withAppKey('YOUR-APP-KEY')
-            .withButton({"color":"#2CC3D6"})
-            .build();
-        }
-    })();
+  ;(function () {
+    window.onload = function () {
+      new BlipChat()
+        .withAppKey('YOUR-APP-KEY')
+        .withButton({ color: '#2CC3D6' })
+        .build()
+    }
+  })()
 </script>
 ```
-
 
 You can also use BlipChat Widget as npm module:
 
 ```javascript
-import { BlipChat } from "blip-chat-widget";
+import { BlipChat } from 'blip-chat-widget'
 new BlipChat()
-  .withAppKey("YOUR-APP-KEY")
-  .withButton({ color: "#2CC3D5" })
-  .build();
+  .withAppKey('YOUR-APP-KEY')
+  .withButton({ color: '#2CC3D5' })
+  .build()
 ```
 
 # Optional parameters
 
-| Property          | Description                                             |
-| ----------------- | ------------------------------------------------------- |
-| withAppKey        | Set the bot's app key                                   |
-| withButton        | Set the button's color and icon                         |
-| withAuth          | Set the auth type, user identity and password [(see more)](https://github.com/takenet/blip-chat-widget/wiki/Authentication-Types)          |
-| withAccount       | Set the user account [(see more)](https://github.com/takenet/blip-chat-widget/wiki/Authentication-Types)                                   |
-| withEventHandler  | Set the events to be called. Params: name and function* |
-| withTarget        | Set the element that will contain the chat              |
-| withCustomStyle   | Set a custom style for BLiP Chat                        |
-| withCustomCommonUrl   | Set a custom URL for BLiP Chat                      |
-| withCustomSearchParams | Set custom query parameters for the iframe URL     |
+| Property               | Description                                                                                                                       |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| withAppKey             | Set the bot's app key                                                                                                             |
+| withButton             | Set the button's color and icon                                                                                                   |
+| withAuth               | Set the auth type, user identity and password [(see more)](https://github.com/takenet/blip-chat-widget/wiki/Authentication-Types) |
+| withAccount            | Set the user account [(see more)](https://github.com/takenet/blip-chat-widget/wiki/Authentication-Types)                          |
+| withEventHandler       | Set the events to be called. Params: name and function\*                                                                          |
+| withTarget             | Set the element that will contain the chat                                                                                        |
+| withCustomStyle        | Set a custom style for BLiP Chat                                                                                                  |
+| withCustomCommonUrl    | Set a custom URL for BLiP Chat                                                                                                    |
+| withCustomSearchParams | Set custom query parameters for the iframe URL                                                                                    |
 
-*Guest auth will keep the same generated 'userIdentity' for 30 days. When using DEV auth type, 'userIdentity' and 'userPassword' are required.
+\*Guest auth will keep the same generated 'userIdentity' for 30 days. When using DEV auth type, 'userIdentity' and 'userPassword' are required.
 
-*Supported events:
+\*Supported events:
 
-* OnEnter - Set the event to run on opening the chat
-* OnLeave - Set the event to run on closing the chat
-* OnLoad  - Set the event to run on finish loading the chat
-* OnCreateAccount - Set the event to run on creating new user account
+- OnEnter - Set the event to run on opening the chat
+- OnLeave - Set the event to run on closing the chat
+- OnLoad - Set the event to run on finish loading the chat
+- OnCreateAccount - Set the event to run on creating new user account
 
 **[Click here](https://github.com/takenet/blip-chat-widget/wiki/Authentication-Types)** to see how to use BLiP Chat in a logged web page.
 
@@ -106,6 +108,7 @@ Connecting on BLiP Chat passing user auth, account and event handlers.
     })();
 </script>
 ```
+
 ## Example 2
 
 Connect on BLiP Chat and set create account event to send chat state on the first time that the user is interacting with the bot.
@@ -213,7 +216,8 @@ It's pretty recommended to use SSL certificate for the site that will receive th
 BLiP Chat needs the document.referrer value to communicate with the website hosting it. But in some servers, we can have a Referrer-Policy header configurated. In this case, we cannot have a `no-referrer` and `same-origin` policies, because we won't receive the value in this situation (we just receive a blank string).
 
 Reference Article: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
-___
+
+---
 
 If your website blocks iframe origins by using the `Content-Security-Policy`, you need to add the domain `https://chat.blip.ai/` on `frame-src` policy. If you do not add that domain, the BLiP Chat will not load and the following error will be showed on browser console:
 
@@ -245,8 +249,6 @@ This card only works if your website has a SSL certificate and is accessed via H
 
 # Script usage
 
-
-
 # Features
 
 ## Destroy chat widget
@@ -254,7 +256,7 @@ This card only works if your website has a SSL certificate and is accessed via H
 Destroys the widget that was added to your page.
 
 ```javascript
-blipClient.destroy();
+blipClient.destroy()
 ```
 
 ## Toogle chat widget
@@ -262,7 +264,7 @@ blipClient.destroy();
 Toggles the chat widget window.
 
 ```javascript
-blipClient.toogleChat();
+blipClient.toogleChat()
 ```
 
 ## Send message
@@ -286,6 +288,14 @@ Sends a message to your bot. The message can be a simple text or any LIME Protoc
         }
     })();
 </script>
+```
+
+## Update custom style
+
+Updates the custom style at runtime, without rebuilding the widget. It replaces the value previously set with `withCustomStyle`. If the chat is already loaded, the new style is sent immediately; otherwise, it will be applied as soon as the chat is ready.
+
+```javascript
+blipClient.updateCustomStyle(customStyle)
 ```
 
 ## Send command
@@ -314,10 +324,9 @@ Sends a command. See example below:
 
 # Supported mobile technologies
 
-* [Android][2]
-* [iOS][3]
+- [Android][2]
+- [iOS][3]
 
- [1]: https://portal.blip.ai
- [2]: https://help.blip.ai/hc/pt-br/articles/360057510674-Como-adicionar-um-bot-em-um-aplicativo-Android-utilizando-o-BLiP-Chat-
- [3]: https://help.blip.ai/hc/pt-br/articles/360059367773-Como-adicionar-um-bot-em-um-aplicativo-iOS-utilizando-o-BLiP-Chat-
-
+[1]: https://portal.blip.ai
+[2]: https://help.blip.ai/hc/pt-br/articles/360057510674-Como-adicionar-um-bot-em-um-aplicativo-Android-utilizando-o-BLiP-Chat-
+[3]: https://help.blip.ai/hc/pt-br/articles/360059367773-Como-adicionar-um-bot-em-um-aplicativo-iOS-utilizando-o-BLiP-Chat-
