@@ -305,6 +305,20 @@ export class BlipChatWidget {
   }
 
   _onReceivePostMessage(message) {
+    const expectedOrigin = new window.URL(this.NEW_URL || this.CHAT_URL).origin
+    const originValid = message.origin === expectedOrigin
+    const sourceValid = this.blipChatIframe
+      ? message.source === this.blipChatIframe.contentWindow
+      : true
+
+    if (!originValid || !sourceValid) {
+      console.warn('[BlipChatWidget] postMessage recebida com origin/source inesperado', {
+        origin: message.origin,
+        expectedOrigin,
+        hasIframeRef: !!this.blipChatIframe
+      })
+    }
+
     switch (message.data.code) {
       case Constants.REDIRECT_URL:
         this.NEW_URL = this._getNewUrlWithWebProtocol(message.data.url)
@@ -352,7 +366,7 @@ export class BlipChatWidget {
         const accountObj = JSON.parse(data)
         if (accountObj.authType === Constants.GUEST_AUTH) {
           StorageService.setToLocalStorage(
-            Constants.USER_ACCOUNT_KEY,
+            Constants.getUserAccountKey(this.appKey),
             accountObj,
             Constants.COOKIES_EXPIRATION
           )
@@ -426,9 +440,39 @@ export class BlipChatWidget {
 
   _getObfuscatedUserAccount() {
     if (!this.authConfig || this.authConfig.authType === Constants.GUEST_AUTH) {
-      const localUserAccount = StorageService.getFromLocalStorage(
-        Constants.USER_ACCOUNT_KEY
+      const namespacedUserAccountKey = Constants.getUserAccountKey(this.appKey)
+      let localUserAccount = StorageService.getFromLocalStorage(
+        namespacedUserAccountKey
       )
+
+      if (!localUserAccount) {
+        const legacyUserAccount = StorageService.getFromLocalStorage(
+          Constants.USER_ACCOUNT_KEY
+        )
+
+        if (legacyUserAccount) {
+          try {
+            // Migrate the legacy shared key to the namespaced one and drop it
+            const migratedAccount = JSON.parse(window.atob(legacyUserAccount))
+            StorageService.setToLocalStorage(
+              namespacedUserAccountKey,
+              migratedAccount,
+              Constants.COOKIES_EXPIRATION
+            )
+            localUserAccount = StorageService.getFromLocalStorage(
+              namespacedUserAccountKey
+            )
+          } catch (error) {
+            // Corrupted legacy value: discard it and fall back to guest creation below
+            console.warn(
+              'BlipChat: legacy user account key was corrupted and has been discarded',
+              error
+            )
+          } finally {
+            window.localStorage.removeItem(Constants.USER_ACCOUNT_KEY)
+          }
+        }
+      }
 
       if (!localUserAccount) {
         const { botIdentifier } = misc.decodeBlipKey(this.appKey)

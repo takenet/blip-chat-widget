@@ -24,6 +24,9 @@ const COOKIES_EXPIRATION = 2.592e9
 const DEV_AUTH = 'Dev'
 const GUEST_AUTH = 'Guest'
 
+// Namespaces the guest account key per appKey to avoid cross-instance collisions
+const getUserAccountKey = (appKey) => `${USER_ACCOUNT_KEY}:${appKey}`
+
 const CONSTANTS = {
   CHAT_URL_LOCAL,
   CHAT_URL_HMG,
@@ -39,6 +42,7 @@ const CONSTANTS = {
   CUSTOM_MESSAGE_METADATA,
   USER_IRIS_ACCOUNT,
   USER_ACCOUNT_KEY,
+  getUserAccountKey,
   CREATE_ACCOUNT_CODE,
   COOKIES_EXPIRATION,
   DEV_AUTH,
