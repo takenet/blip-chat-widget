@@ -241,7 +241,7 @@ export class BlipChatWidget {
     if (
       !forceClose &&
       this.blipChatIframe &&
-      !this.blipChatIframe.classList.contains('blip-chat-iframe-opened')
+      !this.isOpen
     ) {
       // Hide parent html when on widget mode, only for the first widget instance opening
       if (!this.target) {
