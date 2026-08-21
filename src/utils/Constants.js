@@ -27,6 +27,11 @@ const GUEST_AUTH = 'Guest'
 // Namespaces the guest account key per appKey to avoid cross-instance collisions
 const getUserAccountKey = (appKey) => `${USER_ACCOUNT_KEY}:${appKey}`
 
+const WIDGET_OPEN_KEY = 'blipSdkWidgetOpen'
+
+// Namespaces the widget open state key per appKey to avoid cross-instance collisions
+const getWidgetOpenKey = (appKey) => `${WIDGET_OPEN_KEY}:${appKey}`
+
 const CONSTANTS = {
   CHAT_URL_LOCAL,
   CHAT_URL_HMG,
@@ -43,6 +48,8 @@ const CONSTANTS = {
   USER_IRIS_ACCOUNT,
   USER_ACCOUNT_KEY,
   getUserAccountKey,
+  WIDGET_OPEN_KEY,
+  getWidgetOpenKey,
   CREATE_ACCOUNT_CODE,
   COOKIES_EXPIRATION,
   DEV_AUTH,
