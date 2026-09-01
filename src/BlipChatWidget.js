@@ -688,6 +688,7 @@ export class BlipChatWidget {
             .getElementsByTagName('html')[0]
             .classList.remove('chatParent')
         }
+        this._setWidgetOpenState(false)
       }
       this.isOpen = false
     }
