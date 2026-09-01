@@ -206,6 +206,12 @@ export class BlipChatWidget {
   }
 
   _createIframe(url = this.CHAT_URL) {
+    // Idempotent: several call sites (boot, _openChat, sendMessage/sendCommand/
+    // setDraftMessage before the chat has loaded) may race to create the
+    // iframe. Creating a second one would duplicate the handshake and corrupt
+    // the open-state/ref-count bookkeeping.
+    if (this.blipChatIframe) return
+
     this.blipChatIframe = document.createElement('iframe')
     this.blipChatIframe.setAttribute('src', url)
     this.blipChatIframe.setAttribute('id', 'blip-chat-iframe')
