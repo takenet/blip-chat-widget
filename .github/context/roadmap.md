@@ -1,0 +1,72 @@
+# Roadmap de produto vs. estado da arquitetura
+
+## Proveniência (fonte externa, não versionada neste repo)
+
+Este roadmap tem origem em um documento de produto externo ("Sugestões
+BlipChat Pedroso", Google Sites, requer login,
+`https://sites.google.com/blip.ai/sugestes-blipchat-pedroso/`), não
+versionado neste repositório e não acessível para verificação direta a
+partir deste ambiente. As classificações de prioridade/esforço/severidade
+abaixo são as do documento de origem — **não foram re-validadas por este
+Context Engineer**, apenas registradas como decisão de produto existente.
+
+O que **foi** validado nesta sessão, cruzando com o código: quais itens já
+têm suporte implementado no SDK, e quais são estruturalmente inviáveis neste
+repositório por conta da restrição descrita em
+[project.md](./project.md#restrição-estrutural-central) (UI de conversa vive
+apenas no iframe, fora deste repo).
+
+## Bloco A — Fundamental (F1–F7)
+
+Origem: discovery do cliente Energisa.
+
+| Item | Descrição                                       | Estado frente à arquitetura                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+| ---- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F1   | Manutenção de sessão na recarga da página       | **Implementado (parcial)** — o estado _aberto/fechado_ do widget agora sobrevive a reload da página via `sessionStorage`, namespaced por `appKey` (`Constants.getWidgetOpenKey`), restaurado em `CHAT_READY_CODE` reaproveitando `_openChat()` (commit `565723c`, ver [decisions.md](./decisions.md#7-persistência-do-estado-abertofechado-do-widget-entre-reloads-sessionstorage)). Cobre apenas UI (aberto/fechado); a sessão guest em si já expira por tempo (`COOKIES_EXPIRATION`, 30 dias) via `localStorage`, sem mecanismo dedicado de "retomar sessão exata" além disso |
+| F2   | Sessão com contexto via API                     | Parcialmente implementado — `updateConnectionData()` (commit `23d343b`, ver [decisions.md](./decisions.md#2-atualização-de-dados-de-conexão-em-runtime-updateconnectiondata)) permite atualizar dados de conexão em runtime                                                                                                                                                                                                                                                                                                                                                     |
+| F3   | Mensagem inicial dinâmica via URL               | Já alcançável hoje sem mudança de SDK, via `withCustomSearchParams` (confirmado em [src/BlipChat.js](../../src/BlipChat.js) e propagado à `CHAT_URL` em `_setChatUrlEnvironment`)                                                                                                                                                                                                                                                                                                                                                                                               |
+| F4   | Acesso a parâmetros de URL no fluxo da conversa | Não implementado neste SDK — dependeria de como o iframe consome os `customSearchParams` já repassados na URL, fora do escopo deste repo                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| F5   | Bypass da tela inicial                          | Já alcançável hoje via `withCustomSearchParams`, mesmo mecanismo de F3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| F6   | Compressão de imagens no envio                  | `BLOCKED_EXTERNAL` — funcionalidade de anexos vive inteiramente na UI do iframe, fora deste repositório                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| F7   | Teclado virtual cobrindo o campo de input       | Correção de bug (não feature). Root cause não reproduzido no ambiente desta sessão; classificado como real pela própria fonte de produto                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+
+## Bloco B — Evolução (E1–E5)
+
+Origem: discovery do cliente Energisa. Todos exigem novos componentes de UI
+de conversa (captura de foto, menus, formulários, autocompletar, PWA) que só
+podem viver dentro do iframe — **`BLOCKED_EXTERNAL`** para este SDK, sem
+exceção validada nesta sessão.
+
+| Item | Descrição                        | Estado             |
+| ---- | -------------------------------- | ------------------ |
+| E1   | Captura de foto nativa           | `BLOCKED_EXTERNAL` |
+| E2   | Menu de opções mais flexível     | `BLOCKED_EXTERNAL` |
+| E3   | Formulários nativos estruturados | `BLOCKED_EXTERNAL` |
+| E4   | Autocompletar em menus           | `BLOCKED_EXTERNAL` |
+| E5   | PWA instalável                   | `BLOCKED_EXTERNAL` |
+
+## Bloco C — Ampliações (N1–N8)
+
+Origem: benchmark competitivo, não em cliente específico.
+
+| Item | Descrição                                  | Estado frente à arquitetura                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ---- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| N1   | Autenticação via JWT                       | Parcialmente implementável — `authConfig`/`Dev` auth já existe como mecanismo próximo, mas decisões de segurança/produto pendentes (não detalhadas no código; validação de origem do `postMessage` hoje é log-only, ver [decisions.md](./decisions.md) item 5, o que é relevante para qualquer avanço em auth)                                                                                                                                                                     |
+| N2   | Continuidade de conversa via WhatsApp      | `NEEDS_PRODUCT_DECISION` + `BLOCKED_EXTERNAL` — risco de sequestro de identidade se mal implementado; depende de backend/Iris, fora do repo                                                                                                                                                                                                                                                                                                                                        |
+| N3   | Múltiplas conversas/instâncias simultâneas | **O mais avançado** — pré-requisito estrutural (eliminação do singleton de módulo) e escopo de instância já implementados (commits `c06c726`, `4c8c644`, `6c88cf8`, ver [decisions.md](./decisions.md)). Débito de reentrância em `_openChat` corrigido no commit `c292816`. Resta: sobreposição visual entre instâncias em modo widget (decisão de UX pendente) — documentado em [decisions.md](./decisions.md#limitações-conhecidas-deliberadamente-não-corrigidas-nesta-rodada) |
+| N4   | Rascunho de mensagem programável           | **Implementado** — `setDraftMessage()`, commit `3e1463a`                                                                                                                                                                                                                                                                                                                                                                                                                           |
+| N5   | Tema customizável em runtime               | **Implementado** — `updateCustomStyle()`, commit `54e4ed5`                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| N6   | (depende de E5/N3)                         | Bloqueado por dependência em E5 (`BLOCKED_EXTERNAL`) e parcialmente por N3 (parcialmente implementado, ver acima)                                                                                                                                                                                                                                                                                                                                                                  |
+| N7   | Governança de anexos                       | `BLOCKED_EXTERNAL` — anexos vivem na UI do iframe; 3 decisões de produto pendentes na fonte original                                                                                                                                                                                                                                                                                                                                                                               |
+| N8   | Telemetria / prova de contenção            | Parcial: engajamento básico (abertura, envio de mensagem) já instrumentável via eventos públicos existentes (`OnEnter`, `OnLoad`, etc.) sem mudança de SDK — `NO_ACTION_REQUIRED` para essa parte. Para "contenção" (a conversa foi resolvida sem escalada humana), o dado não trafega no protocolo `postMessage` atual e dependeria do backend/Iris — `NEEDS_PRODUCT_DECISION` + `BLOCKED_EXTERNAL`                                                                               |
+
+## Como interpretar
+
+- `BLOCKED_EXTERNAL`: a mudança pertence à UI do iframe ou ao backend/Iris,
+  não a este repositório.
+- `NEEDS_PRODUCT_DECISION`: existe caminho técnico possível, mas falta
+  decisão de produto/segurança antes de qualquer implementação.
+- Itens marcados como implementados aqui foram cruzados contra o código
+  real (`src/BlipChat.js`, `src/BlipChatWidget.js`,
+  `src/utils/Constants.js`) nesta sessão de bootstrap — não são apenas
+  citação do documento de origem.
