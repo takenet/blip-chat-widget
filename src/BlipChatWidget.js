@@ -91,6 +91,11 @@ export class BlipChatWidget {
       this.blipChatContainer
         .querySelector('#blip-chat-open-iframe')
         .addEventListener('click', this._boundOpenChat)
+      // Recreate the iframe on boot when the widget was left open before a
+      // reload, so CHAT_READY_CODE arrives and the reopen logic can run
+      if (this._getWidgetOpenState()) {
+        this._createIframe()
+      }
     } else {
       this._createIframe()
     }
