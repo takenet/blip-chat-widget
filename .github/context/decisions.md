@@ -117,10 +117,11 @@ documento, mas débitos estruturais reais que qualquer trabalho futuro em
 
 ## 7. Persistência do estado aberto/fechado do widget entre reloads (`sessionStorage`)
 
-Commit `565723c`. Endereça o item F1 do discovery Energisa (ver
+Commit `565723c` (versão inicial), corrigido por `e0f6a39`, `2c4686f` e
+`f74cd94`. Endereça o item F1 do discovery Energisa (ver
 [roadmap.md](./roadmap.md)).
 
-**Mecanismo**: `this.isOpen` passou a ser espelhado em `sessionStorage`, sob a
+**Mecanismo**: `this.isOpen` é espelhado em `sessionStorage`, sob a
 chave `Constants.getWidgetOpenKey(appKey)` = `blipSdkWidgetOpen:<appKey>` —
 mesmo padrão de namespacing por `appKey` já usado para a conta guest (ver
 item 5). A escrita ocorre em `_setWidgetOpenState(isOpen)`, chamada nos dois
@@ -145,4 +146,53 @@ erro na leitura) — mesma cautela defensiva já aplicada a operações de
 `localStorage` em `StorageService.js`, relevante para navegadores com
 `sessionStorage` desabilitado ou em modo privado restrito.
 
-Revisado e aprovado (`APPROVED_WITH_NOTES`) por Reviewer independente.
+**BLOCKER real encontrado em auditoria de completude e corrigido (não apenas
+nota cosmética)**: a versão inicial (`565723c`) implementava escrita/leitura
+corretamente, mas o mecanismo era **inalcançável no cenário de uso padrão**.
+Em modo widget, `_createIframe()` só era chamado por clique do usuário ou por
+uma chamada explícita (`sendMessage`/`sendCommand`/`setDraftMessage`) — nunca
+no boot (`_onInit()`). Como a leitura do estado persistido só acontece dentro
+do handler `CHAT_READY_CODE`, e esse handler só existe depois que o iframe é
+criado, um reload de página com o widget previamente aberto nunca recriava o
+iframe sozinho, então o widget nunca reabria. O mecanismo de persistência
+"funcionava" isoladamente (dados eram escritos e lidos corretamente), mas o
+comportamento fim a fim (reabrir após reload) nunca ocorria em produção.
+
+Corrigido em 3 commits, todos revisados e aprovados (`BLOCKER RESOLVIDO` /
+`APPROVED`) por Reviewer independente:
+
+- `e0f6a39` — `_onInit()` passa a chamar `_createIframe()` proativamente
+  quando `_getWidgetOpenState()` é `true`, para que `CHAT_READY_CODE` chegue
+  a disparar e a lógica de reabertura já existente possa rodar.
+- `2c4686f` — `destroy()` passa a limpar a flag de `sessionStorage` (via
+  `_setWidgetOpenState(false)`, guardado pela mesma condição `!this.target`
+  já usada em `_openChat()`). Sem isso, destruir um widget aberto e criar
+  uma nova instância com o mesmo `appKey` na mesma aba/sessão reabriria a
+  nova instância inesperadamente.
+- `f74cd94` — `_createIframe()` passa a ser idempotente (`if
+  (this.blipChatIframe) return` como primeira linha), porque a criação
+  proativada no boot (`e0f6a39`) introduziu uma corrida real: se
+  `sendMessage`/`sendCommand`/`setDraftMessage` fossem chamados antes de
+  `CHAT_READY_CODE`, o call site correspondente também tentava criar o
+  iframe, resultando em um segundo iframe, handshake duplicado e
+  bookkeeping de estado/contadores de referência corrompido.
+
+**A versão atual (pós estes 3 commits) é a que funciona fim a fim**;
+referências anteriores a F1 como simplesmente "implementado" citando apenas
+`565723c` estão incompletas — ver correção em [roadmap.md](./roadmap.md).
+
+### Padrão de risco permanente descoberto (relevante para mudanças futuras neste arquivo)
+
+Qualquer mudança que torne a criação do iframe (`_createIframe()`)
+condicional a **estado** (ex.: valor persistido, flag interna) em vez de
+apenas a uma ação direta do usuário (clique) precisa auditar **todos os call
+sites** de `_createIframe()`, não apenas o caminho feliz que motivou a
+mudança. Neste arquivo, `_createIframe()` é chamado a partir de múltiplos
+pontos independentes — boot (`_onInit`), clique do usuário (`_openChat`), e
+chamadas públicas que podem chegar antes da conexão
+(`sendMessage`/`sendCommand`/`setDraftMessage`) — e cada um assumia
+implicitamente que era o único responsável por criar o iframe. Introduzir um
+novo caminho de criação (boot) sem tornar `_createIframe()` idempotente é
+suficiente para reintroduzir esta classe de bug (iframe duplicado, handshake
+corrompido, contadores de referência incorretos). Qualquer novo call site
+futuro deve assumir que outro pode disparar concorrentemente.
