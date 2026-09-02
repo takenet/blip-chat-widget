@@ -170,7 +170,7 @@ Corrigido em 3 commits, todos revisados e aprovados (`BLOCKER RESOLVIDO` /
   uma nova instância com o mesmo `appKey` na mesma aba/sessão reabriria a
   nova instância inesperadamente.
 - `f74cd94` — `_createIframe()` passa a ser idempotente (`if
-  (this.blipChatIframe) return` como primeira linha), porque a criação
+(this.blipChatIframe) return` como primeira linha), porque a criação
   proativada no boot (`e0f6a39`) introduziu uma corrida real: se
   `sendMessage`/`sendCommand`/`setDraftMessage` fossem chamados antes de
   `CHAT_READY_CODE`, o call site correspondente também tentava criar o
