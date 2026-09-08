@@ -67,8 +67,8 @@ Comunicação bidirecional entre `BlipChatWidget` e o conteúdo do iframe via
 
 | Código                                       | Efeito                                                                                                                                                                                                                                                   |
 | -------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `RedirectUrl`                                | Recarrega o iframe com nova URL (`_reloadIframe`)                                                                                                                                                                                                        |
-| `RequestCookie` (`CHAT_READY_CODE`)          | Torna o botão visível (modo widget) ou abre o chat (modo `target`); marca `isChatLoaded`; reenvia `customStyle`/`customMessageMetadata`; em modo widget, reabre o chat via `_openChat()` se houver estado `sessionStorage` persistido (ver seção abaixo) |
+| `RedirectUrl`                                | Recarrega o **mesmo** iframe com nova URL (`_reloadIframe`) — não cria elemento novo. Também usado por `blip-chat` para redirect de tenant (subdomínio), reaproveitando o mesmo valor de string de `GOOGLE_ANALYTICS_EVENT_NAME`; ver [decisions.md](./decisions.md#descoberta-arquitetural-colisão-de-valor-de-string-entre-constantsredirect_url-widget-e-google_analytics_event_name-blip-chat) |
+| `RequestCookie` (`CHAT_READY_CODE`)          | Torna o botão visível (modo widget) ou abre o chat (modo `target`); marca `isChatLoaded`; reenvia `customStyle`/`customMessageMetadata`; em modo widget, reabre o chat via `_openChat()` se houver estado `sessionStorage` persistido e o chat ainda não estiver aberto (ver seção abaixo). Guardado por `!this.isOpen` em ambos os modos — idempotente a múltiplas ocorrências no mesmo ciclo de vida da instância (ex.: redirect de tenant recarregando o mesmo iframe), ver [decisions.md](./decisions.md#8-bug-real-em-f1-chat-fechava-sozinho-após-redirect-de-tenant-em-bots-multi-tenant-guard-de-idempotência-em-chat_ready_code) |
 | `CreateAccount`                              | Decodifica `userAccount` (base64+JSON); se `authType === Guest`, persiste no `localStorage` namespaced; dispara `OnCreateAccount`                                                                                                                        |
 | `ChatConnected`                              | Envia `UserIrisAccount` se aplicável; dispara `OnLoad`; libera fila `pendings` (mensagens/comandos/draft enfileirados antes da conexão)                                                                                                                  |
 | `NewBotMessage` (`PARENT_NOTIFICATION_CODE`) | Repassa a `NotificationHandler.handle()`                                                                                                                                                                                                                 |
@@ -91,6 +91,14 @@ conforme `environment` (`homolog`/`production`/`local`, default vem de
 `process.env.NODE_ENV` se não passado explicitamente via `withEnvironment`).
 Este é o mecanismo usado para determinar a origem esperada na validação de
 `postMessage` acima.
+
+`_getNewUrlWithWebProtocol(newUrl)` (usado para montar `this.NEW_URL` a
+partir do `RedirectUrl` de tenant) deriva o protocolo de
+`new window.URL(this.CHAT_URL).protocol` — o protocolo do ambiente do chat,
+não o da página host (`window.location.protocol`). Usar o protocolo da
+página host quebrava silenciosamente a validação de origem acima sempre que
+host e chat divergiam em protocolo (ex.: host `http://` local testando
+contra chat `https://` real).
 
 ## Sessão e autenticação
 

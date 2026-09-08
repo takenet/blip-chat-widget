@@ -347,7 +347,8 @@ export class BlipChatWidget {
   }
 
   _getNewUrlWithWebProtocol(newUrl) {
-    return `${window.location.protocol}//${newUrl}`
+    const protocol = new window.URL(this.CHAT_URL).protocol
+    return `${protocol}//${newUrl}`
   }
 
   // Persists the widget open/closed state for the current tab/session only,
@@ -397,6 +398,7 @@ export class BlipChatWidget {
         this._reloadIframe()
         break
       case Constants.CHAT_READY_CODE:
+        // Guard against duplicate CHAT_READY_CODE after a mid-session tenant redirect reload (same iframe), which would otherwise toggle the chat closed
         if (!this.target) {
           // Chat presented on widget
           let button = this.blipChatContainer.querySelector(
@@ -404,12 +406,14 @@ export class BlipChatWidget {
           )
           button.style.visibility = 'visible'
           button.style.opacity = 1
-          if (this._getWidgetOpenState()) {
+          if (this._getWidgetOpenState() && !this.isOpen) {
             this._openChat()
           }
         } else {
           // Chat presented on fixed element
-          this._openChat()
+          if (!this.isOpen) {
+            this._openChat()
+          }
         }
         this.isChatLoaded = true
         const blipChatButton = this.blipChatContainer.querySelector(

@@ -181,6 +181,79 @@ Corrigido em 3 commits, todos revisados e aprovados (`BLOCKER RESOLVIDO` /
 referências anteriores a F1 como simplesmente "implementado" citando apenas
 `565723c` estão incompletas — ver correção em [roadmap.md](./roadmap.md).
 
+## 8. Bug real em F1: chat fechava sozinho após redirect de tenant em bots multi-tenant (guard de idempotência em `CHAT_READY_CODE`)
+
+Descoberto e corrigido nesta sessão, ainda não commitado no momento deste
+registro. Endereça um blocker adicional do mecanismo descrito no item 7 —
+distinto do blocker original (`565723c`), específico do cenário multi-tenant.
+
+**Root cause**: para bots com `tenantId` nas extras da conta, quando o host
+atual não corresponde ao subdomínio esperado, `blip-chat` (`App.vue`) envia
+ao widget um `postMessage` reaproveitando o código de string `'RedirectUrl'`
+(mesmo valor de `AppSettings.get('GOOGLE_ANALYTICS_EVENT_NAME')` em
+`blip-chat/src/settings.json` — colisão de valor de string, não de nome de
+constante, entre dois repositórios distintos; ver "Descoberta arquitetural"
+abaixo). O widget trata isso como instrução de redirect
+(`Constants.REDIRECT_URL`) e chama `_reloadIframe()`, que navega o **mesmo**
+elemento `<iframe>` (não cria um novo). Isso dispara um segundo
+`CHAT_READY_CODE` a partir do conteúdo recarregado do iframe — o estado JS do
+widget (`this.isOpen`, contadores, etc.) não é recriado, só o conteúdo do
+iframe recarrega.
+
+O handler de `CHAT_READY_CODE` em `_onReceivePostMessage` chamava
+`this._openChat()` incondicionalmente sempre que `_getWidgetOpenState()` era
+`true`. Como `_openChat()` é uma função de toggle puro e `this.isOpen` já
+era `true` da primeira chamada (reabertura automática após reload de
+página, mecanismo do item 7), a segunda chamada — disparada pelo redirect de
+tenant — caía no ramo de **fechar**, fechando o chat que tinha acabado de
+reabrir sozinho. Efeito visível: o chat "pisca" aberto e fecha sozinho, sem
+nenhuma ação do usuário.
+
+**Fix aplicado** (escopo único em `BlipChatWidget.js`, `_onReceivePostMessage`,
+`case Constants.CHAT_READY_CODE`): guard `&& !this.isOpen` adicionado ao
+ramo `!this.target` (reabertura automática só ocorre se ainda não estiver
+aberto) e `if (!this.isOpen) { this._openChat() }` no ramo `else`/modo
+`target` (que antes chamava `_openChat()` sem nenhuma condição). Torna a
+reabertura idempotente a múltiplos `CHAT_READY_CODE` no mesmo ciclo de vida
+do widget, sem alterar o comportamento de toggle usado por clique manual no
+botão flutuante, `BlipChat.toogleChat()` público, ou pelo `CloseWidget`
+(`forceClose=true`, caminho não afetado por este guard).
+
+**Bug secundário corrigido no mesmo escopo**: `_getNewUrlWithWebProtocol(newUrl)`
+derivava o protocolo de `window.location.protocol` — o protocolo da página
+HOST onde o widget está embutido, não o do ambiente do chat. Isso causava um
+`console.warn` espúrio de "postMessage recebida com origin/source
+inesperado" (validação de origem, ver item 5) sempre que a página host e o
+domínio do chat tinham protocolos diferentes (ex.: sandbox local em `http://`
+testando contra HMG real em `https://`) durante um redirect de tenant.
+Corrigido para derivar de `new window.URL(this.CHAT_URL).protocol` — o
+protocolo correto do ambiente do chat (local/homolog/produção).
+
+### Descoberta arquitetural: colisão de valor de string entre `Constants.REDIRECT_URL` (widget) e `GOOGLE_ANALYTICS_EVENT_NAME` (`blip-chat`)
+
+Conhecimento estrutural permanente, relevante para qualquer investigação
+futura envolvendo `CHAT_READY_CODE` ou reload de iframe: o valor de string
+`'RedirectUrl'` é definido de forma independente em dois repositórios —
+`Constants.REDIRECT_URL` neste repo (`src/utils/Constants.js`) e
+`GOOGLE_ANALYTICS_EVENT_NAME` em `blip-chat/src/settings.json` — sem
+nenhuma referência compartilhada entre eles. O nome da constante do lado
+`blip-chat` (`GOOGLE_ANALYTICS_EVENT_NAME`) sugere um propósito de
+analytics, mas o valor foi reaproveitado por `redirectIfNotUsingTenantIdOnUrl`
+(`blip-chat/src/App.vue`) para instruir o widget a recarregar o iframe em um
+subdomínio de tenant diferente — um uso não documentado como tal no nome da
+constante de origem. Qualquer mudança de valor de um dos dois lados sem
+coordenar o outro quebra silenciosamente o mecanismo de redirect de tenant
+(F1 multi-tenant), sem erro explícito — o widget simplesmente pararia de
+reagir ao redirect, ou passaria a reagir a eventos de analytics não
+relacionados.
+
+O mecanismo de redirect em si **reutiliza o mesmo `<iframe>`** via
+`_reloadIframe()` (não cria um novo elemento) — por isso o `CHAT_READY_CODE`
+subsequente chega ao mesmo listener/estado de instância já existente, o que
+é a precondição para o bug descrito acima. Qualquer novo handler de
+`CHAT_READY_CODE` ou de outro código de protocolo que assuma "isto só
+dispara uma vez por instância" deve considerar este caminho de reentrada.
+
 ### Padrão de risco permanente descoberto (relevante para mudanças futuras neste arquivo)
 
 Qualquer mudança que torne a criação do iframe (`_createIframe()`)
