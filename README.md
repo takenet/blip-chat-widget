@@ -213,6 +213,10 @@ It's pretty recommended to use SSL certificate for the site that will receive th
 BLiP Chat needs the document.referrer value to communicate with the website hosting it. But in some servers, we can have a Referrer-Policy header configurated. In this case, we cannot have a `no-referrer` and `same-origin` policies, because we won't receive the value in this situation (we just receive a blank string).
 
 Reference Article: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy
+
+---
+
+The camera button of the chat opens the webcam on desktop browsers (and the native camera app on mobile). The chat iframe requests the `camera` permission, so if your website sets a `Permissions-Policy` header it must not block it for the chat origin, e.g. `Permissions-Policy: camera=(self "https://chat.blip.ai")`.
 ___
 
 If your website blocks iframe origins by using the `Content-Security-Policy`, you need to add the domain `https://chat.blip.ai/` on `frame-src` policy. If you do not add that domain, the BLiP Chat will not load and the following error will be showed on browser console:
