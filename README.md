@@ -219,6 +219,10 @@ Reference Article: https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Ref
 
 ---
 
+The camera button of the chat opens the webcam on desktop browsers (and the native camera app on mobile). The chat iframe requests the `camera` permission, so if your website sets a `Permissions-Policy` header it must not block it for the chat origin, e.g. `Permissions-Policy: camera=(self "https://chat.blip.ai")`.
+
+---
+
 If your website blocks iframe origins by using the `Content-Security-Policy`, you need to add the domain `https://chat.blip.ai/` on `frame-src` policy. If you do not add that domain, the BLiP Chat will not load and the following error will be showed on browser console:
 
 ```

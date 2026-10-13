@@ -218,7 +218,7 @@ export class BlipChatWidget {
     this.blipChatIframe.setAttribute('frameborder', 0)
     this.blipChatIframe.setAttribute(
       'allow',
-      'geolocation; microphone; clipboard-read; clipboard-write'
+      'geolocation; microphone; camera; clipboard-read; clipboard-write'
     )
     this.blipChatIframe.setAttribute('allowFullscreen', true)
 
