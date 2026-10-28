@@ -88,6 +88,11 @@ export class BlipChatWidget {
       document
         .getElementById('blip-chat-open-iframe')
         .addEventListener('click', self._openChat)
+      // Recreate the iframe on boot when the widget was left open before a
+      // reload, so CHAT_READY_CODE arrives and the reopen logic can run
+      if (self._getWidgetOpenState()) {
+        self._createIframe()
+      }
     } else {
       self._createIframe()
     }
@@ -192,6 +197,11 @@ export class BlipChatWidget {
   }
 
   _createIframe(url = self.CHAT_URL) {
+    // Idempotent: boot, _openChat and sendMessage/sendCommand (before the chat
+    // has loaded) may all try to create the iframe. A second one would
+    // duplicate the connection handshake.
+    if (self.blipChatIframe) return
+
     self.blipChatIframe = document.createElement('iframe')
     self.blipChatIframe.setAttribute('src', url)
     self.blipChatIframe.setAttribute('id', 'blip-chat-iframe')
@@ -229,14 +239,11 @@ export class BlipChatWidget {
       self._createIframe()
     }
 
-    if (
-      !forceClose &&
-      self.blipChatIframe &&
-      !self.blipChatIframe.classList.contains('blip-chat-iframe-opened')
-    ) {
+    if (!forceClose && self.blipChatIframe && !self.isOpen) {
       // self.blipChatIframe.style.display = 'block'
       // Required for animation effect
-      setTimeout(() => {
+      self._openAnimationTimeout = setTimeout(() => {
+        self._openAnimationTimeout = null
         self.blipChatIframe.classList.add('blip-chat-iframe-opened')
         self._resizeElements()
 
@@ -265,8 +272,18 @@ export class BlipChatWidget {
       // Clear float button notifications
       self.NotificationHandler.clearNotifications()
       self.isOpen = true
+      if (!self.target) {
+        self._setWidgetOpenState(true)
+      }
       if (self.events.OnEnter) self.events.OnEnter()
     } else {
+      // A close right after an open (e.g. automatic reopen after reload) must
+      // not let the pending open animation reopen the chat visually
+      if (self._openAnimationTimeout) {
+        clearTimeout(self._openAnimationTimeout)
+        self._openAnimationTimeout = null
+      }
+
       // Change display to prevent interaction on iOS
       setTimeout(() => {
         // self.blipChatIframe.style.display = 'none'
@@ -274,7 +291,7 @@ export class BlipChatWidget {
 
       // Remove meta tag to prevent zoom on input focus
       let meta = document.getElementById('blipChatMeta')
-      document.getElementsByTagName('head')[0].removeChild(meta)
+      if (meta) meta.parentElement.removeChild(meta)
 
       // Hide parent html when on widget mode
       if (!self.target) {
@@ -286,13 +303,43 @@ export class BlipChatWidget {
       blipChatIcon.style.display = 'block'
       blipChatCloseIcon.style.display = 'none'
       self.isOpen = false
+      if (!self.target) {
+        self._setWidgetOpenState(false)
+      }
 
       if (self.events.OnLeave) self.events.OnLeave()
     }
   }
 
   _getNewUrlWithWebProtocol(newUrl) {
-    return `${window.location.protocol}//${newUrl}`
+    // Use the chat environment protocol, not the host page one, so the
+    // redirected iframe keeps the same origin used to exchange postMessages
+    const protocol = new window.URL(self.CHAT_URL, window.location.href)
+      .protocol
+    return `${protocol}//${newUrl}`
+  }
+
+  // Persists the widget open/closed state for the current tab/session only,
+  // so a page reload restores it but a new session never reopens on its own
+  _setWidgetOpenState(isOpen) {
+    try {
+      window.sessionStorage.setItem(
+        Constants.getWidgetOpenKey(self.appKey),
+        String(isOpen)
+      )
+    } catch (e) {}
+  }
+
+  _getWidgetOpenState() {
+    try {
+      return (
+        window.sessionStorage.getItem(
+          Constants.getWidgetOpenKey(self.appKey)
+        ) === 'true'
+      )
+    } catch (e) {
+      return false
+    }
   }
 
   _onReceivePostMessage(message) {
@@ -302,12 +349,17 @@ export class BlipChatWidget {
         self._reloadIframe()
         break
       case Constants.CHAT_READY_CODE:
+        // CHAT_READY_CODE arrives again when a tenant redirect reloads the same
+        // iframe, so opening must be idempotent instead of toggling it closed
         if (!self.target) {
           // Chat presented on widget
           let button = document.getElementById('blip-chat-open-iframe')
           button.style.visibility = 'visible'
           button.style.opacity = 1
-        } else {
+          if (self._getWidgetOpenState() && !self.isOpen) {
+            self._openChat()
+          }
+        } else if (!self.isOpen) {
           // Chat presented on fixed element
           self._openChat()
         }
@@ -497,5 +549,21 @@ export class BlipChatWidget {
   destroy() {
     window.removeEventListener('message', self._onReceivePostMessage)
     window.removeEventListener('resize', self._resizeElements)
+
+    // Undo page-level changes made while open so the host page is usable
+    // again. The persisted open state is kept on purpose, so hosts that
+    // recreate the widget on navigation keep the chat open.
+    if (self._openAnimationTimeout) {
+      clearTimeout(self._openAnimationTimeout)
+      self._openAnimationTimeout = null
+    }
+    if (self.isOpen) {
+      let meta = document.getElementById('blipChatMeta')
+      if (meta) meta.parentElement.removeChild(meta)
+      if (!self.target) {
+        document.getElementsByTagName('body')[0].classList.remove('chatParent')
+        document.getElementsByTagName('html')[0].classList.remove('chatParent')
+      }
+    }
   }
 }

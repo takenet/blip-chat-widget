@@ -22,6 +22,11 @@ const COOKIES_EXPIRATION = 2.592e+9
 const DEV_AUTH = 'Dev'
 const GUEST_AUTH = 'Guest'
 
+const WIDGET_OPEN_KEY = 'blipSdkWidgetOpen'
+
+// Namespaces the widget open state key per appKey to avoid cross-bot collisions
+const getWidgetOpenKey = (appKey) => `${WIDGET_OPEN_KEY}:${appKey}`
+
 const CONSTANTS = {
   CHAT_URL_LOCAL,
   CHAT_URL_HMG,
@@ -35,6 +40,8 @@ const CONSTANTS = {
   CUSTOM_MESSAGE_METADATA,
   USER_IRIS_ACCOUNT,
   USER_ACCOUNT_KEY,
+  WIDGET_OPEN_KEY,
+  getWidgetOpenKey,
   CREATE_ACCOUNT_CODE,
   COOKIES_EXPIRATION,
   DEV_AUTH,
