@@ -13,7 +13,7 @@ This is a standalone JavaScript widget library for embedding BLiP chatbots into 
 1. Widget creates iframe pointing to `chat.blip.ai` (or custom URL via `withCustomCommonUrl`)
 2. PostMessage codes (defined in `Constants.js`) coordinate bidirectional communication:
    - Widget → iframe: `START_CONNECTION_CODE`, `SEND_MESSAGE_CODE`, `CUSTOM_STYLE_CODE`
-   - iframe → Widget: `CHAT_READY_CODE`, `CREATE_ACCOUNT_CODE`, `PARENT_NOTIFICATION_CODE`
+   - iframe → Widget: `CHAT_READY_CODE`, `CREATE_ACCOUNT_CODE`, `PARENT_NOTIFICATION_CODE`, `CLOSE_WIDGET`, `REDIRECT_URL`
 3. All data passed through iframe boundary is base64-encoded for security
 
 ### Authentication Patterns
@@ -59,6 +59,11 @@ Check distinction in `BlipChatWidget.js:_onInit()` - `if (!self.target)` branche
 - Values stored as base64 JSON with `expires` timestamp
 - `processLocalStorageExpires()` runs on init to clean expired items
 - Used for Guest auth persistence (30 days = `2.592e+9` ms)
+
+Widget open/closed state (widget mode only) is kept separately in `sessionStorage` under `blipSdkWidgetOpen:<appKey>` (`Constants.getWidgetOpenKey`), written by `_openChat()` and read on boot. When it is `true`, `_onInit()` creates the iframe right away and `CHAT_READY_CODE` reopens the chat. `destroy()` intentionally keeps it so hosts that recreate the widget on navigation keep the chat open.
+
+### Tenant Redirect and `CHAT_READY_CODE` Reentrancy
+For bots with a `tenantId`, the chat sends `REDIRECT_URL` (`'RedirectUrl'`, the same value as `GOOGLE_ANALYTICS_EVENT_NAME` in `blip-chat/src/settings.json`) and `_reloadIframe()` navigates the **same** iframe, so `CHAT_READY_CODE` arrives again for the same widget instance. Any handler of that code must be idempotent: opening is guarded by `!self.isOpen` because `_openChat()` is a toggle. `_createIframe()` is idempotent because boot, `_openChat()` and queued `sendMessage`/`sendCommand` may all call it.
 
 ### Message Queueing
 If `sendMessage()` or `sendCommand()` called before iframe loads, they're queued in `self.pendings[]` and flushed on `CHAT_CONNECTED_CODE` (see `BlipChatWidget.js:_onReceivePostMessage`).

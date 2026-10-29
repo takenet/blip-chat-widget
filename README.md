@@ -269,6 +269,17 @@ Toggles the chat widget window.
 blipClient.toogleChat();
 ```
 
+## Open state across page reloads
+
+When the chat is presented as a widget (no `target` element), its open/closed state is remembered for the current browser tab. If the user leaves the chat open and the page is reloaded, or the user navigates to another page of the same site that also loads the widget, the chat opens again automatically with the same conversation. No integration change is required.
+
+- The state is stored in `sessionStorage` under the key `blipSdkWidgetOpen:<appKey>`, so it is shared only by pages of the same origin in the same tab. A new tab or a new browser session starts with the chat closed.
+- Closing the chat (floating button, chat close button or `toogleChat()`) clears the state.
+- `destroy()` does not clear the state, so sites that recreate the widget on each route change keep the chat open. To create a new widget closed in the same tab, close the chat (`toogleChat()`) before calling `destroy()`.
+- The `OnEnter` event is also triggered when the chat is reopened automatically.
+- Bots configured with a tenant keep the chat open after the automatic redirect to the tenant subdomain.
+- When a `target` element is used, the chat is always opened on load, so this state is not used.
+
 ## Send message
 
 Sends a message to your bot. The message can be a simple text or any LIME Protocol document. See example below:
